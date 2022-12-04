@@ -12,13 +12,13 @@ MousePort::MousePort()
 
     absolute_x = 0;
     absolute_y = 0;
-    string tmp = "/dev/input/event" + findTouchScreenEvent();
+    std::string tmp = "/dev/input/event" + findTouchScreenEvent();
     fd = open(tmp.c_str(), O_RDONLY);
     if (fd == -1)
     {
         throw MidiAppError("Cannot open touch screen file: " + tmp, true);
     }
-    thread(&MousePort::run, this).detach();
+    std::thread(&MousePort::run, this).detach();
 }
 
 void MousePort::run()
