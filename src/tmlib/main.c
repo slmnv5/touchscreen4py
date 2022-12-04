@@ -8,21 +8,20 @@
 #include "framebuffer.c"
 #include <signal.h>
 
-
 #define SAMPLE_AMOUNT 2
 
-void  INThandler(int sig)
+void INThandler(int sig)
 {
-        signal(sig, SIG_IGN);
+	signal(sig, SIG_IGN);
 	closeFramebuffer();
-        exit(0);
+	exit(0);
 }
 
 int main()
 {
 	signal(SIGINT, INThandler);
 
-	int  xres,yres,x;
+	int xres, yres, x;
 
 	int Xsamples[20];
 	int Ysamples[20];
@@ -37,50 +36,44 @@ int main()
 	int Xaverage = 0;
 	int Yaverage = 0;
 
-
 	if (openTouchScreen() == 1)
 		perror("error opening touch screen");
 
+	getTouchScreenDetails(&screenXmin, &screenXmax, &screenYmin, &screenYmax);
 
-	getTouchScreenDetails(&screenXmin,&screenXmax,&screenYmin,&screenYmax);
+	framebufferInitialize(&xres, &yres);
 
-	framebufferInitialize(&xres,&yres);
-
-	scaleXvalue = ((float)screenXmax-screenXmin) / xres;
-	printf ("X Scale Factor = %f\n", scaleXvalue);
-	scaleYvalue = ((float)screenYmax-screenYmin) / yres;
-	printf ("Y Scale Factor = %f\n", scaleYvalue);
-
-
-
+	scaleXvalue = ((float)screenXmax - screenXmin) / xres;
+	printf("X Scale Factor = %f\n", scaleXvalue);
+	scaleYvalue = ((float)screenYmax - screenYmin) / yres;
+	printf("Y Scale Factor = %f\n", scaleYvalue);
 
 	int h;
 
-
 	int sample;
 
-	while(1){
-		for (sample = 0; sample < SAMPLE_AMOUNT; sample++){
+	while (1)
+	{
+		for (sample = 0; sample < SAMPLE_AMOUNT; sample++)
+		{
 			getTouchSample(&rawX, &rawY, &rawPressure);
 			Xsamples[sample] = rawX;
 			Ysamples[sample] = rawY;
 		}
 
-		Xaverage  = 0;
-		Yaverage  = 0;
+		Xaverage = 0;
+		Yaverage = 0;
 
-		for ( x = 0; x < SAMPLE_AMOUNT; x++ ){
+		for (x = 0; x < SAMPLE_AMOUNT; x++)
+		{
 			Xaverage += Xsamples[x];
 			Yaverage += Ysamples[x];
 		}
 
-		Xaverage = Xaverage/SAMPLE_AMOUNT;
-		Yaverage = Yaverage/SAMPLE_AMOUNT;
+		Xaverage = Xaverage / SAMPLE_AMOUNT;
+		Yaverage = Yaverage / SAMPLE_AMOUNT;
 
-		scaledX = 	Xaverage / scaleXvalue;
-		scaledY = 	Yaverage / scaleYvalue;
-		drawSquare(scaledX, scaledY,5,5,WHITE);
+		scaledX = Xaverage / scaleXvalue;
+		scaledY = Yaverage / scaleYvalue;
 	}
 }
-
-
