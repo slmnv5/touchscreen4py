@@ -1,6 +1,5 @@
 #include "pch.hpp"
-#include "MidiEvent.hpp"
-#include "utils.hpp"
+#include "lib/utils.hpp"
 #include "MidiClient.hpp"
 #include "MousePort.hpp"
 

@@ -5,6 +5,8 @@
         "log.hpp": "c",
         "touch.h": "c",
         "input.h": "c",
-        "pch.hpp": "c"
+        "pch.hpp": "c",
+        "stdexcept": "cpp",
+        "iostream": "cpp"
     }
 }

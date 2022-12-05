@@ -4,13 +4,13 @@
 // #include <fcntl.h>
 // #include <stdio.h>
 #include "touch.h"
-#include "touch.c"
+
 //#include "framebuffer.c"
 #include <signal.h>
 
 #define SAMPLE_AMOUNT 2
 
-int main()
+int main111()
 {
 
 	int xres, yres, x;
