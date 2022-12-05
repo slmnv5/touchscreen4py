@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <linux/input.h>
 
-#include "utils.hpp"
+#include "lib/utils.hpp"
 #include "MousePort.hpp"
 #include "MidiEvent.hpp"
 

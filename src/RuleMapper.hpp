@@ -5,9 +5,6 @@
 #include "lib/utils.hpp"
 #include "MidiClient.hpp"
 
-
-
-
 class RuleMapper {
 private:
 	static const int sleep_ms;

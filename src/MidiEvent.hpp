@@ -9,7 +9,7 @@ typedef std::map<midi_byte_t, midi_byte_t> count_map_t;
 extern const midi_byte_t MIDI_MAX;
 extern const midi_byte_t MIDI_MAXCH;
 
-//=============================================================
+//===========================================
 class MidiAppError : public std::exception {
 private:
 	const std::string msg;

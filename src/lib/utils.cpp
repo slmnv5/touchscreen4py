@@ -1,8 +1,10 @@
 #include "utils.hpp"
 
-bool writeMidiEvent(snd_seq_event_t* event, const MidiEvent& ev) {
+bool writeMidiEvent(snd_seq_event_t *event, const MidiEvent &ev)
+{
 	// note OFF is note ON with zero velocity
-	if (ev.isNote()) {
+	if (ev.isNote())
+	{
 		event->type = SND_SEQ_EVENT_NOTEON;
 		event->data.note.channel = ev.ch;
 		event->data.note.note = ev.v1;
@@ -10,14 +12,16 @@ bool writeMidiEvent(snd_seq_event_t* event, const MidiEvent& ev) {
 		return true;
 	}
 
-	else if (ev.evtype == MidiEventType::PROGCHANGE) {
+	else if (ev.evtype == MidiEventType::PROGCHANGE)
+	{
 		event->type = SND_SEQ_EVENT_PGMCHANGE;
 		event->data.control.channel = ev.ch;
 		event->data.control.value = ev.v1;
 		return true;
 	}
 
-	else if (ev.evtype == MidiEventType::CONTROLCHANGE) {
+	else if (ev.evtype == MidiEventType::CONTROLCHANGE)
+	{
 		event->type = SND_SEQ_EVENT_CONTROLLER;
 		event->data.control.channel = ev.ch;
 		event->data.control.param = ev.v1;
@@ -27,28 +31,33 @@ bool writeMidiEvent(snd_seq_event_t* event, const MidiEvent& ev) {
 	return false;
 }
 
-bool readMidiEvent(const snd_seq_event_t* event, MidiEvent& ev) {
-	if (event->type == SND_SEQ_EVENT_NOTEOFF) {
+bool readMidiEvent(const snd_seq_event_t *event, MidiEvent &ev)
+{
+	if (event->type == SND_SEQ_EVENT_NOTEOFF)
+	{
 		ev.evtype = MidiEventType::NOTE;
 		ev.ch = event->data.note.channel;
 		ev.v1 = event->data.note.note;
 		ev.v2 = 0;
 		return true;
 	}
-	if (event->type == SND_SEQ_EVENT_NOTEON) {
+	if (event->type == SND_SEQ_EVENT_NOTEON)
+	{
 		ev.evtype = MidiEventType::NOTE;
 		ev.ch = event->data.note.channel;
 		ev.v1 = event->data.note.note;
 		ev.v2 = event->data.note.velocity;
 		return true;
 	}
-	if (event->type == SND_SEQ_EVENT_PGMCHANGE) {
+	if (event->type == SND_SEQ_EVENT_PGMCHANGE)
+	{
 		ev.evtype = MidiEventType::PROGCHANGE;
 		ev.ch = event->data.control.channel;
 		ev.v1 = event->data.control.value;
 		return true;
 	}
-	if (event->type == SND_SEQ_EVENT_CONTROLLER) {
+	if (event->type == SND_SEQ_EVENT_CONTROLLER)
+	{
 		ev.evtype = MidiEventType::CONTROLCHANGE;
 		ev.ch = event->data.control.channel;
 		ev.v1 = event->data.control.param;
@@ -60,12 +69,12 @@ bool readMidiEvent(const snd_seq_event_t* event, MidiEvent& ev) {
 
 //==================== utility functions ===================================
 
+std::string findKbdEvent()
+{
+	const char *cmd = "grep -E 'Handlers|EV=' /proc/bus/input/devices | "
+					  "grep -B1 'EV=120013' | grep -Eo 'event[0-9]+' | grep -Eo '[0-9]+' | tr -d '\n'";
 
-std::string findKbdEvent() {
-	const char* cmd = "grep -E 'Handlers|EV=' /proc/bus/input/devices | "
-		"grep -B1 'EV=120013' | grep -Eo 'event[0-9]+' | grep -Eo '[0-9]+' | tr -d '\n'";
-
-	FILE* pipe = popen(cmd, "r");
+	FILE *pipe = popen(cmd, "r");
 	char buffer[128];
 	std::string result = "";
 	while (!feof(pipe))
@@ -75,11 +84,12 @@ std::string findKbdEvent() {
 	return result;
 }
 
-std::string findTouchScreenEvent() {
-	const char* cmd = "grep -E 'Handlers|EV=' /proc/bus/input/devices | "
-		"grep -B1 'EV=b' | grep -Eo 'event[0-9]+' | grep -Eo '[0-9]+' | tr -d '\n'";
+std::string findTouchScreenEvent()
+{
+	const char *cmd = "grep -E 'Handlers|EV=' /proc/bus/input/devices | "
+					  "grep -B1 'EV=b' | grep -Eo 'event[0-9]+' | grep -Eo '[0-9]+' | tr -d '\n'";
 
-	FILE* pipe = popen(cmd, "r");
+	FILE *pipe = popen(cmd, "r");
 	char buffer[128];
 	std::string result = "";
 	while (!feof(pipe))
@@ -89,12 +99,13 @@ std::string findTouchScreenEvent() {
 	return result;
 }
 
-
-std::vector<std::string> split_string(const std::string& s, const std::string& delimiter) {
+std::vector<std::string> split_string(const std::string &s, const std::string &delimiter)
+{
 	std::vector<std::string> tokens;
 	auto start = 0U;
 	auto stop = s.find(delimiter);
-	while (stop != std::string::npos) {
+	while (stop != std::string::npos)
+	{
 		tokens.push_back(s.substr(start, stop - start));
 		start = stop + delimiter.length();
 		stop = s.find(delimiter, start);
@@ -103,13 +114,15 @@ std::vector<std::string> split_string(const std::string& s, const std::string& d
 	return tokens;
 }
 
-int replace_all(std::string& s, const std::string& del, const std::string& repl) {
+int replace_all(std::string &s, const std::string &del, const std::string &repl)
+{
 	std::string::size_type delsz = del.size();
 	if (delsz == 0)
 		return 0;
 	int count = 0;
 	std::string::size_type n = 0;
-	while ((n = s.find(del, n)) != std::string::npos) {
+	while ((n = s.find(del, n)) != std::string::npos)
+	{
 		s.replace(n, delsz, repl);
 		n += repl.size();
 		count++;
@@ -117,30 +130,33 @@ int replace_all(std::string& s, const std::string& del, const std::string& repl)
 	return count;
 }
 
-void remove_spaces(std::string& s) {
+void remove_spaces(std::string &s)
+{
 	s = s.substr(0, s.find(";"));
 	replace_all(s, " ", "");
 	replace_all(s, "\n", "");
 	replace_all(s, "\t", "");
 }
 
-std::string exec_command(const std::string& cmd) {
+std::string exec_command(const std::string &cmd)
+{
 	char buffer[128];
 	std::string result = "";
-	FILE* pipe = popen(cmd.c_str(), "r");
+	FILE *pipe = popen(cmd.c_str(), "r");
 	if (!pipe)
 		throw std::runtime_error("popen() failed!");
-	try {
-		while (fgets(buffer, sizeof buffer, pipe) != NULL) {
+	try
+	{
+		while (fgets(buffer, sizeof buffer, pipe) != NULL)
+		{
 			result += buffer;
 		}
 	}
-	catch (std::exception& e) {
+	catch (std::exception &e)
+	{
 		pclose(pipe);
 		throw e;
 	}
 	pclose(pipe);
 	return result;
 }
-
-
