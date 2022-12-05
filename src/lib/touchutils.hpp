@@ -9,10 +9,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "tmlib/touch.h"
-
 #define KWHT "\x1B[37m"
 #define KYEL "\x1B[33m"
+
+#define EVENT_DEVICE "/dev/input/event0"
+#define EVENT_TYPE EV_ABS
+#define EVENT_CODE_X ABS_X
+#define EVENT_CODE_Y ABS_Y
 
 int framebufferInitialize(int *xres, int *yres)
 {
@@ -37,44 +40,6 @@ int framebufferInitialize(int *xres, int *yres)
     return 0;
 }
 
-void getTouchSample(int fd, int *rawX, int *rawY, int *rawPressure)
-{
-    int i;
-    /* how many bytes were read */
-    size_t rb;
-    /* the events (up to 64 at once) */
-    struct input_event ev[64];
-
-    rb = read(fd, ev, sizeof(struct input_event) * 64);
-    for (i = 0; i < (rb / sizeof(struct input_event)); i++)
-    {
-        if (ev[i].type == EV_SYN)
-            printf("Event type is %s%s%s = Start of New Event\n", KYEL, events[ev[i].type], KWHT);
-
-        else if (ev[i].type == EV_KEY && ev[i].code == 330 && ev[i].value == 1)
-            printf("Event type is %s%s%s & Event code is %sTOUCH(330)%s & Event value is %s1%s = Touch Starting\n", KYEL, events[ev[i].type], KWHT, KYEL, KWHT, KYEL, KWHT);
-
-        else if (ev[i].type == EV_KEY && ev[i].code == 330 && ev[i].value == 0)
-            printf("Event type is %s%s%s & Event code is %sTOUCH(330)%s & Event value is %s0%s = Touch Finished\n", KYEL, events[ev[i].type], KWHT, KYEL, KWHT, KYEL, KWHT);
-
-        else if (ev[i].type == EV_ABS && ev[i].code == 0 && ev[i].value > 0)
-        {
-            printf("Event type is %s%s%s & Event code is %sX(0)%s & Event value is %s%d%s\n", KYEL, events[ev[i].type], KWHT, KYEL, KWHT, KYEL, ev[i].value, KWHT);
-            *rawX = ev[i].value;
-        }
-        else if (ev[i].type == EV_ABS && ev[i].code == 1 && ev[i].value > 0)
-        {
-            printf("Event type is %s%s%s & Event code is %sY(1)%s & Event value is %s%d%s\n", KYEL, events[ev[i].type], KWHT, KYEL, KWHT, KYEL, ev[i].value, KWHT);
-            *rawY = ev[i].value;
-        }
-        else if (ev[i].type == EV_ABS && ev[i].code == 24 && ev[i].value > 0)
-        {
-            printf("Event type is %s%s%s & Event code is %sPressure(24)%s & Event value is %s%d%s\n", KYEL, events[ev[i].type], KWHT, KYEL, KWHT, KYEL, ev[i].value, KWHT);
-            *rawPressure = ev[i].value;
-        }
-    }
-}
-
 // return screen file descr. and details
 int getTouchScreenDetails2(int *screenXmin, int *screenXmax, int *screenYmin, int *screenYmax)
 
@@ -83,32 +48,32 @@ int getTouchScreenDetails2(int *screenXmin, int *screenXmax, int *screenYmin, in
     int fd;
     if ((fd = open("/dev/input/event0", O_RDONLY | O_NONBLOCK)) < 0)
     {
-        cout << "Could not open device file. Try running as root." << endl;
+        std::cout << "Could not open device file. Try running as root." << std::endl;
         return -1;
     }
 
-    char *absval[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
+    const char *absval[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
     int absX[6] = {};
     int absY[6] = {};
 
     ioctl(fd, EVIOCGABS(ABS_MT_POSITION_X), absX);
     ioctl(fd, EVIOCGABS(ABS_MT_POSITION_Y), absY);
 
-    cout << "ABS_MT_POSITION_X Properties" << endl;
+    cout << "ABS_MT_POSITION_X Properties" << std::endl;
     for (int x = 0; x < 6; x++)
     {
         if ((x < 3) || absX[x])
         {
-            cout << absval[x] << ": " << absX[x] << endl;
+            cout << absval[x] << ": " << absX[x] << std::endl;
         }
     }
 
-    cout << "ABS_MT_POSITION_Y Properties" << endl;
+    cout << "ABS_MT_POSITION_Y Properties" << std::endl;
     for (int y = 0; y < 6; y++)
     {
         if ((y < 3) || absX[y])
         {
-            cout << absval[y] << ": " << absY[y] << endl;
+            cout << absval[y] << ": " << absY[y] << std::endl;
         }
     }
 
@@ -135,14 +100,13 @@ void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure)
 
     while (true)
     {
-        const size_t ev_size = sizeof(struct input_event);
-        ssize_t size;
+        const ssize_t ev_size = sizeof(struct input_event);
 
-        size = read(fd, &ev, ev_size);
+        auto size = read(fd, &ev, ev_size);
         if (size < ev_size)
         {
             fprintf(stderr, "Error size when reading\n");
-            return 1;
+            return;
         }
 
         if (ev.type == EVENT_TYPE && (ev.code == EVENT_CODE_X || ev.code == EVENT_CODE_Y))
