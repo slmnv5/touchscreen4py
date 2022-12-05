@@ -1,7 +1,13 @@
-/*
-	Copyright (C) 2013  Mark Williams
 
-*/
+
+#include <linux/input.h>
+#include <fcntl.h>
+#include <linux/fb.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <string.h>
+
 #define BITS_PER_LONG (sizeof(long) * 8)
 #define NBITS(x) ((((x)-1) / BITS_PER_LONG) + 1)
 #define OFF(x) ((x) % BITS_PER_LONG)

@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "tmlib/touch.h"
+
 #define KWHT "\x1B[37m"
 #define KYEL "\x1B[33m"
 
@@ -119,5 +121,35 @@ int getTouchScreenDetails2(int *screenXmin, int *screenXmax, int *screenYmin, in
     // auto SCALE_Y = (1080.0f / absY[2]);
 
     return fd;
+}
+
+void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure)
+{
+
+    struct input_event ev;
+    char name[256] = "Unknown";
+
+    ioctl(fd, EVIOCGNAME(sizeof(name)), name);
+    printf("device file = %s\n", EVENT_DEVICE);
+    printf("device name = %s\n", name);
+
+    while (true)
+    {
+        const size_t ev_size = sizeof(struct input_event);
+        ssize_t size;
+
+        size = read(fd, &ev, ev_size);
+        if (size < ev_size)
+        {
+            fprintf(stderr, "Error size when reading\n");
+            return 1;
+        }
+
+        if (ev.type == EVENT_TYPE && (ev.code == EVENT_CODE_X || ev.code == EVENT_CODE_Y))
+        {
+            printf("%s = %d\n", ev.code == EVENT_CODE_X ? "X" : "Y",
+                   ev.value);
+        }
+    }
 }
 #endif
