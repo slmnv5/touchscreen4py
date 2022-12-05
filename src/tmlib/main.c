@@ -1,25 +1,17 @@
 
-#include <linux/input.h>
-#include <string.h>
-#include <fcntl.h>
-#include <stdio.h>
+// #include <linux/input.h>
+// #include <string.h>
+// #include <fcntl.h>
+// #include <stdio.h>
 #include "touch.h"
 #include "touch.c"
-#include "framebuffer.c"
+//#include "framebuffer.c"
 #include <signal.h>
 
 #define SAMPLE_AMOUNT 2
 
-void INThandler(int sig)
-{
-	signal(sig, SIG_IGN);
-	closeFramebuffer();
-	exit(0);
-}
-
 int main()
 {
-	signal(SIGINT, INThandler);
 
 	int xres, yres, x;
 
