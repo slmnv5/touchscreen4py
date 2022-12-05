@@ -1,6 +1,5 @@
 #include "pch.hpp"
 #include "lib/utils.hpp"
-#include "MidiClient.hpp"
 #include "MousePort.hpp"
 
 using namespace std;
@@ -11,7 +10,7 @@ int main(int argc, char *argv[])
 {
 
 	const char *clientName = nullptr;
-	const char *kbdMapFile = nullptr;
+
 	LOG::ReportingLevel() = LogLvl::ERROR;
 
 	for (int i = 1; i < argc; i++)
@@ -19,10 +18,6 @@ int main(int argc, char *argv[])
 		if (strcmp(argv[i], "-n") == 0 && i + 1 < argc)
 		{
 			clientName = argv[i + 1];
-		}
-		else if (strcmp(argv[i], "-k") == 0 && i + 1 < argc)
-		{
-			kbdMapFile = argv[i + 1];
 		}
 		else if (strcmp(argv[i], "-v") == 0)
 		{
@@ -47,17 +42,12 @@ int main(int argc, char *argv[])
 		clientName = "mimap";
 
 	LOG(LogLvl::INFO) << "MIDI client name: " << clientName;
-	MidiClient *midiClient = nullptr;
 	MousePort *mousePort = nullptr;
 
 	try
 	{
 
-		midiClient = new MidiKbdClient(clientName, kbdMapFile);
-		LOG(LogLvl::INFO) << "Using typing keyboard as source with map: " << kbdMapFile;
-
 		mousePort = new MousePort();
-
 		LOG(LogLvl::INFO) << "Starting MIDI messages processing";
 	}
 	catch (exception &e)
