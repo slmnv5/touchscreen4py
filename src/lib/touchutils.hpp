@@ -15,6 +15,9 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#define KWHT "\x1B[37m"
+#define KYEL "\x1B[33m"
+
 int fillArrayFromDevice(int fd, int propId, const char *propName, int *minV, int *maxV)
 {
     const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
@@ -91,21 +94,53 @@ int getTouchInfo(int *scrXmin, int *scrXmax,
 void get2(int fd)
 {
 
-    struct input_event ev;
+    const char *events[EV_MAX + 1] = {};
+    events[EV_SYN] = "Sync";
+    events[EV_KEY] = "Key";
+    events[EV_REL] = "Relative";
+    events[EV_ABS] = "Absolute";
+    events[EV_MSC] = "Misc";
+    events[EV_LED] = "LED";
+    events[EV_SND] = "Sound";
+    events[EV_REP] = "Repeat";
+    events[EV_FF] = "ForceFeedback";
+    events[EV_PWR] = "Power";
+    events[EV_FF_STATUS] = "ForceFeedbackStatus";
 
+    int *rawX = 0;
+    int *rawY = 0;
+    int *rawPressure = 0;
+
+    struct input_event ev;
     while (true)
     {
         const ssize_t ev_size = sizeof(struct input_event);
 
-        auto size = read(fd, &ev, ev_size);
-        if (size < ev_size)
-        {
-            throw std::runtime_error("Error in size when reading touch screen");
-        }
+        read(fd, &ev, ev_size);
 
-        if (ev.type == EV_ABS && (ev.code == ABS_X || ev.code == ABS_Y))
+        if (ev.type == EV_SYN)
+            printf("Event type is %s%s%s = Start of New Event\n", KYEL, events[ev.type], KWHT);
+
+        else if (ev.type == EV_KEY && ev.code == 330 && ev.value == 1)
+            printf("Event type is %s%s%s & Event code is %sTOUCH(330)%s & Event value is %s1%s = Touch Starting\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, KWHT);
+
+        else if (ev.type == EV_KEY && ev.code == 330 && ev.value == 0)
+            printf("Event type is %s%s%s & Event code is %sTOUCH(330)%s & Event value is %s0%s = Touch Finished\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, KWHT);
+
+        else if (ev.type == EV_ABS && ev.code == 0 && ev.value > 0)
         {
-            LOG(LogLvl::INFO) << (ev.code == ABS_X ? "X" : "Y") << ev.value;
+            printf("Event type is %s%s%s & Event code is %sX(0)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
+            *rawX = ev.value;
+        }
+        else if (ev.type == EV_ABS && ev.code == 1 && ev.value > 0)
+        {
+            printf("Event type is %s%s%s & Event code is %sY(1)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
+            *rawY = ev.value;
+        }
+        else if (ev.type == EV_ABS && ev.code == 24 && ev.value > 0)
+        {
+            printf("Event type is %s%s%s & Event code is %sPressure(24)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
+            *rawPressure = ev.value;
         }
     }
 }

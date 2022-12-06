@@ -37,7 +37,6 @@ public:
     {
     }
 
-private:
     void run()
     {
 
