@@ -51,8 +51,7 @@ private:
             {
                 continue;
             }
-            printf("-------type %d\tcode %d\tvalue %d\n", ie.type, ie.code, ie.value);
-            printf("\n");
+            LOG(LogLvl::DEBUG) << "type: " << ie.type << " code: " << ie.code << " value: " << ie.value;
         }
     }
 };
