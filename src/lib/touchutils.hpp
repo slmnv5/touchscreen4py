@@ -8,6 +8,7 @@
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <string.h>
+#include "lib/log.hpp"
 
 #define KWHT "\x1B[37m"
 #define KYEL "\x1B[33m"
@@ -46,12 +47,10 @@ int touchscr_info(int *scrXmin, int *scrXmax,
 
 {
 
-    LOG(LogLvl::INFO) << "Touch screen event file: " << fname;
-
     int fd;
     if ((fd = open(fname.c_str(), O_RDONLY)) < 0)
     {
-        LOG(LogLvl::ERROR) << "Could not open device file. Try as root";
+        LOG(LogLvl::ERROR) << "Could not open device file: " << fname;
         return -1;
     }
 
@@ -99,14 +98,10 @@ int touchscr_info(int *scrXmin, int *scrXmax,
     return fd;
 }
 
-void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure, std::string fname)
+void get2(int fd)
 {
 
     struct input_event ev;
-    char name[256] = "Unknown";
-
-    ioctl(fd, EVIOCGNAME(sizeof(name)), name);
-    LOG(LogLvl::INFO) << "device file: " << fname << " device name:" << name;
 
     while (true)
     {
@@ -115,8 +110,7 @@ void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure, std::string
         auto size = read(fd, &ev, ev_size);
         if (size < ev_size)
         {
-            LOG(LogLvl::ERROR) << "Error in size when reading touch screen";
-            return;
+            throw std::runtime_error("Error in size when reading touch screen");
         }
 
         if (ev.type == EVENT_TYPE && (ev.code == EVENT_CODE_X || ev.code == EVENT_CODE_Y))
@@ -125,4 +119,21 @@ void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure, std::string
         }
     }
 }
+
+void get1()
+{
+    std::string dev_id = find_touchscr_event();
+    if ("" == dev_id)
+    {
+        throw std::runtime_error("Cannot find touch screen device");
+    }
+    std::string fname = "/dev/input/event" + dev_id;
+    int fd = open(fname.c_str(), O_RDONLY);
+    if (fd < 0)
+    {
+        throw std::runtime_error("Cannot open touch screen device");
+    }
+    get2(fd);
+}
+
 #endif

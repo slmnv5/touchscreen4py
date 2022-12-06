@@ -32,12 +32,10 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	MousePort *mousePort = nullptr;
-
 	try
 	{
 
-		mousePort = new MousePort();
+		MousePort *mousePort = new MousePort();
 		LOG(LogLvl::INFO) << "Starting MIDI messages processing";
 	}
 	catch (exception &e)

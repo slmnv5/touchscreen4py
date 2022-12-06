@@ -41,6 +41,6 @@ TEST_CASE("Test 2", "[all][basic]")
 
 	SECTION("Section 2")
 	{
-		MousePort mousePort = MousePort();
+		get1();
 	}
 }
