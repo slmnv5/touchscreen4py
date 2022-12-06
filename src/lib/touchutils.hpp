@@ -10,20 +10,42 @@
 #include <string.h>
 #include "lib/log.hpp"
 
-#define KWHT "\x1B[37m"
-#define KYEL "\x1B[33m"
+#include <linux/input.h>
+#include <string.h>
+#include <fcntl.h>
+#include <stdio.h>
 
-#define EVENT_TYPE EV_ABS
-#define EVENT_CODE_X ABS_X
-#define EVENT_CODE_Y ABS_Y
+int fillArrayFromDevice(int fd, int propId, const char *propName, int *minV, int *maxV)
+{
+    const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
+    int arrPropValue[6] = {0, 0, 0, 0, 0, 0};
 
-int framebuff_info(int *xres, int *yres)
+    if (ioctl(fd, EVIOCGABS(propId), arrPropValue) < 0)
+    {
+        LOG(LogLvl::ERROR) << "Could not fill property: " << propName;
+        return -1;
+    }
+    LOG(LogLvl::INFO) << "Properties " << propName;
+    for (int x = 0; x < 6; x++)
+    {
+        if ((x < 3) || arrPropValue[x])
+        {
+            LOG(LogLvl::INFO) << arrPropName[x] << ": " << arrPropValue[x];
+        }
+    }
+    *minV = arrPropValue[1];
+    *maxV = arrPropValue[2];
+
+    return 0;
+}
+
+int getFrameBuffInfo(int *xres, int *yres, std::string fname)
 {
     *xres = *yres = -1;
     struct fb_var_screeninfo var;
     int fb = 0;
-    fb = open("/dev/fb1", O_RDONLY | O_NONBLOCK);
-    if (fb == -1)
+    fb = open(fname.c_str(), O_RDONLY);
+    if (fb < 0)
     {
         return -1;
     }
@@ -42,8 +64,10 @@ int framebuff_info(int *xres, int *yres)
 }
 
 // return screen file descr. and details
-int touchscr_info(int *scrXmin, int *scrXmax,
-                  int *scrYmin, int *scrYmax, std::string fname)
+int getTouchInfo(int *scrXmin, int *scrXmax,
+                 int *scrYmin, int *scrYmax,
+                 int *scrPmin, int *scrPmax,
+                 std::string fname)
 
 {
 
@@ -54,50 +78,16 @@ int touchscr_info(int *scrXmin, int *scrXmax,
         return -1;
     }
 
-    const char *absval[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
-    int absX[6] = {};
-    int absY[6] = {};
+    int r1 = fillArrayFromDevice(fd, ABS_X, "ABS_X", scrXmin, scrXmax);
+    int r2 = fillArrayFromDevice(fd, ABS_Y, "ABS_Y", scrYmin, scrYmax);
+    int r3 = fillArrayFromDevice(fd, ABS_PRESSURE, "ABS_PRESSURE", scrPmin, scrPmax);
+    close(fd);
 
-    if (ioctl(fd, EVIOCGABS(ABS_MT_POSITION_X), absX) < 0)
-    {
-        LOG(LogLvl::ERROR) << "Could not open ABS_MT_POSITION_X";
-        return -1;
-    }
-    if (ioctl(fd, EVIOCGABS(ABS_MT_POSITION_Y), absY) < 0)
-    {
-        LOG(LogLvl::ERROR) << "Could not open ABS_MT_POSITION_Y";
-        return -1;
-    }
-
-    LOG(LogLvl::INFO) << "ABS_MT_POSITION_X Properties";
-    for (int x = 0; x < 6; x++)
-    {
-        if ((x < 3) || absX[x])
-        {
-            LOG(LogLvl::INFO) << absval[x] << ": " << absX[x];
-        }
-    }
-
-    LOG(LogLvl::INFO) << "ABS_MT_POSITION_Y Properties";
-    for (int y = 0; y < 6; y++)
-    {
-        if ((y < 3) || absX[y])
-        {
-            LOG(LogLvl::INFO) << absval[y] << ": " << absY[y];
-        }
-    }
-
-    *scrXmin = absX[1];
-    *scrXmax = absX[2];
-    *scrYmin = absY[1];
-    *scrYmax = absY[2];
+    return (r1 < 0 || r2 < 0 || r3 < 0) ? -1 : 0;
 
     // auto SCALE_X = (1920.0f / absX[2]);
     // auto SCALE_Y = (1080.0f / absY[2]);
-
-    return fd;
 }
-
 void get2(int fd)
 {
 
@@ -113,9 +103,9 @@ void get2(int fd)
             throw std::runtime_error("Error in size when reading touch screen");
         }
 
-        if (ev.type == EVENT_TYPE && (ev.code == EVENT_CODE_X || ev.code == EVENT_CODE_Y))
+        if (ev.type == EV_ABS && (ev.code == ABS_X || ev.code == ABS_Y))
         {
-            LOG(LogLvl::INFO) << (ev.code == EVENT_CODE_X ? "X" : "Y") << ev.value;
+            LOG(LogLvl::INFO) << (ev.code == ABS_X ? "X" : "Y") << ev.value;
         }
     }
 }

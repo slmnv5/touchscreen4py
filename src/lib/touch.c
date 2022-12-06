@@ -9,14 +9,6 @@ Copyright (C) 2013  Mark Williams
 
 int fd;
 
-int openTouchScreen()
-{
-        if ((fd = open("/dev/input/event0", O_RDONLY)) < 0)
-        {
-                return 1;
-        }
-}
-
 void getTouchScreenDetails(int *screenXmin, int *screenXmax, int *screenYmin, int *screenYmax)
 {
         unsigned short id[4];

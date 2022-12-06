@@ -7,7 +7,7 @@
 class MousePort
 {
 private:
-    int screenXmin, screenXmax, screenYmin, screenYmax;
+    int scrXmin, scrXmax, scrYmin, scrYmax, scrPmin, scrPmax;
     int xresolution, yresolution;
     float scaleXvalue, scaleYvalue;
     int rawX, rawY, rawPressure, scaledX, scaledY;
@@ -16,7 +16,7 @@ private:
 public:
     MousePort()
     {
-        if (framebuff_info(&xresolution, &yresolution) < 0)
+        if (getFrameBuffInfo(&xresolution, &yresolution, "/dev/fb1") < 0)
         {
             throw std::runtime_error("Cannot open frame buffer file");
         }
@@ -26,7 +26,7 @@ public:
             throw std::runtime_error("Cannot find touch screen device");
         }
         std::string fname = "/dev/input/event" + dev_id;
-        fd = touchscr_info(&screenXmin, &screenXmax, &screenYmin, &screenYmax, fname);
+        fd = getTouchInfo(&scrXmin, &scrXmax, &scrYmin, &scrYmax, &scrPmin, &scrPmax, fname);
         if (fd == -1)
         {
             throw std::runtime_error("Cannot open touch screen file");
