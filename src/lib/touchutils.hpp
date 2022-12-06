@@ -8,12 +8,9 @@
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <string.h>
-#include "lib/log.hpp"
 
-#include <linux/input.h>
-#include <string.h>
-#include <fcntl.h>
-#include <stdio.h>
+#include "lib/log.hpp"
+#include "lib/utils.hpp"
 
 #define KWHT "\x1B[37m"
 #define KYEL "\x1B[33m"
@@ -91,8 +88,20 @@ int getTouchInfo(int *scrXmin, int *scrXmax,
     // auto SCALE_X = (1920.0f / absX[2]);
     // auto SCALE_Y = (1080.0f / absY[2]);
 }
-void get2(int fd)
+
+void run_test()
 {
+    std::string dev_id = find_touchscr_event();
+    if ("" == dev_id)
+    {
+        throw std::runtime_error("Cannot find touch screen device");
+    }
+    std::string fname = "/dev/input/event" + dev_id;
+    int fd = open(fname.c_str(), O_RDONLY);
+    if (fd < 0)
+    {
+        throw std::runtime_error("Cannot open touch screen device");
+    }
 
     const char *events[EV_MAX + 1] = {};
     events[EV_SYN] = "Sync";
@@ -127,38 +136,22 @@ void get2(int fd)
         else if (ev.type == EV_KEY && ev.code == 330 && ev.value == 0)
             printf("Event type is %s%s%s & Event code is %sTOUCH(330)%s & Event value is %s0%s = Touch Finished\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, KWHT);
 
-        else if (ev.type == EV_ABS && ev.code == 0 && ev.value > 0)
+        else if (ev.type == EV_ABS)
         {
-            printf("Event type is %s%s%s & Event code is %sX(0)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
-            rawX = ev.value;
-        }
-        else if (ev.type == EV_ABS && ev.code == 1 && ev.value > 0)
-        {
-            printf("Event type is %s%s%s & Event code is %sY(1)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
-            rawY = ev.value;
-        }
-        else if (ev.type == EV_ABS && ev.code == 24 && ev.value > 0)
-        {
-            printf("Event type is %s%s%s & Event code is %sPressure(24)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
-            rawPressure = ev.value;
+            if (ev.code == 0 && ev.value > 0)
+            {
+                rawX = ev.value;
+            }
+            else if (ev.code == 1 && ev.value > 0)
+            {
+                rawY = ev.value;
+            }
+            else if (ev.code == 24 && ev.value > 0)
+            {
+                rawPressure = ev.value;
+            }
         }
     }
-}
-
-void get1()
-{
-    std::string dev_id = find_touchscr_event();
-    if ("" == dev_id)
-    {
-        throw std::runtime_error("Cannot find touch screen device");
-    }
-    std::string fname = "/dev/input/event" + dev_id;
-    int fd = open(fname.c_str(), O_RDONLY);
-    if (fd < 0)
-    {
-        throw std::runtime_error("Cannot open touch screen device");
-    }
-    get2(fd);
 }
 
 #endif

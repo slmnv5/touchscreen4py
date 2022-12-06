@@ -9,7 +9,7 @@ class MousePort
 private:
     int scrXmin, scrXmax, scrYmin, scrYmax, scrPmin, scrPmax;
     int xresolution, yresolution;
-    float scaleXvalue, scaleYvalue;
+    float scaleX, scaleY, scaleP;
     int rawX, rawY, rawPressure, scaledX, scaledY;
     int fd;
 
@@ -41,11 +41,26 @@ public:
     {
 
         struct input_event ie;
-
+        int touch_on = 0;
         while (read(fd, &ie, sizeof(struct input_event)) != -1)
         {
+            if (ev.type == EV_KEY && ev.code == 330)
+            {
+                touch_on = ev.value;
+            }
+            else if (ie.type = EV_ABS && ev.code == 0 && ev.value > 0)
+            {
+                rawX = ev.value;
+            })
+            else if (ie.type = EV_ABS && ev.code == 1 && ev.value > 0)
+            {
+                rawY = ev.value;
+            })
+               else if (ie.type = EV_ABS && ev.code == 0 && ev.value > 0)
+            {
+                rawX = ev.value;
+            })
 
-            if (ie.type != EV_REL && ie.type != EV_ABS && ie.type != EV_KEY)
             {
                 continue;
             }
