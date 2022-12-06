@@ -16,17 +16,16 @@ private:
 public:
     MousePort()
     {
+        if (framebuff_info(&xresolution, &yresolution) < 0)
+        {
+            throw std::runtime_error("Cannot open frame buffer file");
+        }
         std::string dev_id = find_touchscr_event();
         if ("" == dev_id)
         {
             throw std::runtime_error("Cannot find touch screen device");
         }
         std::string fname = "/dev/input/event" + dev_id;
-        if (framebuff_info(&xresolution, &yresolution) < 0)
-        {
-            throw std::runtime_error("Cannot open frame buffer file");
-        }
-
         fd = touchscr_info(&screenXmin, &screenXmax, &screenYmin, &screenYmax, fname);
         if (fd == -1)
         {

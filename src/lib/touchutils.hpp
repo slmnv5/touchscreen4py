@@ -33,6 +33,7 @@ int framebuff_info(int *xres, int *yres)
         return -1;
     }
 
+    LOG(LogLvl::INFO) << "Screen resolution X, Y: " << var.xres << ", " << var.yres;
     *xres = var.xres;
     *yres = var.yres;
     close(fb);
@@ -48,7 +49,7 @@ int touchscr_info(int *scrXmin, int *scrXmax,
     int fd;
     if ((fd = open(fname.c_str(), O_RDONLY | O_NONBLOCK)) < 0)
     {
-        LOG(LogLvl::INFO) << "Could not open device file. Try as root" << std::endl;
+        LOG(LogLvl::INFO) << "Could not open device file. Try as root";
         return -1;
     }
 
@@ -59,21 +60,21 @@ int touchscr_info(int *scrXmin, int *scrXmax,
     ioctl(fd, EVIOCGABS(ABS_MT_POSITION_X), absX);
     ioctl(fd, EVIOCGABS(ABS_MT_POSITION_Y), absY);
 
-    LOG(LogLvl::INFO) << "ABS_MT_POSITION_X Properties" << std::endl;
+    LOG(LogLvl::INFO) << "ABS_MT_POSITION_X Properties";
     for (int x = 0; x < 6; x++)
     {
         if ((x < 3) || absX[x])
         {
-            LOG(LogLvl::INFO) << absval[x] << ": " << absX[x] << std::endl;
+            LOG(LogLvl::INFO) << absval[x] << ": " << absX[x];
         }
     }
 
-    LOG(LogLvl::INFO) << "ABS_MT_POSITION_Y Properties" << std::endl;
+    LOG(LogLvl::INFO) << "ABS_MT_POSITION_Y Properties";
     for (int y = 0; y < 6; y++)
     {
         if ((y < 3) || absX[y])
         {
-            LOG(LogLvl::INFO) << absval[y] << ": " << absY[y] << std::endl;
+            LOG(LogLvl::INFO) << absval[y] << ": " << absY[y];
         }
     }
 
