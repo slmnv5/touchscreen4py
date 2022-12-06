@@ -46,10 +46,12 @@ int touchscr_info(int *scrXmin, int *scrXmax,
 
 {
 
+    LOG(LogLvl::INFO) << "Touch screen event file: " << fname;
+
     int fd;
-    if ((fd = open(fname.c_str(), O_RDONLY | O_NONBLOCK)) < 0)
+    if ((fd = open(fname.c_str(), O_RDONLY)) < 0)
     {
-        LOG(LogLvl::INFO) << "Could not open device file. Try as root";
+        LOG(LogLvl::ERROR) << "Could not open device file. Try as root";
         return -1;
     }
 
@@ -57,8 +59,16 @@ int touchscr_info(int *scrXmin, int *scrXmax,
     int absX[6] = {};
     int absY[6] = {};
 
-    ioctl(fd, EVIOCGABS(ABS_MT_POSITION_X), absX);
-    ioctl(fd, EVIOCGABS(ABS_MT_POSITION_Y), absY);
+    if (ioctl(fd, EVIOCGABS(ABS_MT_POSITION_X), absX) < 0)
+    {
+        LOG(LogLvl::ERROR) << "Could not open ABS_MT_POSITION_X";
+        return -1;
+    }
+    if (ioctl(fd, EVIOCGABS(ABS_MT_POSITION_Y), absY) < 0)
+    {
+        LOG(LogLvl::ERROR) << "Could not open ABS_MT_POSITION_Y";
+        return -1;
+    }
 
     LOG(LogLvl::INFO) << "ABS_MT_POSITION_X Properties";
     for (int x = 0; x < 6; x++)
