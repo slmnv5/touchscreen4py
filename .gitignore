@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# make file output
+app_t
+app_d
+app
+

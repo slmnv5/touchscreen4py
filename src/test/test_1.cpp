@@ -2,10 +2,10 @@
 #include "lib/utils.hpp"
 #include "lib/catch.hpp"
 
-TEST_CASE("Test LOG 1", "[all][basic]")
+TEST_CASE("Test 1", "[all][basic]")
 {
 
-	SECTION("Section print 1")
+	SECTION("Section 1")
 	{
 
 		LOG(LogLvl::DEBUG) << "TEST0";
@@ -18,7 +18,7 @@ TEST_CASE("Test LOG 1", "[all][basic]")
 		REQUIRE(Log::toString(static_cast<LogLvl>(3)) == "ERROR");
 	}
 
-	SECTION("Section print 2")
+	SECTION("Section 2")
 	{
 		LOG::ReportingLevel() = LogLvl::WARN;
 		LOG(LogLvl::DEBUG) << "TEST0";
@@ -26,5 +26,19 @@ TEST_CASE("Test LOG 1", "[all][basic]")
 		LOG(LogLvl::WARN) << "TEST2";
 		LOG(LogLvl::ERROR) << "TEST3";
 		LOG::ReportingLevel() = LogLvl::DEBUG;
+	}
+}
+
+TEST_CASE("Test 2", "[all][basic]")
+{
+
+	SECTION("Section 1")
+	{
+		LOG(LogLvl::INFO) << findKbdEvent();
+		LOG(LogLvl::INFO) << findTouchScreenEvent();
+	}
+
+	SECTION("Section 2")
+	{
 	}
 }
