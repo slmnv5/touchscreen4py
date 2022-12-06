@@ -34,8 +34,8 @@ TEST_CASE("Test 2", "[all][basic]")
 
 	SECTION("Section 1")
 	{
-		LOG(LogLvl::INFO) << findKbdEvent();
-		LOG(LogLvl::INFO) << findTouchScreenEvent();
+		LOG(LogLvl::INFO) << "keyboard device: " << findKbdEvent();
+		LOG(LogLvl::INFO) << "touch screen device: " << findTouchScreenEvent();
 	}
 
 	SECTION("Section 2")

@@ -12,7 +12,6 @@
 #define KWHT "\x1B[37m"
 #define KYEL "\x1B[33m"
 
-#define EVENT_DEVICE "/dev/input/event0"
 #define EVENT_TYPE EV_ABS
 #define EVENT_CODE_X ABS_X
 #define EVENT_CODE_Y ABS_Y
@@ -41,12 +40,13 @@ int framebufferInitialize(int *xres, int *yres)
 }
 
 // return screen file descr. and details
-int getTouchScreenDetails2(int *screenXmin, int *screenXmax, int *screenYmin, int *screenYmax)
+int getTouchScInfo(int *screenXmin, int *screenXmax,
+                   int *screenYmin, int *screenYmax, std::string fname)
 
 {
 
     int fd;
-    if ((fd = open("/dev/input/event0", O_RDONLY | O_NONBLOCK)) < 0)
+    if ((fd = open(fname.c_str(), O_RDONLY | O_NONBLOCK)) < 0)
     {
         std::cout << "Could not open device file. Try running as root." << std::endl;
         return -1;
@@ -88,14 +88,14 @@ int getTouchScreenDetails2(int *screenXmin, int *screenXmax, int *screenYmin, in
     return fd;
 }
 
-void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure)
+void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure, std::string fname)
 {
 
     struct input_event ev;
     char name[256] = "Unknown";
 
     ioctl(fd, EVIOCGNAME(sizeof(name)), name);
-    printf("device file = %s\n", EVENT_DEVICE);
+    printf("device file = %s\n", fname);
     printf("device name = %s\n", name);
 
     while (true)
