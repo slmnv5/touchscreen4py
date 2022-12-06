@@ -107,9 +107,9 @@ void get2(int fd)
     events[EV_PWR] = "Power";
     events[EV_FF_STATUS] = "ForceFeedbackStatus";
 
-    int *rawX = 0;
-    int *rawY = 0;
-    int *rawPressure = 0;
+    int rawX;
+    int rawY;
+    int rawPressure;
 
     struct input_event ev;
     while (true)
@@ -130,17 +130,17 @@ void get2(int fd)
         else if (ev.type == EV_ABS && ev.code == 0 && ev.value > 0)
         {
             printf("Event type is %s%s%s & Event code is %sX(0)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
-            *rawX = ev.value;
+            rawX = ev.value;
         }
         else if (ev.type == EV_ABS && ev.code == 1 && ev.value > 0)
         {
             printf("Event type is %s%s%s & Event code is %sY(1)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
-            *rawY = ev.value;
+            rawY = ev.value;
         }
         else if (ev.type == EV_ABS && ev.code == 24 && ev.value > 0)
         {
             printf("Event type is %s%s%s & Event code is %sPressure(24)%s & Event value is %s%d%s\n", KYEL, events[ev.type], KWHT, KYEL, KWHT, KYEL, ev.value, KWHT);
-            *rawPressure = ev.value;
+            rawPressure = ev.value;
         }
     }
 }
