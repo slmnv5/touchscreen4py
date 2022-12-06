@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include "lib/utils.hpp"
 #include "lib/catch.hpp"
+#include "MousePort.hpp"
 
 TEST_CASE("Test 1", "[all][basic]")
 {
@@ -34,11 +35,12 @@ TEST_CASE("Test 2", "[all][basic]")
 
 	SECTION("Section 1")
 	{
-		LOG(LogLvl::INFO) << "keyboard device: " << findKbdEvent();
-		LOG(LogLvl::INFO) << "touch screen device: " << findTouchScreenEvent();
+		LOG(LogLvl::INFO) << "keyboard device: " << find_kbd_event();
+		LOG(LogLvl::INFO) << "touch screen device: " << find_touchscr_event();
 	}
 
 	SECTION("Section 2")
 	{
+		MousePort mousePort = MousePort();
 	}
 }

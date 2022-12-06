@@ -5,7 +5,7 @@
 
 //==================== utility functions ===================================
 
-std::string findKbdEvent()
+std::string find_kbd_event()
 {
     const char *cmd = "grep -E 'Handlers|EV=' /proc/bus/input/devices | "
                       "grep -B1 'EV=120013' | grep -Eo 'event[0-9]+' | grep -Eo '[0-9]+' | tr -d '\n'";
@@ -20,7 +20,7 @@ std::string findKbdEvent()
     return result;
 }
 
-std::string findTouchScreenEvent()
+std::string find_touchscr_event()
 {
     const char *cmd = "grep -E 'Handlers|EV=' /proc/bus/input/devices | "
                       "grep -B1 'EV=b' | grep -Eo 'event[0-9]+' | grep -Eo '[0-9]+' | tr -d '\n'";

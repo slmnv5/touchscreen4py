@@ -16,7 +16,7 @@
 #define EVENT_CODE_X ABS_X
 #define EVENT_CODE_Y ABS_Y
 
-int framebufferInitialize(int *xres, int *yres)
+int framebuff_info(int *xres, int *yres)
 {
     *xres = *yres = -1;
     struct fb_var_screeninfo var;
@@ -40,15 +40,15 @@ int framebufferInitialize(int *xres, int *yres)
 }
 
 // return screen file descr. and details
-int getTouchScInfo(int *screenXmin, int *screenXmax,
-                   int *screenYmin, int *screenYmax, std::string fname)
+int touchscr_info(int *scrXmin, int *scrXmax,
+                  int *scrYmin, int *scrYmax, std::string fname)
 
 {
 
     int fd;
     if ((fd = open(fname.c_str(), O_RDONLY | O_NONBLOCK)) < 0)
     {
-        std::cout << "Could not open device file. Try running as root." << std::endl;
+        LOG(LogLvl::INFO) << "Could not open device file. Try as root" << std::endl;
         return -1;
     }
 
@@ -59,28 +59,28 @@ int getTouchScInfo(int *screenXmin, int *screenXmax,
     ioctl(fd, EVIOCGABS(ABS_MT_POSITION_X), absX);
     ioctl(fd, EVIOCGABS(ABS_MT_POSITION_Y), absY);
 
-    cout << "ABS_MT_POSITION_X Properties" << std::endl;
+    LOG(LogLvl::INFO) << "ABS_MT_POSITION_X Properties" << std::endl;
     for (int x = 0; x < 6; x++)
     {
         if ((x < 3) || absX[x])
         {
-            cout << absval[x] << ": " << absX[x] << std::endl;
+            LOG(LogLvl::INFO) << absval[x] << ": " << absX[x] << std::endl;
         }
     }
 
-    cout << "ABS_MT_POSITION_Y Properties" << std::endl;
+    LOG(LogLvl::INFO) << "ABS_MT_POSITION_Y Properties" << std::endl;
     for (int y = 0; y < 6; y++)
     {
         if ((y < 3) || absX[y])
         {
-            cout << absval[y] << ": " << absY[y] << std::endl;
+            LOG(LogLvl::INFO) << absval[y] << ": " << absY[y] << std::endl;
         }
     }
 
-    *screenXmin = absX[1];
-    *screenXmax = absX[2];
-    *screenYmin = absY[1];
-    *screenYmax = absY[2];
+    *scrXmin = absX[1];
+    *scrXmax = absX[2];
+    *scrYmin = absY[1];
+    *scrYmax = absY[2];
 
     // auto SCALE_X = (1920.0f / absX[2]);
     // auto SCALE_Y = (1080.0f / absY[2]);
@@ -95,8 +95,7 @@ void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure, std::string
     char name[256] = "Unknown";
 
     ioctl(fd, EVIOCGNAME(sizeof(name)), name);
-    printf("device file = %s\n", fname);
-    printf("device name = %s\n", name);
+    LOG(LogLvl::INFO) << "device file: " << fname << " device name:" << name;
 
     while (true)
     {
@@ -105,14 +104,13 @@ void getTouchSample2(int fd, int *rawX, int *rawY, int *rawPressure, std::string
         auto size = read(fd, &ev, ev_size);
         if (size < ev_size)
         {
-            fprintf(stderr, "Error size when reading\n");
+            LOG(LogLvl::ERROR) << "Error in size when reading touch screen";
             return;
         }
 
         if (ev.type == EVENT_TYPE && (ev.code == EVENT_CODE_X || ev.code == EVENT_CODE_Y))
         {
-            printf("%s = %d\n", ev.code == EVENT_CODE_X ? "X" : "Y",
-                   ev.value);
+            LOG(LogLvl::INFO) << (ev.code == EVENT_CODE_X ? "X" : "Y") << ev.value;
         }
     }
 }
