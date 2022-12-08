@@ -15,17 +15,30 @@
 #define KWHT "\x1B[37m"
 #define KYEL "\x1B[33m"
 
-int fillArrayFromDevice(int fd, int propId, const char *propName, int *minV, int *maxV)
+const char *events[EV_MAX + 1] = {
+    events[EV_SYN] = "Sync",
+    events[EV_KEY] = "Key",
+    events[EV_REL] = "Relative",
+    events[EV_ABS] = "Absolute",
+    events[EV_MSC] = "Misc",
+    events[EV_LED] = "LED",
+    events[EV_SND] = "Sound",
+    events[EV_REP] = "Repeat",
+    events[EV_FF] = "ForceFeedback",
+    events[EV_PWR] = "Power",
+    events[EV_FF_STATUS] = "ForceFeedbackStatus"};
+
+void fillArrayFromDevice(int fdscr, int propId, int *minV, int *maxV)
 {
     const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
     int arrPropValue[6] = {0, 0, 0, 0, 0, 0};
 
-    if (ioctl(fd, EVIOCGABS(propId), arrPropValue) < 0)
+    if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
     {
-        LOG(LogLvl::ERROR) << "Could not fill property: " << propName;
-        return -1;
+        close(fdscr);
+        throw std::runtime_error("Cannot read property of touch device: " + std::string(events[propId]));
     }
-    LOG(LogLvl::INFO) << "Properties " << propName;
+    LOG(LogLvl::INFO) << "Properties " << events[propId];
     for (int x = 0; x < 6; x++)
     {
         if ((x < 3) || arrPropValue[x])
@@ -35,8 +48,6 @@ int fillArrayFromDevice(int fd, int propId, const char *propName, int *minV, int
     }
     *minV = arrPropValue[1];
     *maxV = arrPropValue[2];
-
-    return 0;
 }
 
 void getFrameBuffInfo(int *xres, int *yres, int fdfb)
@@ -63,15 +74,9 @@ void getTouchInfo(int *scrXmin, int *scrXmax,
 
 {
 
-    int r1 = fillArrayFromDevice(fdscr, ABS_X, "ABS_X", scrXmin, scrXmax);
-    int r2 = fillArrayFromDevice(fdscr, ABS_Y, "ABS_Y", scrYmin, scrYmax);
-    int r3 = fillArrayFromDevice(fdscr, ABS_PRESSURE, "ABS_PRESSURE", scrPmin, scrPmax);
-
-    if (r1 < 0 || r2 < 0 || r3 < 0)
-    {
-        close(fdscr);
-        throw std::runtime_error("Cannot read touch screen file");
-    }
+    fillArrayFromDevice(fdscr, ABS_X, scrXmin, scrXmax);
+    fillArrayFromDevice(fdscr, ABS_Y, scrYmin, scrYmax);
+    fillArrayFromDevice(fdscr, ABS_PRESSURE, scrPmin, scrPmax);
 };
 
 void run_test()
@@ -87,19 +92,6 @@ void run_test()
     {
         throw std::runtime_error("Cannot open touch screen device");
     }
-
-    const char *events[EV_MAX + 1] = {};
-    events[EV_SYN] = "Sync";
-    events[EV_KEY] = "Key";
-    events[EV_REL] = "Relative";
-    events[EV_ABS] = "Absolute";
-    events[EV_MSC] = "Misc";
-    events[EV_LED] = "LED";
-    events[EV_SND] = "Sound";
-    events[EV_REP] = "Repeat";
-    events[EV_FF] = "ForceFeedback";
-    events[EV_PWR] = "Power";
-    events[EV_FF_STATUS] = "ForceFeedbackStatus";
 
     struct input_event ev;
     while (true)
