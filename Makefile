@@ -26,7 +26,7 @@ app_d: $(OBJ_APP)
 	
 
 app: CXXFLAGS = -std=c++11 -O2 -Wall
-mimap5: $(OBJ_APP)
+app: $(OBJ_APP)
 	@echo "Build release version"
 	cd $(PROJECT_ROOT)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^  $(LDFLAGS)

@@ -39,54 +39,44 @@ int fillArrayFromDevice(int fd, int propId, const char *propName, int *minV, int
     return 0;
 }
 
-int getFrameBuffInfo(int *xres, int *yres, std::string fname)
+void getFrameBuffInfo(int *xres, int *yres, int fdfb)
 {
     *xres = *yres = -1;
     struct fb_var_screeninfo var;
-    int fb = 0;
-    fb = open(fname.c_str(), O_RDONLY);
-    if (fb < 0)
+
+    if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
     {
-        return -1;
+        close(fdfb);
+        throw std::runtime_error("Cannot read buffer file");
     }
 
-    if (ioctl(fb, FBIOGET_VSCREENINFO, &var) < 0)
-    {
-        close(fb);
-        return -1;
-    }
-
-    LOG(LogLvl::INFO) << "Screen resolution X, Y: " << var.xres << ", " << var.yres;
+    LOG(LogLvl::INFO) << "Screen resolution X, Y: " << var.xres << ", " << var.yres << var.bits_per_pixel;
     *xres = var.xres;
     *yres = var.yres;
-    close(fb);
     return 0;
 }
 
 // return screen file descr. and details
-int getTouchInfo(int *scrXmin, int *scrXmax,
-                 int *scrYmin, int *scrYmax,
-                 int *scrPmin, int *scrPmax,
-                 std::string fname)
+void getTouchInfo(int *scrXmin, int *scrXmax,
+                  int *scrYmin, int *scrYmax,
+                  int *scrPmin, int *scrPmax,
+                  int fdscr)
 
 {
 
-    int fd;
-    if ((fd = open(fname.c_str(), O_RDONLY)) < 0)
+    int r1 = fillArrayFromDevice(fdscr, ABS_X, "ABS_X", scrXmin, scrXmax);
+    int r2 = fillArrayFromDevice(fdscr, ABS_Y, "ABS_Y", scrYmin, scrYmax);
+    int r3 = fillArrayFromDevice(fdscr, ABS_PRESSURE, "ABS_PRESSURE", scrPmin, scrPmax);
+
+    if (r1 < 0 || r2 < 0 || r3 < 0)
     {
-        LOG(LogLvl::ERROR) << "Could not open device file: " << fname;
-        return -1;
+        close(fdscr);
+        throw std::runtime_error("Cannot read touch screen file");
     }
+};
 
-    int r1 = fillArrayFromDevice(fd, ABS_X, "ABS_X", scrXmin, scrXmax);
-    int r2 = fillArrayFromDevice(fd, ABS_Y, "ABS_Y", scrYmin, scrYmax);
-    int r3 = fillArrayFromDevice(fd, ABS_PRESSURE, "ABS_PRESSURE", scrPmin, scrPmax);
-    close(fd);
-
-    return (r1 < 0 || r2 < 0 || r3 < 0) ? -1 : 0;
-
-    // auto SCALE_X = (1920.0f / absX[2]);
-    // auto SCALE_Y = (1080.0f / absY[2]);
+// auto SCALE_X = (1920.0f / absX[2]);
+// auto SCALE_Y = (1080.0f / absY[2]);
 }
 
 void run_test()
