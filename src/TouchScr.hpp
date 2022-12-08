@@ -1,31 +1,25 @@
-#ifndef MOUSEPORT_H
-#define MOUSEPORT_H
+#ifndef TOUCHSCR_H
+#define TOUCHSCR_H
 
 // #include "pch.hpp"
 #include "lib/touchutils.hpp"
+#include "lib/framebuff.hpp"
 
-class MousePort
+class TouchScr
 {
 private:
+    FrameBuff fb;
     int minX, minY, minP;
     float scaleX, scaleY, scaleP;
-    int fdscr, fdfb;
+    int fdscr;
     std::thread run_thread;
     bool stopped = false;
 
 public:
-    MousePort()
+    TouchScr() : fb()
     {
         int maxX, maxY, maxP;
-        int resolutionX, resolutionY;
 
-        fdfb = open("/dev/fb1", O_RDWR);
-        if (fdfb < 0)
-        {
-            throw std::runtime_error("Cannot open frame buffer file");
-        }
-
-        getFrameBuffInfo(&resolutionX, &resolutionY, fdfb);
         std::string dev_id = find_touchscr_event();
         if ("" == dev_id)
         {
@@ -41,7 +35,7 @@ public:
         scaleX = resolutionX / (maxX - minX);
         scaleY = resolutionY / (maxY - minY);
         scaleP = 1.0 / (maxP - minP);
-        run_thread = std::thread(&MousePort::run, this);
+        run_thread = std::thread(&TouchScr::run, this);
     }
     virtual ~MousePort()
     {
@@ -118,25 +112,25 @@ extern "C"
 
     void *createTchScr()
     {
-        return new (std::nothrow) MousePort;
+        return new (std::nothrow) TouchScr;
     }
 
     void deleteTchScr(void *ptr)
     {
-        MousePort *x = static_cast<MousePort *>(ptr);
+        TouchScr *x = static_cast<TouchScr *>(ptr);
         delete x;
     }
 
     int stop(void *ptr)
     {
-        MousePort *x = static_cast<MousePort *>(ptr);
+        TouchScr *x = static_cast<TouchScr *>(ptr);
         x->stop();
         return 0;
     }
 
     int start(void *ptr)
     {
-        MousePort *x = static_cast<MousePort *>(ptr);
+        TouchScr *x = static_cast<TouchScr *>(ptr);
         x->start();
         return 0;
     }
@@ -145,7 +139,7 @@ extern "C"
     {
         try
         {
-            MousePort *x = static_cast<MousePort *>(ptr);
+            TouchScr *x = static_cast<TouchScr *>(ptr);
             std::string temp = "x->getID()";
             return temp.c_str();
         }
@@ -160,7 +154,7 @@ extern "C"
 
         try
         {
-            MousePort *x = static_cast<MousePort *>(ptr);
+            TouchScr *x = static_cast<TouchScr *>(ptr);
             return x->setText(aa);
         }
         catch (...)

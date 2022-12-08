@@ -50,22 +50,6 @@ void fillArrayFromDevice(int fdscr, int propId, int *minV, int *maxV)
     *maxV = arrPropValue[2];
 }
 
-void getFrameBuffInfo(int *xres, int *yres, int fdfb)
-{
-    *xres = *yres = -1;
-    struct fb_var_screeninfo var;
-
-    if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
-    {
-        close(fdfb);
-        throw std::runtime_error("Cannot read buffer file");
-    }
-
-    LOG(LogLvl::INFO) << "Screen resolution X, Y: " << var.xres << ", " << var.yres << var.bits_per_pixel;
-    *xres = var.xres;
-    *yres = var.yres;
-}
-
 // return screen file descr. and details
 void getTouchInfo(int *scrXmin, int *scrXmax,
                   int *scrYmin, int *scrYmax,
