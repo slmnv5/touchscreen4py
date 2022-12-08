@@ -82,6 +82,11 @@ public:
                 put_pixel_16bpp(h + (x - 2), w + (y - 2), def_r[c], def_g[c], def_b[c]);
     }
 
+    void drawSquare(int x, int y)
+    {
+        drawSquare(x, y, 20, 20, 229);
+    }
+
     float resx() const
     {
         return resX;

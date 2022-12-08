@@ -95,13 +95,7 @@ private:
             {
                 scaledY = (ev.value - minY) * scaleY;
             }
-            else if (ev.type == EV_ABS && ev.code == ABS_PRESSURE && ev.value > 0)
-            {
-            }
-            else
-            {
-                continue;
-            }
+            fb.drawSquare(scaledX, scaledY);
             LOG(LogLvl::DEBUG) << "type: " << events[ev.type] << " code: " << ev.code << " value: " << ev.value;
         }
     }
