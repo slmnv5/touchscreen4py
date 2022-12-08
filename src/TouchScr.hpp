@@ -1,9 +1,9 @@
 #ifndef TOUCHSCR_H
 #define TOUCHSCR_H
 
-// #include "pch.hpp"
+#include "pch.hpp"
 #include "lib/touchutils.hpp"
-#include "lib/framebuff.hpp"
+#include "FrameBuff.hpp"
 
 class TouchScr
 {
@@ -31,13 +31,13 @@ public:
         {
             throw std::runtime_error("Could not open touch screen device file: " + fname);
         }
-        getTouchInfo(&minX, &maxX, &minY, &maxY, &minP, &maxP, fdscr);
-        scaleX = resolutionX / (maxX - minX);
-        scaleY = resolutionY / (maxY - minY);
+        // getTouchInfo(&minX, &maxX, &minY, &maxY, &minP, &maxP, fdscr);
+        scaleX = fb.resx() / (maxX - minX);
+        scaleY = fb.resy() / (maxY - minY);
         scaleP = 1.0 / (maxP - minP);
         run_thread = std::thread(&TouchScr::run, this);
     }
-    virtual ~MousePort()
+    virtual ~TouchScr()
     {
         run_thread.join();
     }

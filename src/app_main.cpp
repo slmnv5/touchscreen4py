@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	try
 	{
 
-		MousePort *mousePort = new MousePort();
+		TouchScr *ts = new TouchScr();
 		LOG(LogLvl::INFO) << "Starting MIDI messages processing";
 	}
 	catch (exception &e)

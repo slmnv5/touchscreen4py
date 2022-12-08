@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <linux/fb.h>
 #include <sys/mman.h>
+#include <sys/ioctl.h>
 #include "lib/log.hpp"
 #include "lib/utils.hpp"
 
@@ -41,7 +42,8 @@ static unsigned short def_b[] =
 class FrameBuff
 {
 private:
-    int fdfb = -1;
+    int fdfb = -1; // file descriptor
+    char *fbp = 0; // pointer to memory
     int resX, resY;
     int line_length = 0;
 
@@ -53,9 +55,7 @@ public:
         {
             throw std::runtime_error("Cannot open frame buffer file");
         }
-        int bpp;
-        getFrameBuffInfo(&resolutionX, &resolutionY, &bpp, fdfb);
-        line_length = resX * bpp;
+        initBuff();
     }
 
     void put_pixel_16bpp(int x, int y, int r, int g, int b)
@@ -82,11 +82,19 @@ public:
                 put_pixel_16bpp(h + (x - 2), w + (y - 2), def_r[c], def_g[c], def_b[c]);
     }
 
+    float resx() const
+    {
+        return resX;
+    }
+    float resy() const
+    {
+        return resY;
+    }
+
 private:
-    void getFrameBuffInfo(int *xres, int *yres, int *bpp)
+    void initBuff()
     {
 
-        *xres = *yres = -1;
         struct fb_var_screeninfo var;
 
         if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
@@ -96,9 +104,19 @@ private:
         }
 
         LOG(LogLvl::INFO) << "Screen resolution X, Y: " << var.xres << ", " << var.yres << var.bits_per_pixel;
-        *xres = var.xres;
-        *yres = var.yres;
-        *bpp = var.bits_per_pixel;
+        resX = var.xres;
+        resY = var.yres;
+        line_length = var.bits_per_pixel * resX;
+
+        // map framebuffer to user memory
+        fbp = (char *)mmap(0, line_length * resY, PROT_READ | PROT_WRITE,
+                           MAP_SHARED, fdfb, 0);
+        int int_result = reinterpret_cast<std::intptr_t>(fbp);
+        if (int_result == -1)
+        {
+            close(fdfb);
+            throw std::runtime_error("Cannot map buffer memory");
+        }
     }
 };
 
