@@ -1,5 +1,3 @@
-
-
 #ifndef FRAMEBUFF_H
 #define FRAMEBUFF_H
 
@@ -104,4 +102,4 @@ private:
     }
 };
 
-endif
+#endif
