@@ -108,7 +108,7 @@ private:
             throw std::runtime_error("Cannot read buffer file");
         }
 
-        LOG(LogLvl::INFO) << "Screen resolution X, Y: " << var.xres << ", " << var.yres << var.bits_per_pixel;
+        LOG(LogLvl::INFO) << "Screen resolution X, Y, BPP: " << var.xres << ", " << var.yres << ", " << var.bits_per_pixel;
         resX = var.xres;
         resY = var.yres;
         line_length = var.bits_per_pixel * resX;
