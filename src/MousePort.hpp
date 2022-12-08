@@ -55,10 +55,12 @@ public:
     {
         stopped = false;
     }
-    int setValue(const char *)
+    int setText(const char *)
     {
         return 0;
     }
+
+private:
     void run()
     {
         int scaledX, scaledY, savedX, savedY;
@@ -106,7 +108,7 @@ public:
             {
                 continue;
             }
-            LOG(LogLvl::DEBUG) << "type: " << ev.type << " code: " << ev.code << " value: " << ev.value;
+            LOG(LogLvl::DEBUG) << "type: " << events[ev.type] << " code: " << ev.code << " value: " << ev.value;
         }
     }
 };
@@ -114,12 +116,12 @@ public:
 extern "C"
 {
 
-    void *createClass(void)
+    void *createTchScr()
     {
         return new (std::nothrow) MousePort;
     }
 
-    void deleteClass(void *ptr)
+    void deleteTchScr(void *ptr)
     {
         MousePort *x = static_cast<MousePort *>(ptr);
         delete x;
@@ -159,7 +161,7 @@ extern "C"
         try
         {
             MousePort *x = static_cast<MousePort *>(ptr);
-            return x->setValue(aa);
+            return x->setText(aa);
         }
         catch (...)
         {
