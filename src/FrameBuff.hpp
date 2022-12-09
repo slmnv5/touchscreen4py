@@ -126,7 +126,15 @@ private:
             close(fdfb);
             throw std::runtime_error("Cannot map buffer memory");
         }
-        LOG(LogLvl::INFO) << "Frame buffer memory mapped, res: " << int_result << " ptr: " << fbp;
+        LOG(LogLvl::INFO) << "Frame buffer memory mapped, result: " << int_result;
+        try
+        {
+            this->put_pixel_16bpp(11, 11, 11, 11, 11);
+        }
+        catch (std::exception e)
+        {
+            LOG(LogLvl::ERROR) << "Error doing pixel: " << e.what();
+        }
     }
 };
 
