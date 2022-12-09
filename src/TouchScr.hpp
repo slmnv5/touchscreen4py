@@ -112,18 +112,24 @@ public:
                         LOG(LogLvl::DEBUG) << "Button click" << scaledX << scaledY;
                     }
                 }
+                LOG(LogLvl::DEBUG) << "Touch: " << touch_on;
             }
 
             else if (ev.type == EV_ABS && ev.code == ABS_X && ev.value > 0)
             {
                 scaledX = (ev.value - minX) * scaleX;
+                LOG(LogLvl::DEBUG) << "X value: " << scaledX;
             }
             else if (ev.type == EV_ABS && ev.code == ABS_Y && ev.value > 0)
             {
                 scaledY = (ev.value - minY) * scaleY;
+                LOG(LogLvl::DEBUG) << "Y value: " << scaledY;
             }
-            fb.drawSquare(scaledX, scaledY, 25, 25, GREEN);
-            LOG(LogLvl::DEBUG) << "type: " << events[ev.type] << " code: " << ev.code << " value: " << ev.value;
+            else
+            {
+                continue;
+            }
+            // fb.drawSquare(scaledX, scaledY, 25, 25, GREEN);
         }
     }
     void run_test()
