@@ -61,7 +61,7 @@ public:
             throw std::runtime_error("Cannot find touch screen device");
         }
         std::string fname = "/dev/input/event" + dev_id;
-        int fdscr = open(fname.c_str(), O_RDONLY);
+        fdscr = open(fname.c_str(), O_RDONLY);
         if (fdscr < 0)
         {
             throw std::runtime_error("Could not open touch screen device file: " + fname);
@@ -152,25 +152,17 @@ public:
 private:
     void getFromDevice(int propId, int &minV, int &maxV)
     {
-
-        char name[256] = "Unknown";
-        ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
-        LOG(LogLvl::INFO) << "==============: " << name;
-
         const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
         int arrPropValue[6] = {};
 
         if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
         {
-            LOG(LogLvl::WARN) << "Possible error: " << errno << ", " << strerror(errno);
+            throw std::runtime_error("Cannot read touch screen device");
         }
         LOG(LogLvl::INFO) << "ABS. property: " << propId;
         for (int x = 0; x < 6; x++)
         {
-            if ((x < 3) || arrPropValue[x])
-            {
-                LOG(LogLvl::INFO) << arrPropName[x] << ": " << arrPropValue[x];
-            }
+            LOG(LogLvl::INFO) << arrPropName[x] << ": " << arrPropValue[x];
         }
         minV = arrPropValue[1];
         maxV = arrPropValue[2];
