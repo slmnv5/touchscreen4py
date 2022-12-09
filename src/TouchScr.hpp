@@ -49,7 +49,7 @@ class TouchScr
 private:
     int fdscr;
     int minX, minY, minP;
-    double scaleX, scaleY, scaleP;
+    float scaleX, scaleY, scaleP;
 
 public:
     bool stopped = false;
@@ -77,12 +77,12 @@ public:
         int minV, maxV;
         getFromDevice(ABS_X, minV, maxV);
         minX = minV;
-        scaleX = resx / (maxV - minV);
+        scaleX = 1.0 / (maxV - minV) * resx;
         LOG(LogLvl::INFO) << "ssssssssss" << minV << "sssssss" << maxV << "ssss" << resx << "Ss" << scaleX;
 
         getFromDevice(ABS_Y, minV, maxV);
         minY = minV;
-        scaleY = resx / (maxV - minV);
+        scaleY = 1.0 / (maxV - minV) * resy;
 
         getFromDevice(ABS_PRESSURE, minV, maxV);
         minP = minV;
