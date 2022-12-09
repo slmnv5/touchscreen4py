@@ -154,9 +154,9 @@ private:
         if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
         {
             close(fdscr);
-            throw std::runtime_error("Cannot read property of touch device: " + std::string(events[propId]));
+            throw std::runtime_error("Cannot read touch device, ABS. property: " + propId);
         }
-        LOG(LogLvl::INFO) << "Properties " << events[propId];
+        LOG(LogLvl::INFO) << "ABS. property: " << propId;
         for (int x = 0; x < 6; x++)
         {
             if ((x < 3) || arrPropValue[x])
