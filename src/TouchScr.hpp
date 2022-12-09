@@ -78,7 +78,6 @@ public:
         getFromDevice(ABS_X, minV, maxV);
         minX = minV;
         scaleX = 1.0 / (maxV - minV) * resx;
-        LOG(LogLvl::INFO) << "ssssssssss" << minV << "sssssss" << maxV << "ssss" << resx << "Ss" << scaleX;
 
         getFromDevice(ABS_Y, minV, maxV);
         minY = minV;
@@ -139,7 +138,7 @@ public:
             {
                 continue;
             }
-            // fb.drawSquare(scaledX, scaledY, 25, 25, GREEN);
+            fb.drawSquare(scaledX, scaledY, 25, 25, GREEN);
         }
     }
     void run_test()
