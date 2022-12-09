@@ -78,6 +78,7 @@ public:
         getFromDevice(ABS_X, minV, maxV);
         minX = minV;
         scaleX = resx / (maxV - minV);
+        LOG(LogLvl::INFO) << "ssssssssss" << minV << "sssssss" << maxV << "ssss" << resx << "Ss" << scaleX;
 
         getFromDevice(ABS_Y, minV, maxV);
         minY = minV;
