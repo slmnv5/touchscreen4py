@@ -56,6 +56,10 @@ public:
 
     TouchScr(int resx, int resy)
     {
+        if (resx <= 0 || resy <= 0)
+        {
+            throw std::runtime_error("Screen resolution must be positive");
+        }
         std::string dev_id = find_touchscr_event();
         if ("" == dev_id)
         {
@@ -78,7 +82,7 @@ public:
         scaleX = resx / (maxX - minX);
         scaleY = resy / (maxY - minY);
         scaleP = 1.0 / (maxP - minP);
-        LOG(LogLvl::INFO) << "Opened touch screen device: " << name << ", scaleX: " << scaleX << ", scaleY" << scaleY;
+        LOG(LogLvl::INFO) << "Opened touch screen device: " << name << ", scaleX: " << scaleX << ", scaleY: " << scaleY;
     }
     ~TouchScr() {}
 
@@ -159,7 +163,7 @@ public:
 private:
     void getFromDevice(int propId, int &minV, int &maxV)
     {
-        const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
+        // const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
         int arrPropValue[6] = {};
 
         if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)

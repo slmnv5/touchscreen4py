@@ -119,7 +119,7 @@ private:
             close(fdfb);
             throw std::runtime_error("Cannot map buffer memory");
         }
-        LOG(LogLvl::DEBUG) << "Frame buffer memory mapped, result: " << int_result;
+        LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
     }
 };
 
