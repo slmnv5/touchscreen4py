@@ -6,7 +6,7 @@
 #include "FrameBuff.hpp"
 #include "TouchScr.hpp"
 
-class TouchAndBuff
+class TouchAndBuff1
 {
 private:
     FrameBuff fb;
@@ -15,11 +15,11 @@ private:
     std::thread run_thread;
 
 public:
-    TouchAndBuff() : fb(), ts(fb.resx(), fb.resy())
+    TouchAndBuff1() : fb(), ts(fb.resx(), fb.resy())
     {
-        run_thread = std::thread(&TouchAndBuff::run, this);
+        run_thread = std::thread(&TouchAndBuff1::run, this);
     }
-    virtual ~TouchAndBuff()
+    virtual ~TouchAndBuff1()
     {
         run_thread.join();
     }
@@ -47,25 +47,25 @@ extern "C"
 
     void *createTchScr()
     {
-        return new (std::nothrow) TouchAndBuff;
+        return new (std::nothrow) TouchAndBuff1;
     }
 
     void deleteTchScr(void *ptr)
     {
-        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
+        TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
         delete x;
     }
 
     int stop(void *ptr)
     {
-        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
+        TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
         x->stop();
         return 0;
     }
 
     int start(void *ptr)
     {
-        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
+        TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
         x->start();
         return 0;
     }
@@ -74,7 +74,7 @@ extern "C"
     {
         try
         {
-            TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
+            TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
             std::string temp = "x->getID()";
             return temp.c_str();
         }
@@ -89,7 +89,7 @@ extern "C"
 
         try
         {
-            TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
+            TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
             return x->setText(aa);
         }
         catch (...)

@@ -36,10 +36,9 @@ TEST_CASE("Test 2", "[all][basic]")
 
 	SECTION("Section 1")
 	{
-		LOG(LogLvl::INFO) << "touch screen device: " << find_touchscr_event();
+		LOG(LogLvl::INFO) << "Touch screen device: " << find_touchscr_event();
 	}
 
-	FrameBuff fb;
 	SECTION("Section 2")
 	{
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
