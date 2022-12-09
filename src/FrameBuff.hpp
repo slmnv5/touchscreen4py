@@ -56,7 +56,6 @@ public:
             throw std::runtime_error("Cannot open frame buffer file");
         }
         initBuff();
-        LOG(LogLvl::INFO) << "Cleared screen";
     }
 
     void put_pixel_16bpp(int x, int y, int r, int g, int b)
@@ -101,7 +100,7 @@ private:
         }
         screensize = fix.smem_len;
         linelen = fix.line_length;
-        LOG(LogLvl::INFO) << "Screen memory, line size: " << screensize << ", " << linelen;
+        LOG(LogLvl::DEBUG) << "Screen memory, line size: " << screensize << ", " << linelen;
 
         if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
         {
@@ -110,7 +109,7 @@ private:
         }
         resX = var.xres;
         resY = var.yres;
-        LOG(LogLvl::INFO) << "Screen resolution X, Y, BPP: " << resX << ", " << resY << ", " << var.bits_per_pixel;
+        LOG(LogLvl::DEBUG) << "Screen resolution X, Y, BPP: " << resX << ", " << resY << ", " << var.bits_per_pixel;
 
         // map framebuffer to user memory
         fbp = (char *)mmap(0, screensize * resY, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
@@ -120,7 +119,7 @@ private:
             close(fdfb);
             throw std::runtime_error("Cannot map buffer memory");
         }
-        LOG(LogLvl::INFO) << "Frame buffer memory mapped, result: " << int_result;
+        LOG(LogLvl::DEBUG) << "Frame buffer memory mapped, result: " << int_result;
     }
 };
 

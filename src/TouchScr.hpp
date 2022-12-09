@@ -11,6 +11,7 @@
 
 #include "lib/log.hpp"
 #include "FrameBuff.hpp"
+#include "pch.hpp"
 
 std::string find_touchscr_event()
 {
@@ -162,7 +163,7 @@ private:
         LOG(LogLvl::INFO) << "ABS. property: " << propId;
         for (int x = 0; x < 6; x++)
         {
-            LOG(LogLvl::INFO) << arrPropName[x] << ": " << arrPropValue[x];
+            LOG(LogLvl::DEBUG) << arrPropName[x] << ": " << arrPropValue[x];
         }
         minV = arrPropValue[1];
         maxV = arrPropValue[2];
