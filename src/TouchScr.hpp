@@ -136,7 +136,10 @@ public:
             {
                 continue;
             }
-            fb.drawSquare(scaledX, scaledY, 25, 25, COLOR_INDEX_T::GREEN);
+            assert(0 <= scaledX <= 480);
+            assert(0 <= scaledY <= 320);
+
+            fb.drawSquare(scaledX, scaledY, 11, 11, COLOR_INDEX_T::GREEN);
         }
     }
     void run_test()
