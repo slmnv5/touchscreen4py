@@ -55,8 +55,6 @@ public:
             throw std::runtime_error("Cannot open frame buffer file");
         }
         initBuff();
-        drawSquare(111, 111);
-        drawSquare(222, 222);
     }
 
     void put_pixel_16bpp(int x, int y, int r, int g, int b)
@@ -85,7 +83,7 @@ public:
 
     void drawSquare(int x, int y)
     {
-        drawSquare(x, y, 20, 20, 229);
+        drawSquare(x, y, 20, 20, 29);
     }
 
     float resx() const
