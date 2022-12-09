@@ -66,7 +66,9 @@ public:
         {
             throw std::runtime_error("Could not open touch screen device file: " + fname);
         }
-        LOG(LogLvl::INFO) << "Opened event: " << fname;
+        char name[256] = "Unknown";
+        ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
+        LOG(LogLvl::INFO) << "Opened touch screen device: " << name;
 
         int maxX, maxY, maxP;
         getFromDevice(ABS_X, minX, maxX);
@@ -151,7 +153,7 @@ private:
     void getFromDevice(int propId, int &minV, int &maxV)
     {
         const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
-        int arrPropValue[6] = {0, 0, 0, 0, 0, 0};
+        int arrPropValue[6] = {};
 
         if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
         {
