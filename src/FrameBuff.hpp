@@ -60,7 +60,12 @@ public:
 
     void put_pixel_16bpp(int x, int y, int r, int g, int b)
     {
-        unsigned int pix_offset;
+        int offset = x * 2 + y * linelen;
+        if (offset < 0 || offset > this->screensize - 2)
+        {
+            LOG(LogLvl::WARN) << "Incorrect offset: " << offset;
+        }
+        unsigned int pix_offset = offset;
         unsigned short c;
         pix_offset = x * 2 + y * linelen;
         c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
