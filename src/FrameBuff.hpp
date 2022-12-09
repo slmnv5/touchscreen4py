@@ -114,11 +114,11 @@ private:
         }
 
         LOG(LogLvl::INFO) << "Screen resolution X, Y, BPP: " << var.xres << ", " << var.yres << ", " << var.bits_per_pixel;
-        LOG(LogLvl::INFO) << "Screen size: " << line_length << ", " << screensize;
 
         resX = var.xres;
         resY = var.yres;
         line_length = var.bits_per_pixel * resX;
+        LOG(LogLvl::INFO) << "=========Screen size: " << line_length << ", " << screensize;
 
         // map framebuffer to user memory
         fbp = (char *)mmap(0, line_length * resY, PROT_READ | PROT_WRITE,
