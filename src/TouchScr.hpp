@@ -155,9 +155,9 @@ private:
         const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
         int arrPropValue[6] = {};
 
-        if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) == -1)
+        if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
         {
-            LOG(LogLvl::ERROR) << "Error: " << errno;
+            LOG(LogLvl::ERROR) << "Error: " << errno << ", " << strerror(errno);
             close(fdscr);
             throw std::runtime_error("Cannot read touch device, ABS. property: " + std::to_string(propId));
         }
