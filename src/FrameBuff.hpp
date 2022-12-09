@@ -118,7 +118,10 @@ private:
         LOG(LogLvl::DEBUG) << "var.xoffset,  var.xres_virtual,  var.left_margin: "
                            << var.xoffset << ", " << var.xres_virtual << ", " << var.left_margin;
 
-        // map framebuffer to user memory
+        linelen = resX * (var.bits_per_pixel / 2);
+        screensize = resY * linelen;
+        LOG(LogLvl::DEBUG) << "CORRECTED screen memory, line size: " << screensize << ", " << linelen;
+
         fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
         int int_result = reinterpret_cast<std::intptr_t>(fbp);
         if (int_result == -1)
