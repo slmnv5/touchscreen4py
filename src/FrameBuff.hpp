@@ -58,7 +58,8 @@ public:
         int x, y;
         for (x = 0; x < resX; x++)
             for (y = 0; y < resY; y++)
-                put_pixel_16bpp(x, y, 111, 0, 0);
+                put_pixel_16bpp(x, y, 15, 0, 0);
+        LOG(LogLvl::INFO) << "Cleared screen";
     }
 
     void put_pixel_16bpp(int x, int y, int r, int g, int b)
