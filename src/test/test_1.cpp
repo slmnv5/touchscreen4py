@@ -41,7 +41,9 @@ TEST_CASE("Test 2", "[all][basic]")
 
 	SECTION("Section 2")
 	{
-		TouchAndBuff tb;
-		tb.run();
+		FrameBuff fb;
+		fb.drawSquare(22, 22);
+		fb.drawSquare(33, 33);
+		fb.drawSquare(77, 77);
 	}
 }
