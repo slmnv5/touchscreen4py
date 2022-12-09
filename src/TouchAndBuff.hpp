@@ -36,7 +36,6 @@ public:
         return 0;
     }
 
-protected:
     void run()
     {
         ts.run(fb);

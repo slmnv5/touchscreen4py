@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include "lib/utils.hpp"
 #include "lib/catch.hpp"
-#include "TouchScr.hpp"
+#include "TouchAndBuff.hpp"
 
 TEST_CASE("Test 1", "[all][basic]")
 {
@@ -41,7 +41,7 @@ TEST_CASE("Test 2", "[all][basic]")
 
 	SECTION("Section 2")
 	{
-		TouchScr msp;
-		msp.setText("ssss");
+		TouchAndBuff tb;
+		tb.run();
 	}
 }
