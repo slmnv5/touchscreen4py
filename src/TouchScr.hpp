@@ -87,7 +87,8 @@ public:
         minP = minV;
         scaleP = 1.0 / (maxV - minV);
 
-        LOG(LogLvl::INFO) << "Opened touch screen device: " << name << ", scaleX: " << scaleX << ", scaleY: " << scaleY;
+        LOG(LogLvl::INFO) << "Opened touch screen device: " << name << ", scaleX: " << scaleX << ", scaleY: " << scaleY
+                          << ", minX: " << minX << ", minY: " << minY;
     }
     ~TouchScr() {}
 
@@ -121,24 +122,21 @@ public:
                         LOG(LogLvl::DEBUG) << "Button click" << scaledX << scaledY;
                     }
                 }
-                LOG(LogLvl::DEBUG) << "Touch: " << touch_on;
             }
 
-            else if (ev.type == EV_ABS && ev.code == ABS_X && ev.value > 0)
+            else if (ev.type == EV_ABS && ev.code == ABS_X && ev.value > minX)
             {
                 scaledX = (ev.value - minX) * scaleX;
-                LOG(LogLvl::DEBUG) << "X value: " << scaledX;
             }
-            else if (ev.type == EV_ABS && ev.code == ABS_Y && ev.value > 0)
+            else if (ev.type == EV_ABS && ev.code == ABS_Y && ev.value > minY)
             {
                 scaledY = (ev.value - minY) * scaleY;
-                LOG(LogLvl::DEBUG) << "Y value: " << scaledY;
             }
             else
             {
                 continue;
             }
-            fb.drawSquare(scaledX, scaledY, 25, 25, GREEN);
+            fb.drawSquare(scaledX, scaledY, 25, 25, COLOR_INDEX_T::GREEN);
         }
     }
     void run_test()
