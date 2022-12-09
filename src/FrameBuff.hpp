@@ -110,6 +110,8 @@ private:
         resX = var.xres;
         resY = var.yres;
         LOG(LogLvl::DEBUG) << "Screen resolution X, Y, BPP: " << resX << ", " << resY << ", " << var.bits_per_pixel;
+        LOG(LogLvl::DEBUG) << "var.xoffset,  var.xres_virtual,  var.left_margin: "
+                           << var.xoffset << ", " << var.xres_virtual << ", " << var.left_margin;
 
         // map framebuffer to user memory
         fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
