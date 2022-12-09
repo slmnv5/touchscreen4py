@@ -46,7 +46,11 @@ TEST_CASE("Test 2", "[all][basic]")
 		LOG(LogLvl::INFO) << "Frame buffer created";
 		fb.drawSquare(12, 12, 15, 15, COLOR_INDEX_T::RED);
 		LOG(LogLvl::INFO) << "Square draw done!!!";
-		fb.drawSquare(133, 233, 22, 22, COLOR_INDEX_T::BLUE);
+		fb.drawSquare(473, 233, 22, 22, COLOR_INDEX_T::WHITE);
+		fb.drawSquare(133, 310, 22, 22, COLOR_INDEX_T::BLUE);
+		fb.drawSquare(223, 233, 22, 22, COLOR_INDEX_T::RED);
+		fb.drawSquare(453, 13, 22, 22, COLOR_INDEX_T::YELLOW);
+
 		assert(fb.resx() > 10);
 		assert(fb.resy() > 10);
 
