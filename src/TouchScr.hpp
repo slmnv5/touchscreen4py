@@ -117,7 +117,7 @@ public:
             {
                 scaledY = (ev.value - minY) * scaleY;
             }
-            fb.drawSquare(scaledX, scaledY);
+            // fb.drawSquare(scaledX, scaledY);
             LOG(LogLvl::DEBUG) << "type: " << events[ev.type] << " code: " << ev.code << " value: " << ev.value;
         }
     }

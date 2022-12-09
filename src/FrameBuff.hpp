@@ -73,7 +73,7 @@ public:
         // some magic to work out the color
         c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
 
-        LOG(LogLvl::INFO) << "Put pixel: " << c;
+        LOG(LogLvl::INFO) << "Put pixel: " << x << ", " << y << ", " << c;
         // write 'two bytes at once'
         *((unsigned short *)(fbp + pix_offset)) = c;
     }
@@ -87,7 +87,7 @@ public:
                 put_pixel_16bpp(h + (x - 2), w + (y - 2), def_r[c], def_g[c], def_b[c]);
     }
 
-    void drawSquare(int x, int y)
+    void drawSquare1(int x, int y)
     {
         drawSquare(x, y, 20, 20, 29);
     }
