@@ -94,7 +94,7 @@ public:
 
     void run(FrameBuff &fb)
     {
-        int scaledX, scaledY, savedX, savedY;
+        int valx, valy, savex, savey;
         auto moment = std::chrono::steady_clock::now();
         int touch_on = 0;
 
@@ -110,59 +110,36 @@ public:
                 touch_on = ev.value;
                 if (touch_on)
                 {
-                    savedX = scaledX;
-                    savedY = scaledY;
+                    savex = valx;
+                    savey = valy;
                     moment = std::chrono::steady_clock::now();
                 }
                 else
                 {
                     auto duration = moment - std::chrono::steady_clock::now();
-                    if (duration.count() > 0.5 && abs(scaledX - savedX) / scaleX < 0.1 && abs(scaledY - savedY) / scaleY < 0.1)
+                    if (duration.count() > 0.5 && abs(valx - savex) / scaleX < 0.1 && abs(valy - savey) / scaleY < 0.1)
                     {
-                        LOG(LogLvl::DEBUG) << "Button click" << scaledX << scaledY;
+                        LOG(LogLvl::DEBUG) << "Button click" << valx << valy;
                     }
                 }
             }
 
             else if (ev.type == EV_ABS && ev.code == ABS_X && ev.value > minX)
             {
-                scaledX = (ev.value - minX) * scaleX;
+                valx = (ev.value - minX) * scaleX;
             }
             else if (ev.type == EV_ABS && ev.code == ABS_Y && ev.value > minY)
             {
-                scaledY = (ev.value - minY) * scaleY;
+                valy = (ev.value - minY) * scaleY;
             }
             else
             {
                 continue;
             }
-            assert(0 <= scaledX <= 480);
-            assert(0 <= scaledY <= 320);
-
-            fb.drawSquare(scaledX, scaledY, 11, 11, COLOR_INDEX_T::GREEN);
-        }
-    }
-    void run_test()
-    {
-        std::string dev_id = find_touchscr_event();
-        if ("" == dev_id)
-        {
-            throw std::runtime_error("Cannot find touch screen device");
-        }
-        std::string fname = "/dev/input/event" + dev_id;
-        int fd = open(fname.c_str(), O_RDONLY);
-        if (fd < 0)
-        {
-            throw std::runtime_error("Cannot open touch screen device");
-        }
-
-        struct input_event ev;
-        while (true)
-        {
-            const ssize_t ev_size = sizeof(struct input_event);
-
-            read(fd, &ev, ev_size);
-            LOG(LogLvl::DEBUG) << "type: " << events[ev.type] << " code: " << ev.code << " value: " << ev.value;
+            assert(0 <= valx <= 480);
+            assert(0 <= valy <= 320);
+            LOG(LogLvl::DEBUG) << "valx, valy" << valx << ", " << valy;
+            // fb.drawSquare(valx, valy, 11, 11, COLOR_INDEX_T::GREEN);
         }
     }
 
