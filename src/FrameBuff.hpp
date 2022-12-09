@@ -56,9 +56,9 @@ public:
         }
         initBuff();
         int x, y;
-        for (x = 0; x < resX; x++)
-            for (y = 0; y < resY; y++)
-                put_pixel_16bpp(x, y, 15, 0, 0);
+        for (x = 0; x < 111; x++)
+            for (y = 0; y < 111; y++)
+                put_pixel_16bpp(x, y, 15, 7, 7);
         LOG(LogLvl::INFO) << "Cleared screen";
     }
 
