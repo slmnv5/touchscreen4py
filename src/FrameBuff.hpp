@@ -44,8 +44,8 @@ private:
     int fdfb = -1; // file descriptor
     char *fbp = 0; // pointer to memory
     int resX, resY;
-    uint screensize = 0; // for mem copy
-    uint linelen = 0;    // for finding pixels
+    uint screensize = 0; // for mem copy, in bytes
+    uint linesize = 0;   // for finding pixels, in bytes
 
 public:
     FrameBuff()
@@ -60,26 +60,23 @@ public:
 
     void put_pixel_16bpp(int x, int y, int r, int g, int b)
     {
-        int offset = x * 2 + y * linelen;
-        if (offset < 0 || offset > this->screensize - 2)
+        int pix_offset = x * 2 + y * linesize;
+        if (pix_offset < 0 || pix_offset > this->screensize - 2)
         {
-            LOG(LogLvl::WARN) << "Incorrect offset: " << offset;
+            return;
         }
-        unsigned int pix_offset = offset;
-        unsigned short c;
-        pix_offset = x * 2 + y * linelen;
-        c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
+        unsigned short c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
         // write 'two bytes at once'
         *((unsigned short *)(fbp + pix_offset)) = c;
     }
 
-    void drawSquare(int x, int y, int height, int width, int c)
+    void drawSquare(int x, int y, int width, int height, int c)
     {
         int h = 0;
         int w = 0;
-        for (h = 0; h < height; h++)
-            for (w = 0; w < width; w++)
-                put_pixel_16bpp(h + (x - 2), w + (y - 2), def_r[c], def_g[c], def_b[c]);
+        for (h = -height / 2; h < height / 2; h++)
+            for (w = -width / 2; w < width / 2; w++)
+                put_pixel_16bpp(h + x, w + y, def_r[c], def_g[c], def_b[c]);
     }
 
     float resx() const
@@ -96,17 +93,6 @@ private:
     {
 
         struct fb_var_screeninfo var;
-        struct fb_fix_screeninfo fix;
-
-        if (ioctl(fdfb, FBIOGET_FSCREENINFO, &fix) < 0)
-        {
-            close(fdfb);
-            throw std::runtime_error("Cannot read buffer file fix. info");
-        }
-        screensize = fix.smem_len;
-        linelen = fix.line_length;
-        LOG(LogLvl::DEBUG) << "Screen memory, line size: " << screensize << ", " << linelen;
-
         if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
         {
             close(fdfb);
@@ -115,12 +101,12 @@ private:
         resX = var.xres;
         resY = var.yres;
         LOG(LogLvl::DEBUG) << "Screen resolution X, Y, BPP: " << resX << ", " << resY << ", " << var.bits_per_pixel;
-        LOG(LogLvl::DEBUG) << "var.xoffset,  var.xres_virtual,  var.left_margin: "
-                           << var.xoffset << ", " << var.xres_virtual << ", " << var.left_margin;
+        LOG(LogLvl::DEBUG) << "var.xoffset, var.left_margin: " << var.xoffset << ", " << var.left_margin;
+        LOG(LogLvl::DEBUG) << "var.yoffset, var.upper_margin: " << var.yoffset << ", " << var.upper_margin;
 
-        linelen = resX * (var.bits_per_pixel / 8);
-        screensize = resY * linelen;
-        LOG(LogLvl::DEBUG) << "CORRECTED screen memory, line size: " << screensize << ", " << linelen;
+        linesize = resX * (var.bits_per_pixel / 8);
+        screensize = resY * linesize;
+        LOG(LogLvl::DEBUG) << "Calculated memory and line sizes: " << screensize << ", " << linesize;
 
         fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
         int int_result = reinterpret_cast<std::intptr_t>(fbp);
