@@ -44,7 +44,8 @@ private:
     int fdfb = -1; // file descriptor
     char *fbp = 0; // pointer to memory
     int resX, resY;
-    int line_length = 0;
+    uint line_length = 0;
+    uint screensize = 0;
 
 public:
     FrameBuff()
@@ -97,14 +98,24 @@ private:
     {
 
         struct fb_var_screeninfo var;
+        struct fb_fix_screeninfo fix;
+
+        if (ioctl(fdfb, FBIOGET_FSCREENINFO, &fix) < 0)
+        {
+            close(fdfb);
+            throw std::runtime_error("Cannot read buffer file fix. info");
+        }
+        uint screensize = fix.smem_len;
 
         if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
         {
             close(fdfb);
-            throw std::runtime_error("Cannot read buffer file");
+            throw std::runtime_error("Cannot read buffer file var. info");
         }
 
         LOG(LogLvl::INFO) << "Screen resolution X, Y, BPP: " << var.xres << ", " << var.yres << ", " << var.bits_per_pixel;
+        LOG(LogLvl::INFO) << "Screen size: " << line_length << ", " << screensize;
+
         resX = var.xres;
         resY = var.yres;
         line_length = var.bits_per_pixel * resX;
