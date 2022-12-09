@@ -66,6 +66,8 @@ public:
         {
             throw std::runtime_error("Could not open touch screen device file: " + fname);
         }
+        LOG(LogLvl::INFO) << "Opened event: " << fname;
+
         int maxX, maxY, maxP;
         getFromDevice(ABS_X, minX, maxX);
         getFromDevice(ABS_Y, minY, maxY);
