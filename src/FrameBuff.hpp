@@ -118,7 +118,7 @@ private:
         LOG(LogLvl::DEBUG) << "var.xoffset,  var.xres_virtual,  var.left_margin: "
                            << var.xoffset << ", " << var.xres_virtual << ", " << var.left_margin;
 
-        linelen = resX * (var.bits_per_pixel / 2);
+        linelen = resX * (var.bits_per_pixel / 8);
         screensize = resY * linelen;
         LOG(LogLvl::DEBUG) << "CORRECTED screen memory, line size: " << screensize << ", " << linelen;
 
