@@ -6,7 +6,6 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include "lib/log.hpp"
-#include "lib/utils.hpp"
 
 // default framebuffer palette
 typedef enum

@@ -1,5 +1,5 @@
-#ifndef TOUCHSCR_H
-#define TOUCHSCR_H
+#ifndef TOUCBUFF_H
+#define TOUCBUFF_H
 
 #include "pch.hpp"
 
@@ -16,24 +16,8 @@ private:
     bool stopped = false;
 
 public:
-    TouchAndBuff() : fb(), ts()
+    TouchAndBuff() : fb(), ts(fb.resx(), fb.resy())
     {
-
-        std::string dev_id = find_touchscr_event();
-        if ("" == dev_id)
-        {
-            throw std::runtime_error("Cannot find touch screen device");
-        }
-        std::string fname = "/dev/input/event" + dev_id;
-        int fdscr = open(fname.c_str(), O_RDONLY);
-        if (fdscr < 0)
-        {
-            throw std::runtime_error("Could not open touch screen device file: " + fname);
-        }
-        getTouchInfo(&minX, &maxX, &minY, &maxY, &minP, &maxP, fdscr);
-        scaleX = fb.resx() / (maxX - minX);
-        scaleY = fb.resy() / (maxY - minY);
-        scaleP = 1.0 / (maxP - minP);
         run_thread = std::thread(&TouchAndBuff::run, this);
     }
     virtual ~TouchAndBuff()

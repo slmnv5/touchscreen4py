@@ -1,5 +1,5 @@
-#ifndef PRECOMP_FILES
-#define PRECOMP_FILES
+#ifndef PCH_H
+#define PCH_H
 
 #include <alsa/asoundlib.h>
 #include <algorithm>
@@ -13,6 +13,4 @@
 #include <map>
 #include "lib/log.hpp"
 
-
 #endif
-

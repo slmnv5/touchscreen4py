@@ -1,5 +1,5 @@
-#ifndef TOUCHUTILS_H
-#define TOUCHUTILS_H
+#ifndef TOUCHSCR_H
+#define TOUCHSCR_H
 
 #include <linux/input.h>
 #include <fcntl.h>
@@ -10,7 +10,21 @@
 #include <string.h>
 
 #include "lib/log.hpp"
-#include "lib/utils.hpp"
+
+std::string find_touchscr_event()
+{
+    const char *cmd = "grep -E 'Handlers|EV=' /proc/bus/input/devices | "
+                      "grep -B1 'EV=b' | grep -Eo 'event[0-9]+' | grep -Eo '[0-9]+' | tr -d '\n'";
+
+    FILE *pipe = popen(cmd, "r");
+    char buffer[128];
+    std::string result = "";
+    while (!feof(pipe))
+        if (fgets(buffer, 128, pipe) != NULL)
+            result += buffer;
+    pclose(pipe);
+    return result;
+}
 
 #define KWHT "\x1B[37m"
 #define KYEL "\x1B[33m"
@@ -50,16 +64,18 @@ public:
             throw std::runtime_error("Could not open touch screen device file: " + fname);
         }
         int maxX, maxY, maxP;
-        getTouchInfo(maxX, maxY, maxP);
+        getFromDevice(ABS_X, minX, maxX);
+        getFromDevice(ABS_Y, minY, maxY);
+        getFromDevice(ABS_PRESSURE, minP, maxP);
+
         scaleX = resx / (maxX - minX);
         scaleY = resy / (maxY - minY);
         scaleP = 1.0 / (maxP - minP);
-        run_thread = std::thread(&TouchAndBuff::run, this);
     }
     ~TouchScr() {}
 
 private:
-    void fillArrayFromDevice(int propId, int &minV, int &maxV)
+    void getFromDevice(int propId, int &minV, int &maxV)
     {
         const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
         int arrPropValue[6] = {0, 0, 0, 0, 0, 0};
@@ -80,16 +96,6 @@ private:
         minV = arrPropValue[1];
         maxV = arrPropValue[2];
     }
-
-    // return screen file descr. and details
-    void getTouchInfo(int &maxX, int &maxY, int &maxP)
-    {
-        int maxX, maxT, maxP;
-
-        fillArrayFromDevice(ABS_X, minX, maxX);
-        fillArrayFromDevice(ABS_Y, minY, maxY);
-        fillArrayFromDevice(ABS_PRESSURE, minP, maxP);
-    };
 
     void run_test()
     {
