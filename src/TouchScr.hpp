@@ -49,7 +49,7 @@ class TouchScr
 private:
     int fdscr;
     int minX, minY, minP;
-    float scaleX, scaleY, scaleP;
+    double scaleX, scaleY, scaleP;
 
 public:
     bool stopped = false;
