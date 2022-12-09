@@ -55,6 +55,10 @@ public:
             throw std::runtime_error("Cannot open frame buffer file");
         }
         initBuff();
+        int x, y;
+        for (x = 0; x < resX; x++)
+            for (y = 0; y < resY; y++)
+                put_pixel_16bpp(x, y, 111, 0, 0);
     }
 
     void put_pixel_16bpp(int x, int y, int r, int g, int b)
