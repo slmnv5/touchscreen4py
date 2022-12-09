@@ -4,6 +4,7 @@
 using namespace std;
 
 void help();
+bool tryParse(std::string &, int &);
 
 int main(int argc, char *argv[])
 {
@@ -33,7 +34,27 @@ int main(int argc, char *argv[])
 
 	try
 	{
-		LOG(LogLvl::INFO) << "Starting MIDI messages processing";
+		FrameBuff fb;
+		std::string input;
+		int x, y;
+
+		while (1)
+		{
+			std::cout << "Enter a NUMBER X: ";
+			getline(std::cin, input);
+			while (!tryParse(input, x))
+			{
+				continue;
+			}
+			std::cout << "Enter a NUMBER Y: ";
+			getline(std::cin, input);
+			while (!tryParse(input, y))
+			{
+				continue;
+			}
+
+			fb.drawSquare(x, y, 50, 50, COLOR_INDEX_T::GREEN);
+		}
 	}
 	catch (exception &e)
 	{
@@ -51,4 +72,17 @@ void help()
 			"  -vv more verbose\n"
 			"  -vvv even more verbose\n"
 			"  -h displays this info\n";
+}
+
+bool tryParse(std::string &input, int &output)
+{
+	try
+	{
+		output = std::stoi(input);
+	}
+	catch (std::invalid_argument)
+	{
+		return false;
+	}
+	return true;
 }
