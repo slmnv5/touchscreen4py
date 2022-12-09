@@ -43,8 +43,8 @@ TEST_CASE("Test 2", "[all][basic]")
 	{
 		FrameBuff fb;
 		LOG(LogLvl::INFO) << "Frame buffer created";
-		fb.drawSquare(122, 122, 50, 50, 222);
+		fb.drawSquare(12, 12, 15, 15, COLOR_INDEX_T::RED);
 		LOG(LogLvl::INFO) << "Square draw done!!!";
-		fb.drawSquare(133, 233, 111, 22, 2211);
+		fb.drawSquare(133, 233, 22, 22, COLOR_INDEX_T::BLUE);
 	}
 }
