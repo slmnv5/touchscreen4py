@@ -69,7 +69,6 @@ public:
         }
         char name[256] = "Unknown";
         ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
-        LOG(LogLvl::INFO) << "Opened touch screen device: " << name;
 
         int maxX, maxY, maxP;
         getFromDevice(ABS_X, minX, maxX);
@@ -79,6 +78,7 @@ public:
         scaleX = resx / (maxX - minX);
         scaleY = resy / (maxY - minY);
         scaleP = 1.0 / (maxP - minP);
+        LOG(LogLvl::INFO) << "Opened touch screen device: " << name << ", scaleX: " << scaleX << ", scaleY" << scaleY;
     }
     ~TouchScr() {}
 
@@ -166,13 +166,9 @@ private:
         {
             throw std::runtime_error("Cannot read touch screen device");
         }
-        LOG(LogLvl::INFO) << "ABS. property: " << propId;
-        for (int x = 0; x < 6; x++)
-        {
-            LOG(LogLvl::DEBUG) << arrPropName[x] << ": " << arrPropValue[x];
-        }
         minV = arrPropValue[1];
         maxV = arrPropValue[2];
+        LOG(LogLvl::DEBUG) << "ABS. property: " << propId << ", min: " << minV << ", max:" << maxV;
     }
 };
 
