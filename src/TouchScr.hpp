@@ -74,14 +74,19 @@ public:
         char name[256] = "Unknown";
         ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
 
-        int maxX, maxY, maxP;
-        getFromDevice(ABS_X, minX, maxX);
-        getFromDevice(ABS_Y, minY, maxY);
-        getFromDevice(ABS_PRESSURE, minP, maxP);
+        int minV, maxV;
+        getFromDevice(ABS_X, minV, maxV);
+        minX = minV;
+        scaleX = resx / (maxV - minV);
 
-        scaleX = resx / (maxX - minX);
-        scaleY = resy / (maxY - minY);
-        scaleP = 1.0 / (maxP - minP);
+        getFromDevice(ABS_Y, minV, maxV);
+        minY = minV;
+        scaleY = resx / (maxV - minV);
+
+        getFromDevice(ABS_PRESSURE, minV, maxV);
+        minP = minV;
+        scaleP = 1.0 / (maxV - minV);
+
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name << ", scaleX: " << scaleX << ", scaleY: " << scaleY;
     }
     ~TouchScr() {}
