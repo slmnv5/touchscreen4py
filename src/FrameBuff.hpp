@@ -73,6 +73,7 @@ public:
         // some magic to work out the color
         c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
 
+        LOG(LogLvl::INFO) << "Put pixel: " << c;
         // write 'two bytes at once'
         *((unsigned short *)(fbp + pix_offset)) = c;
     }
