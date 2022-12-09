@@ -152,6 +152,11 @@ public:
 private:
     void getFromDevice(int propId, int &minV, int &maxV)
     {
+
+        char name[256] = "Unknown";
+        ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
+        LOG(LogLvl::INFO) << "==============: " << name;
+
         const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
         int arrPropValue[6] = {};
 
