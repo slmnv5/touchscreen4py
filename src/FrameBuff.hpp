@@ -44,9 +44,8 @@ private:
     int fdfb = -1; // file descriptor
     char *fbp = 0; // pointer to memory
     int resX, resY;
-    uint line_length = 0;
-    uint screensize = 0;
-    uint linelen = 0;
+    uint screensize = 0; // for mem copy
+    uint linelen = 0;    // for finding pixels
 
 public:
     FrameBuff()
@@ -66,7 +65,7 @@ public:
         unsigned short c;
 
         // calculate the pixel's byte offset inside the buffer
-        pix_offset = x * 2 + y * line_length;
+        pix_offset = x * 2 + y * linelen;
 
         // some magic to work out the color
         c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
@@ -108,23 +107,19 @@ private:
         }
         screensize = fix.smem_len;
         linelen = fix.line_length;
+        LOG(LogLvl::INFO) << "Screen memory, line size: " << screensize << ", " << linelen;
 
         if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
         {
             close(fdfb);
             throw std::runtime_error("Cannot read buffer file var. info");
         }
-
-        LOG(LogLvl::INFO) << "Screen resolution X, Y, BPP: " << var.xres << ", " << var.yres << ", " << var.bits_per_pixel;
-
         resX = var.xres;
         resY = var.yres;
-        line_length = var.bits_per_pixel * resX;
-        LOG(LogLvl::INFO) << "========= Screen size: " << line_length << ", " << screensize << ", " << linelen;
+        LOG(LogLvl::INFO) << "Screen resolution X, Y, BPP: " << resX << ", " << resY << ", " << var.bits_per_pixel;
 
         // map framebuffer to user memory
-        fbp = (char *)mmap(0, screensize * resY, PROT_READ | PROT_WRITE,
-                           MAP_SHARED, fdfb, 0);
+        fbp = (char *)mmap(0, screensize * resY, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
         int int_result = reinterpret_cast<std::intptr_t>(fbp);
         if (int_result == -1)
         {
@@ -135,6 +130,7 @@ private:
         try
         {
             this->put_pixel_16bpp(11, 11, 11, 11, 11);
+            LOG(LogLvl::INFO) << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1";
         }
         catch (std::exception e)
         {
