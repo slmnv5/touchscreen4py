@@ -112,7 +112,7 @@ private:
         LOG(LogLvl::DEBUG) << "Screen resolution X, Y, BPP: " << resX << ", " << resY << ", " << var.bits_per_pixel;
 
         // map framebuffer to user memory
-        fbp = (char *)mmap(0, screensize * resY, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
+        fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
         int int_result = reinterpret_cast<std::intptr_t>(fbp);
         if (int_result == -1)
         {
