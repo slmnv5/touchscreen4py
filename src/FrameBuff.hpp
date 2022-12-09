@@ -63,14 +63,8 @@ public:
     {
         unsigned int pix_offset;
         unsigned short c;
-
-        // calculate the pixel's byte offset inside the buffer
         pix_offset = x * 2 + y * linelen;
-
-        // some magic to work out the color
         c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-
-        LOG(LogLvl::INFO) << "Put pixel: " << x << ", " << y << ", " << c;
         // write 'two bytes at once'
         *((unsigned short *)(fbp + pix_offset)) = c;
     }
