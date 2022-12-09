@@ -39,6 +39,7 @@ TEST_CASE("Test 2", "[all][basic]")
 		LOG(LogLvl::INFO) << "touch screen device: " << find_touchscr_event();
 	}
 
+	FrameBuff fb;
 	SECTION("Section 2")
 	{
 		FrameBuff fb;
@@ -46,5 +47,10 @@ TEST_CASE("Test 2", "[all][basic]")
 		fb.drawSquare(12, 12, 15, 15, COLOR_INDEX_T::RED);
 		LOG(LogLvl::INFO) << "Square draw done!!!";
 		fb.drawSquare(133, 233, 22, 22, COLOR_INDEX_T::BLUE);
+
+		TouchScr ts(fb.resx(), fb.resy());
+		LOG(LogLvl::INFO) << "Touch screen created";
+		ts.run(fb);
+		LOG(LogLvl::INFO) << "Screen run done!!!";
 	}
 }
