@@ -157,9 +157,7 @@ private:
 
         if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
         {
-            LOG(LogLvl::ERROR) << "Error: " << errno << ", " << strerror(errno);
-            close(fdscr);
-            throw std::runtime_error("Cannot read touch device, ABS. property: " + std::to_string(propId));
+            LOG(LogLvl::WARN) << "Possible error: " << errno << ", " << strerror(errno);
         }
         LOG(LogLvl::INFO) << "ABS. property: " << propId;
         for (int x = 0; x < 6; x++)
