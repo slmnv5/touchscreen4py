@@ -45,7 +45,6 @@ TEST_CASE("Test 2", "[all][basic]")
 		LOG(LogLvl::INFO) << "Frame buffer created";
 		fb.drawSquare(122, 122, 50, 50, 222);
 		LOG(LogLvl::INFO) << "Square draw done!!!";
-		fb.drawSquare(33, 33, 11, 22, 2211);
-		fb.drawSquare(77, 77, 33, 55, 65000);
+		fb.drawSquare(133, 233, 111, 22, 2211);
 	}
 }
