@@ -10,6 +10,7 @@
 #include <string.h>
 
 #include "lib/log.hpp"
+#include "FrameBuff.hpp"
 
 std::string find_touchscr_event()
 {
@@ -50,6 +51,8 @@ private:
     float scaleX, scaleY, scaleP;
 
 public:
+    bool stopped = false;
+
     TouchScr(int resx, int resy)
     {
         std::string dev_id = find_touchscr_event();
@@ -74,29 +77,50 @@ public:
     }
     ~TouchScr() {}
 
-private:
-    void getFromDevice(int propId, int &minV, int &maxV)
+    void run(FrameBuff &fb)
     {
-        const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
-        int arrPropValue[6] = {0, 0, 0, 0, 0, 0};
+        int scaledX, scaledY, savedX, savedY;
+        auto moment = std::chrono::steady_clock::now();
+        int touch_on = 0;
 
-        if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
+        struct input_event ev;
+
+        while (read(fdscr, &ev, sizeof(struct input_event)) != -1)
         {
-            close(fdscr);
-            throw std::runtime_error("Cannot read property of touch device: " + std::string(events[propId]));
-        }
-        LOG(LogLvl::INFO) << "Properties " << events[propId];
-        for (int x = 0; x < 6; x++)
-        {
-            if ((x < 3) || arrPropValue[x])
+            if (stopped)
+                break;
+
+            if (ev.type == EV_KEY && ev.code == BTN_TOUCH)
             {
-                LOG(LogLvl::INFO) << arrPropName[x] << ": " << arrPropValue[x];
+                touch_on = ev.value;
+                if (touch_on)
+                {
+                    savedX = scaledX;
+                    savedY = scaledY;
+                    moment = std::chrono::steady_clock::now();
+                }
+                else
+                {
+                    auto duration = moment - std::chrono::steady_clock::now();
+                    if (duration.count() > 0.5 && abs(scaledX - savedX) / scaleX < 0.1 && abs(scaledY - savedY) / scaleY < 0.1)
+                    {
+                        LOG(LogLvl::DEBUG) << "Button click" << scaledX << scaledY;
+                    }
+                }
             }
-        }
-        minV = arrPropValue[1];
-        maxV = arrPropValue[2];
-    }
 
+            else if (ev.type == EV_ABS && ev.code == ABS_X && ev.value > 0)
+            {
+                scaledX = (ev.value - minX) * scaleX;
+            }
+            else if (ev.type == EV_ABS && ev.code == ABS_Y && ev.value > 0)
+            {
+                scaledY = (ev.value - minY) * scaleY;
+            }
+            fb.drawSquare(scaledX, scaledY);
+            LOG(LogLvl::DEBUG) << "type: " << events[ev.type] << " code: " << ev.code << " value: " << ev.value;
+        }
+    }
     void run_test()
     {
         std::string dev_id = find_touchscr_event();
@@ -119,6 +143,29 @@ private:
             read(fd, &ev, ev_size);
             LOG(LogLvl::DEBUG) << "type: " << events[ev.type] << " code: " << ev.code << " value: " << ev.value;
         }
+    }
+
+private:
+    void getFromDevice(int propId, int &minV, int &maxV)
+    {
+        const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
+        int arrPropValue[6] = {0, 0, 0, 0, 0, 0};
+
+        if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
+        {
+            close(fdscr);
+            throw std::runtime_error("Cannot read property of touch device: " + std::string(events[propId]));
+        }
+        LOG(LogLvl::INFO) << "Properties " << events[propId];
+        for (int x = 0; x < 6; x++)
+        {
+            if ((x < 3) || arrPropValue[x])
+            {
+                LOG(LogLvl::INFO) << arrPropName[x] << ": " << arrPropValue[x];
+            }
+        }
+        minV = arrPropValue[1];
+        maxV = arrPropValue[2];
     }
 };
 

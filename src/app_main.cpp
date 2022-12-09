@@ -33,8 +33,6 @@ int main(int argc, char *argv[])
 
 	try
 	{
-
-		TouchScr *ts = new TouchScr();
 		LOG(LogLvl::INFO) << "Starting MIDI messages processing";
 	}
 	catch (exception &e)
