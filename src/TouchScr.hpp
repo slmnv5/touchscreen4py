@@ -50,16 +50,13 @@ private:
     int fdscr;
     int minX, minY, minP;
     float scaleX, scaleY, scaleP;
-    const int codeX;
-    const int codeY;
     const FrameBuff fb;
     const bool swapXY;
 
 public:
     bool stopped = false;
 
-    TouchScr(bool swapxy)
-        : swapXY(swapxy), codeX(swapxy ? ABS_Y : ABS_X), codeY(swapxy ? ABS_X : ABS_Y)
+    TouchScr(bool swapxy) : swapXY(swapxy)
     {
 
         if (fb.resx() <= 0 || fb.resy() <= 0)
@@ -81,11 +78,11 @@ public:
         ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
 
         int minV, maxV;
-        getFromDevice(codeX, minV, maxV);
+        getFromDevice(ABS_X, minV, maxV);
         minX = minV;
         scaleX = 1.0 / (maxV - minV) * fb.resx();
 
-        getFromDevice(codeY, minV, maxV);
+        getFromDevice(ABS_Y, minV, maxV);
         minY = minV;
         scaleY = 1.0 / (maxV - minV) * fb.resy();
 
@@ -134,12 +131,12 @@ public:
                 }
             }
 
-            else if (ev.type == EV_ABS && ev.code == codeX)
+            else if (ev.type == EV_ABS && ev.code == ABS_X)
             {
                 valx = (ev.value - minX) * scaleX;
                 cout << "XXXXXXXXXX" << valx << std::endl;
             }
-            else if (ev.type == EV_ABS && ev.code == codeY)
+            else if (ev.type == EV_ABS && ev.code == ABS_Y)
             {
                 valy = (ev.value - minY) * scaleY;
                 cout << "YYYYYYYY" << valy << std::endl;
