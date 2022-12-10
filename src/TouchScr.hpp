@@ -28,8 +28,8 @@ std::string find_touchscr_event()
     return result;
 }
 
-#define KWHT "\x1B[37m"
-#define KYEL "\x1B[33m"
+using clock1 = std::chrono::system_clock;
+using sec1 = std::chrono::duration<double>;
 
 const char *events[EV_MAX + 1] = {
     events[EV_SYN] = "Sync",
@@ -99,7 +99,7 @@ public:
     {
         int x, y, valx, valy, savex, savey;
         x = y = valx = valy = savex = savey = 0;
-        auto moment = std::chrono::steady_clock::now();
+        auto started = clock1::now();
         int touch_on = 0;
         bool button_click = false;
 
@@ -118,11 +118,11 @@ public:
                     cout << "-------------\n";
                     savex = valx;
                     savey = valy;
-                    moment = std::chrono::steady_clock::now();
+                    started = clock1::now();
                 }
                 else
                 {
-                    auto duration = moment - std::chrono::steady_clock::now();
+                    sec1 duration = started - clock1::now();
                     if (duration.count() > 0.5 && abs(valx - savex) / scaleX < 0.1 && abs(valy - savey) / scaleY < 0.1)
                     {
                         bool button_click = true;
