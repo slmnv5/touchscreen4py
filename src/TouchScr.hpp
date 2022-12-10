@@ -36,16 +36,14 @@ private:
     int fdscr;
     int minX, minY, minP;
     int maxX, maxY, maxP;
-    float scaleX, scaleY, scaleP;
     const FrameBuff fb;
-    const bool swapXY;
     const bool invX;
     const bool invY;
 
 public:
     bool stopped = false;
 
-    TouchScr(bool swapxy, bool invx, bool invy) : swapXY(swapxy), invX(invx), invY(invy)
+    TouchScr(bool invx, bool invy) : invX(invx), invY(invy)
     {
 
         if (fb.resx() <= 0 || fb.resy() <= 0)
@@ -65,19 +63,11 @@ public:
         }
         char name[256] = "Unknown";
         ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
-
         getFromDevice(ABS_X, minX, maxX);
-        scaleX = 1.0 / (maxX - minX) * fb.resx();
-
         getFromDevice(ABS_Y, minY, maxY);
-        scaleY = 1.0 / (maxY - minY) * fb.resy();
-
         getFromDevice(ABS_PRESSURE, minP, maxP);
-        scaleP = 1.0 / (maxP - minP);
-
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
-                          << ", scaleX: " << scaleX << ", X: " << minX << "--" << maxX
-                          << ", scaleY: " << scaleY << ", Y: " << minY << "--" << maxY;
+                          << ", X: " << minX << "--" << maxX << ", Y: " << minY << "--" << maxY;
     }
     ~TouchScr() {}
 
@@ -88,6 +78,10 @@ public:
         auto started = myclock::now();
         int touch_on = 0;
         bool button_click = false;
+        float scaleX = 1.0 / (maxX - minX) * fb.resx();
+        float scaleY = 1.0 / (maxY - minY) * fb.resy();
+        LOG(LogLvl::DEBUG) << "Touch screen: "
+                           << "scaleX: " << scaleX << ", scaleY: " << scaleY;
 
         struct input_event ev;
 
@@ -130,11 +124,6 @@ public:
             if (button_click)
             {
                 button_click = false;
-                if (swapXY)
-                {
-                    x = y;
-                    y = x;
-                }
                 x = invX ? maxX - x : x;
                 y = invY ? maxY - y : y;
                 x = (x - minX) * scaleX;

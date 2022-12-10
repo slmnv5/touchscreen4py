@@ -58,7 +58,7 @@ void help()
 
 void test2()
 {
-	TouchScr ts(false, false, true);
+	TouchScr ts(false, true);
 	ts.run();
 }
 void test1()
