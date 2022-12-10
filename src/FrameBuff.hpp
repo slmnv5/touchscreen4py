@@ -58,7 +58,7 @@ public:
         initBuff();
     }
 
-    void put_pixel_16bpp(int x, int y, int r, int g, int b)
+    void put_pixel_16bpp(int x, int y, int r, int g, int b) const
     {
         int pix_offset = x * 2 + y * linesize;
         if (pix_offset < 0 || pix_offset > this->screensize - 2)
@@ -70,7 +70,7 @@ public:
         *((unsigned short *)(fbp + pix_offset)) = c;
     }
 
-    void drawSquare(int x, int y, int width, int height, int c)
+    void drawSquare(int x, int y, int width, int height, int c) const
     {
         int h = 0;
         int w = 0;

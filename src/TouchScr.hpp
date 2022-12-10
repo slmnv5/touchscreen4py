@@ -146,8 +146,8 @@ public:
             }
             assert(0 <= valx <= 480);
             assert(0 <= valy <= 320);
-            LOG(LogLvl::DEBUG) << "valx, valy" << valx << ", " << valy;
-            // fb.drawSquare(valx, valy, 11, 11, COLOR_INDEX_T::GREEN);
+            // LOG(LogLvl::DEBUG) << "valx, valy: " << valx << ", " << valy;
+            fb.drawSquare(valx, valy, 11, 11, COLOR_INDEX_T::GREEN);
         }
     }
 
