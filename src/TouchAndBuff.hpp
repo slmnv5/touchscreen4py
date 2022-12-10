@@ -15,7 +15,7 @@ private:
     std::thread run_thread;
 
 public:
-    TouchAndBuff1() : fb(), ts(fb.resx(), fb.resy())
+    TouchAndBuff1() : fb(), ts(fb.resx(), fb.resy(), true)
     {
         run_thread = std::thread(&TouchAndBuff1::run, this);
     }
