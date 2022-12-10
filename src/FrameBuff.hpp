@@ -146,10 +146,10 @@ private:
         int i, j, bits;
         for (i = 0; i < char_sz; i++)
         {
-            LOG(LogLvl::DEBUG) << (int)fbp[start + i];
             uint col = i % char_w;
             uint row = i / char_w;
             bits = font->data[start + i];
+            LOG(LogLvl::DEBUG) << (int)bits;
             for (j = 0; j < 8; j++, bits <<= 1)
                 if (bits & 0x80)
                 {
