@@ -125,7 +125,7 @@ public:
                     if (duration.count() > 0.5 && abs(valx - savex) / (maxX - minX) < 0.1 &&
                         abs(valy - savey) / (maxY - minY) < 0.1)
                     {
-                        bool button_click = true;
+                        button_click = true;
                         LOG(LogLvl::DEBUG) << "Button click!!!";
                     }
                 }
