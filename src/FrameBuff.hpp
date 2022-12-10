@@ -111,6 +111,11 @@ public:
                 put_pixel_16bpp(h + x, w + y, def_r[c], def_g[c], def_b[c]);
     }
 
+    void clear() const
+    {
+        memset(fbp, 0, screensize);
+    }
+
     const int &resx() const
     {
         return resX;
