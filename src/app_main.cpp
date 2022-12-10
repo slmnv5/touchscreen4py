@@ -5,6 +5,8 @@ using namespace std;
 
 void help();
 bool tryParse(std::string &, int &);
+void test1();
+void test2();
 
 int main(int argc, char *argv[])
 {
@@ -34,27 +36,7 @@ int main(int argc, char *argv[])
 
 	try
 	{
-		FrameBuff fb;
-		std::string input;
-		int x, y;
-
-		while (1)
-		{
-			std::cout << "Enter a NUMBER X: ";
-			getline(std::cin, input);
-			while (!tryParse(input, x))
-			{
-				continue;
-			}
-			std::cout << "Enter a NUMBER Y: ";
-			getline(std::cin, input);
-			while (!tryParse(input, y))
-			{
-				continue;
-			}
-
-			fb.drawSquare(x, y, 50, 50, COLOR_INDEX_T::GREEN);
-		}
+		test2();
 	}
 	catch (exception &e)
 	{
@@ -72,6 +54,37 @@ void help()
 			"  -vv more verbose\n"
 			"  -vvv even more verbose\n"
 			"  -h displays this info\n";
+}
+
+void test2()
+{
+	FrameBuff fb;
+	TouchScr ts(fb.resx(), fb.resy(), true);
+	ts.run(fb);
+}
+void test1()
+{
+	FrameBuff fb;
+	std::string input;
+	int x, y;
+
+	while (true)
+	{
+		std::cout << "Enter X: ";
+		getline(std::cin, input);
+		if (!tryParse(input, x))
+		{
+			continue;
+		}
+		std::cout << "Enter Y: ";
+		getline(std::cin, input);
+		if (!tryParse(input, y))
+		{
+			continue;
+		}
+
+		fb.drawSquare(x, y, 50, 50, COLOR_INDEX_T::GREEN);
+	}
 }
 
 bool tryParse(std::string &input, int &output)

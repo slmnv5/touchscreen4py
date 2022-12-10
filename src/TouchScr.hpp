@@ -50,12 +50,17 @@ private:
     int fdscr;
     int minX, minY, minP;
     float scaleX, scaleY, scaleP;
+    const bool swapXY;
+    const int codeX;
+    const int codeY;
 
 public:
     bool stopped = false;
 
-    TouchScr(int resx, int resy)
+    TouchScr(int resx, int resy, bool swapxy)
+        : swapXY(swapxy), codeX(swapxy ? ABS_Y : ABS_X), codeY(swapxy ? ABS_X : ABS_Y)
     {
+
         if (resx <= 0 || resy <= 0)
         {
             throw std::runtime_error("Screen resolution must be positive");
@@ -75,11 +80,11 @@ public:
         ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
 
         int minV, maxV;
-        getFromDevice(ABS_X, minV, maxV);
+        getFromDevice(codeX, minV, maxV);
         minX = minV;
         scaleX = 1.0 / (maxV - minV) * resx;
 
-        getFromDevice(ABS_Y, minV, maxV);
+        getFromDevice(codeY, minV, maxV);
         minY = minV;
         scaleY = 1.0 / (maxV - minV) * resy;
 
@@ -87,6 +92,9 @@ public:
         minP = minV;
         scaleP = 1.0 / (maxV - minV);
 
+        if (swapxy)
+        {
+        }
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name << ", scaleX: " << scaleX << ", scaleY: " << scaleY
                           << ", minX: " << minX << ", minY: " << minY;
     }
@@ -124,11 +132,11 @@ public:
                 }
             }
 
-            else if (ev.type == EV_ABS && ev.code == ABS_X && ev.value > minX)
+            else if (ev.type == EV_ABS && ev.code == codeX && ev.value > minX)
             {
                 valx = (ev.value - minX) * scaleX;
             }
-            else if (ev.type == EV_ABS && ev.code == ABS_Y && ev.value > minY)
+            else if (ev.type == EV_ABS && ev.code == codeY && ev.value > minY)
             {
                 valy = (ev.value - minY) * scaleY;
             }
