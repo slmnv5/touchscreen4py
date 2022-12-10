@@ -133,13 +133,15 @@ public:
                 }
             }
 
-            else if (ev.type == EV_ABS && ev.code == codeX && ev.value > minX)
+            else if (ev.type == EV_ABS && ev.code == codeX)
             {
                 valx = (ev.value - minX) * scaleX;
+                cout << "XXXXXXXXXX" << valx;
             }
-            else if (ev.type == EV_ABS && ev.code == codeY && ev.value > minY)
+            else if (ev.type == EV_ABS && ev.code == codeY)
             {
                 valy = (ev.value - minY) * scaleY;
+                cout << "YYYYYYYY" << valy;
             }
             else
             {
