@@ -52,7 +52,7 @@ private:
 public:
     FrameBuff()
     {
-        std::string fbname("/dev/fb1");
+        std::string fbname("/dev/fb0");
         fdfb = open(fbname.c_str(), O_RDWR);
         if (fdfb < 0)
         {
