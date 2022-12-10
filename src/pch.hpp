@@ -11,6 +11,7 @@
 #include <thread>
 #include <stdexcept>
 #include <map>
+#include <queue>
 #include "lib/log.hpp"
 
 #endif

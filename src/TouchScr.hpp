@@ -2,15 +2,11 @@
 #define TOUCHSCR_H
 
 #include <linux/input.h>
-// #include <fcntl.h>
-//  #include <linux/fb.h>
-//   #include <unistd.h>
-// #include <sys/ioctl.h>
-// #include <stdio.h>
-//  #include <string.h>
 
 #include "FrameBuff.hpp"
 #include "pch.hpp"
+
+#define MAX_QUEUE_SZ 20
 
 std::string find_touchscr_event()
 {
@@ -36,6 +32,7 @@ private:
     int fdscr;
     int minX, minY, minP;
     int maxX, maxY, maxP;
+    std::queue<std::pair<float, float>> que;
     const FrameBuff fb;
     const bool invX;
     const bool invY;
@@ -121,7 +118,7 @@ public:
             {
                 continue;
             }
-            if (button_click)
+            if (button_click and que.size() < MAX_QUEUE_SZ)
             {
                 button_click = false;
                 x = invX ? maxX - x : x;
@@ -130,6 +127,7 @@ public:
                 y = (y - minY) * scaleY;
                 LOG(LogLvl::DEBUG) << "Button click at X, Y: " << x << " " << y;
                 fb.drawSquare(x, y, 15, 15, COLOR_INDEX_T::WHITE);
+                que.push(std::pair<float, float>(x, y));
             }
         }
     }
