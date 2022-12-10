@@ -162,10 +162,11 @@ public:
                 {
                     unsigned short scr_color = (bits & 0x80) ? color : 0;
                     *((unsigned short *)(fbp + pix_offset)) = scr_color;
+                    pix_offset++;
                 }
-                pix_offset++;
+                font_offset++;
             }
-            pix_offset += resX * pixelsize;
+            pix_offset += resX * pixelsize - 8;
         }
     }
 
