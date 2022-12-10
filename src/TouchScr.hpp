@@ -52,11 +52,13 @@ private:
     float scaleX, scaleY, scaleP;
     const FrameBuff fb;
     const bool swapXY;
+    const bool invX;
+    const bool invY;
 
 public:
     bool stopped = false;
 
-    TouchScr(bool swapxy) : swapXY(swapxy)
+    TouchScr(bool swapxy, bool invx, bool invy) : swapXY(swapxy), invX(invx), invY(invy)
     {
 
         if (fb.resx() <= 0 || fb.resy() <= 0)
