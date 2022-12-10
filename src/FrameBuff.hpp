@@ -6,6 +6,7 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include "pch.hpp"
+#include "font_small.hpp"
 
 // default framebuffer palette
 typedef enum
@@ -41,21 +42,50 @@ static unsigned short def_b[] =
 class FrameBuff
 {
 private:
-    int fdfb = -1; // file descriptor
-    char *fbp = 0; // pointer to memory
-    int resX, resY;
-    uint screensize = 0; // for mem copy, in bytes
-    uint linesize = 0;   // for finding pixels, in bytes
+    int fdfb = -1;       // file descriptor
+    char *fbp = 0;       // pointer to frame buffer memory
+    int resX, resY;      // screen resolution
+    uint screensize = 0; // screen memory size in bytes
+    uint linesize = 0;   // screen line size in bytes
 
 public:
     FrameBuff()
     {
-        fdfb = open("/dev/fb1", O_RDWR);
+        std::string fbname("/dev/fb1");
+        fdfb = open(fbname.c_str(), O_RDWR);
         if (fdfb < 0)
         {
-            throw std::runtime_error("Cannot open frame buffer file");
+            throw std::runtime_error("Cannot open frame buffer file: " + fbname);
         }
-        initBuff();
+        struct fb_var_screeninfo var;
+        if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
+        {
+            close(fdfb);
+            throw std::runtime_error("Cannot read frame buffer file info: " + fbname);
+        }
+        resX = var.xres;
+        resY = var.yres;
+        LOG(LogLvl::DEBUG) << "Screen resolution X, Y, BPP: " << resX << ", " << resY << ", " << var.bits_per_pixel;
+        LOG(LogLvl::DEBUG) << "var.xoffset, var.left_margin: " << var.xoffset << ", " << var.left_margin;
+        LOG(LogLvl::DEBUG) << "var.yoffset, var.upper_margin: " << var.yoffset << ", " << var.upper_margin;
+
+        linesize = resX * (var.bits_per_pixel / 8);
+        screensize = resY * linesize;
+        LOG(LogLvl::DEBUG) << "Calculated memory and line sizes: " << screensize << ", " << linesize;
+
+        fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
+        int int_result = reinterpret_cast<std::intptr_t>(fbp);
+        if (int_result == -1)
+        {
+            close(fdfb);
+            throw std::runtime_error("Cannot map frame buffer memory");
+        }
+        LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
+    }
+    ~FrameBuff()
+    {
+        munmap(fbp, screensize);
+        close(fdfb);
     }
 
     void put_pixel_16bpp(int x, int y, int r, int g, int b) const
@@ -88,34 +118,25 @@ public:
         return resY;
     }
 
-private:
-    void initBuff()
+    void put_char(int x, int y, int c, int colidx)
     {
-
-        struct fb_var_screeninfo var;
-        if (ioctl(fdfb, FBIOGET_VSCREENINFO, &var) < 0)
+        int i, j, bits;
+        for (i = 0; i < font_vga_8x8.height; i++)
         {
-            close(fdfb);
-            throw std::runtime_error("Cannot read buffer file var. info");
+            bits = font_vga_8x8.data[font_vga_8x8.height * c + i];
+            for (j = 0; j < font_vga_8x8.width; j++, bits <<= 1)
+                if (bits & 0x80)
+                {
+                    put_pixel_16bpp(x + j, y + i, 255, 255, 255);
+                }
         }
-        resX = var.xres;
-        resY = var.yres;
-        LOG(LogLvl::DEBUG) << "Screen resolution X, Y, BPP: " << resX << ", " << resY << ", " << var.bits_per_pixel;
-        LOG(LogLvl::DEBUG) << "var.xoffset, var.left_margin: " << var.xoffset << ", " << var.left_margin;
-        LOG(LogLvl::DEBUG) << "var.yoffset, var.upper_margin: " << var.yoffset << ", " << var.upper_margin;
+    }
 
-        linesize = resX * (var.bits_per_pixel / 8);
-        screensize = resY * linesize;
-        LOG(LogLvl::DEBUG) << "Calculated memory and line sizes: " << screensize << ", " << linesize;
-
-        fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
-        int int_result = reinterpret_cast<std::intptr_t>(fbp);
-        if (int_result == -1)
-        {
-            close(fdfb);
-            throw std::runtime_error("Cannot map buffer memory");
-        }
-        LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
+    void put_string(int x, int y, char *s, unsigned colidx)
+    {
+        int i;
+        for (i = 0; *s; i++, x += font_vga_8x8.width, s++)
+            put_char(x, y, *s, colidx);
     }
 };
 
