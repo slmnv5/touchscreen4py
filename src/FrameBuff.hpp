@@ -166,7 +166,7 @@ public:
                 }
                 font_offset++;
             }
-            pix_offset += resX * pixelsize - 8;
+            pix_offset += resX * pixelsize - font->width * 8;
         }
     }
 
