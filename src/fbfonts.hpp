@@ -2,33 +2,27 @@
 // #include "font.h"
 // #include <linux/types.h>
 
-typedef struct fb_pixel_font
+struct fb_pixel_font
 {
-	int idx;
-	char *name;
+	const char *name;
 	int width, height;
 	unsigned char *data;
-	int pref;
 };
 
 extern unsigned char fontdata_16x32[];
 extern unsigned char fontdata_8x8[];
 
 struct fb_pixel_font font_16x32 = {
-	.idx = 0,
 	.name = "TER16x32",
 	.width = 16,
 	.height = 32,
-	.data = fontdata_16x32,
-	.pref = 0};
+	.data = fontdata_16x32};
 
 struct fb_pixel_font font_8x8 = {
-	.idx = 0,
 	.name = "VGA8x8",
 	.width = 8,
 	.height = 8,
-	.data = fontdata_8x8,
-	.pref = 0};
+	.data = fontdata_8x8};
 
 unsigned char fontdata_16x32[16 * 32 * 256 / 8] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

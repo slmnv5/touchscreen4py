@@ -44,16 +44,18 @@ TEST_CASE("Test 2", "[all][basic]")
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuff fb;
 		LOG(LogLvl::INFO) << "Frame buffer created";
-		fb.drawSquare(12, 12, 15, 15, COLOR_INDEX_T::RED);
+		fb.draw_square(12, 12, 15, 15, COLOR_INDEX_T::RED);
 		LOG(LogLvl::INFO) << "Square draw done!!!";
 		fb.clear();
-		fb.drawSquare(473, 233, 22, 22, COLOR_INDEX_T::WHITE);
-		fb.drawSquare(133, 310, 22, 22, COLOR_INDEX_T::BLUE);
-		fb.drawSquare(223, 233, 22, 22, COLOR_INDEX_T::RED);
-		fb.drawSquare(453, 13, 22, 22, COLOR_INDEX_T::YELLOW);
+		fb.draw_square(473, 233, 22, 22, COLOR_INDEX_T::WHITE);
+		fb.draw_square(133, 310, 22, 22, COLOR_INDEX_T::BLUE);
+		fb.draw_square(223, 233, 22, 22, COLOR_INDEX_T::RED);
+		fb.draw_square(453, 13, 22, 22, COLOR_INDEX_T::YELLOW);
 		sleep(5);
-		assert(fb.resx() > 10);
-		assert(fb.resy() > 10);
+		assert(fb.res_x() > 10);
+		assert(fb.res_y() > 10);
+		assert(fb.res_x() < 10000);
+		assert(fb.res_y() < 10000);
 	}
 }
 
@@ -66,7 +68,9 @@ TEST_CASE("Test 3", "[all][basic]")
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuff fb;
 		fb.clear();
+		fb.set_font(font_8x8);
 		fb.put_string(120, 120, "AA", GREEN);
+		fb.set_font(font_16x32);
 		fb.put_string(220, 220, "BB", COLOR_INDEX_T::YELLOW);
 	}
 }
