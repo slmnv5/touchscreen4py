@@ -5,24 +5,23 @@
 /*                                            */
 /**********************************************/
 
-//#include "font.h"
+// #include "font.h"
 #include <linux/types.h>
 
-#define VGA8x8_IDX	0
+#define VGA8x8_IDX 0
 #define FONTDATAMAX 2048
-extern struct fbcon_font_desc	font_vga_8x8;
+extern struct fbcon_font_desc font_vga_8x8;
 
 #include <linux/types.h>
 
-struct fbcon_font_desc {
-    int idx;
-    char *name;
-    int width, height;
-    char *data;
-    int pref;
+struct fbcon_font_desc
+{
+	int idx;
+	char *name;
+	int width, height;
+	unsigned char *data;
+	int pref;
 };
-
-
 
 static unsigned char fontdata_8x8[FONTDATAMAX] = {
 
@@ -2588,12 +2587,10 @@ static unsigned char fontdata_8x8[FONTDATAMAX] = {
 
 };
 
-
 struct fbcon_font_desc font_vga_8x8 = {
 	VGA8x8_IDX,
 	"VGA8x8",
 	8,
 	8,
 	fontdata_8x8,
-	0
-};
+	0};
