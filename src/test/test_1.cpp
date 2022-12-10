@@ -53,11 +53,17 @@ TEST_CASE("Test 2", "[all][basic]")
 
 		assert(fb.resx() > 10);
 		assert(fb.resy() > 10);
+	}
+}
 
-		LOG(LogLvl::INFO) << "====================Touch screen test============";
-		TouchScr ts(false, true);
-		LOG(LogLvl::INFO) << "Touch screen created";
-		ts.run();
-		LOG(LogLvl::INFO) << "Screen run done!!!";
+TEST_CASE("Test 3", "[all][basic]")
+{
+
+	SECTION("Section 1")
+	{
+
+		LOG(LogLvl::INFO) << "====================Frame buffer test============";
+		FrameBuff fb;
+		fb.put_string(20, 20, "This is test", GREEN);
 	}
 }
