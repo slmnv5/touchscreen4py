@@ -80,27 +80,18 @@ public:
         char name[256] = "Unknown";
         ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
 
-        int minV, maxV;
-        getFromDevice(ABS_X, minV, maxV);
-        minX = minV;
-        maxX = maxV;
-        scaleX = 1.0 / (maxV - minV) * fb.resx();
+        getFromDevice(ABS_X, minX, maxX);
+        scaleX = 1.0 / (maxX - minX) * fb.resx();
 
-        getFromDevice(ABS_Y, minV, maxV);
-        minY = minV;
-        maxY = maxV;
-        scaleY = 1.0 / (maxV - minV) * fb.resy();
+        getFromDevice(ABS_Y, minY, maxY);
+        scaleY = 1.0 / (maxY - minY) * fb.resy();
 
-        getFromDevice(ABS_PRESSURE, minV, maxV);
-        minP = minV;
-        maxP = maxV;
-        scaleP = 1.0 / (maxV - minV);
+        getFromDevice(ABS_PRESSURE, minP, maxP);
+        scaleP = 1.0 / (maxP - minP);
 
-        if (swapxy)
-        {
-        }
-        LOG(LogLvl::INFO) << "Opened touch screen device: " << name << ", scaleX: " << scaleX << ", scaleY: " << scaleY
-                          << ", minX: " << minX << ", minY: " << minY;
+        LOG(LogLvl::INFO) << "Opened touch screen device: " << name
+                          << ", scaleX: " << scaleX << ", X: " << minX << "--" << maxX
+                          << ", scaleY: " << scaleY << ", Y: " << minY << "--" << maxY;
     }
     ~TouchScr() {}
 
@@ -154,7 +145,7 @@ public:
             y = swapXY ? valx : valy;
             x = invX ? maxX - x : x;
             y = invY ? maxY - y : y;
-            cout << "X, Y: " << valx << ", " << valy << std::endl;
+            cout << "X, Y: " << x << ", " << y << std::endl;
             fb.drawSquare(x, y, 11, 11, COLOR_INDEX_T::GREEN);
         }
     }
