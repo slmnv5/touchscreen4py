@@ -28,8 +28,8 @@ std::string find_touchscr_event()
     return result;
 }
 
-using clock1 = std::chrono::system_clock;
-using sec1 = std::chrono::duration<double>;
+using myclock = std::chrono::system_clock;
+using sec = std::chrono::duration<double>;
 
 const char *events[EV_MAX + 1] = {
     events[EV_SYN] = "Sync",
@@ -99,7 +99,7 @@ public:
     {
         int x, y, valx, valy, savex, savey;
         x = y = valx = valy = savex = savey = 0;
-        auto started = clock1::now();
+        auto started = myclock::now();
         int touch_on = 0;
         bool button_click = false;
 
@@ -115,20 +115,19 @@ public:
                 touch_on = ev.value;
                 if (touch_on)
                 {
-                    cout << "-------------\n";
                     savex = valx;
                     savey = valy;
-                    started = clock1::now();
+                    started = myclock::now();
                 }
                 else
                 {
-                    sec1 duration = started - clock1::now();
-                    if (duration.count() > 0.5 && abs(valx - savex) / scaleX < 0.1 && abs(valy - savey) / scaleY < 0.1)
+                    sec duration = myclock::now() - started;
+                    if (duration.count() > 0.5 && abs(valx - savex) / (maxX - minX) < 0.1 &&
+                        abs(valy - savey) / (maxY - minY) < 0.1)
                     {
                         bool button_click = true;
                         LOG(LogLvl::DEBUG) << "Button click!!!";
                     }
-                    cout << duration.count() << "!!!!!!!!!!!!!!!!!!!\n";
                 }
             }
 
@@ -144,17 +143,20 @@ public:
             {
                 continue;
             }
-            if (swapXY)
+            if (button_click)
             {
-                x = valy;
-                y = valx;
+                button_click = false;
+                if (swapXY)
+                {
+                    x = valy;
+                    y = valx;
+                }
+                x = invX ? maxX - x : x;
+                y = invY ? maxY - y : y;
+                x = (x - minX) * scaleX;
+                y = (y - minY) * scaleY;
+                fb.drawSquare(x, y, 15, 15, COLOR_INDEX_T::WHITE);
             }
-            x = invX ? maxX - x : x;
-            y = invY ? maxY - y : y;
-            x = (x - minX) * scaleX;
-            y = (y - minY) * scaleY;
-            // cout << "X, Y: " << x << ", " << y << std::endl;
-            fb.drawSquare(x, y, 11, 11, COLOR_INDEX_T::GREEN);
         }
     }
 
