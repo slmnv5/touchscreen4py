@@ -125,20 +125,7 @@ public:
         font = &f;
     }
 
-private:
-    void put_pixel_16bpp(int x, int y, int r, int g, int b) const
-    {
-        int pix_offset = x * 2 + y * linesize;
-        if (pix_offset < 0 || pix_offset > (int)(this->screensize - 2))
-        {
-            return;
-        }
-        unsigned short colidx = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-        // write 'two bytes at once'
-        *((unsigned short *)(fbp + pix_offset)) = colidx;
-    }
-
-    void put_char(int x, int y, int font_chr, uint colidx)
+    void put_char(int x, int y, unsigned char font_chr, uint colidx)
     {
         uint char_w = font->width / 8;
         uint char_sz = font->height * char_w;
@@ -161,6 +148,19 @@ private:
                 }
         }
         LOG(LogLvl::DEBUG) << "Done, char: " << font_chr << ", " << font->name;
+    }
+
+private:
+    void put_pixel_16bpp(int x, int y, int r, int g, int b) const
+    {
+        int pix_offset = x * 2 + y * linesize;
+        if (pix_offset < 0 || pix_offset > (int)(this->screensize - 2))
+        {
+            return;
+        }
+        unsigned short colidx = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
+        // write 'two bytes at once'
+        *((unsigned short *)(fbp + pix_offset)) = colidx;
     }
 };
 
