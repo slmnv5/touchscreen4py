@@ -6,7 +6,7 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include "pch.hpp"
-#include "font_small.hpp"
+//#include "font_small.hpp"
 #include "font_big.hpp"
 
 // default framebuffer palette
