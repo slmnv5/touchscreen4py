@@ -49,6 +49,7 @@ class TouchScr
 private:
     int fdscr;
     int minX, minY, minP;
+    int maxX, maxY, maxP;
     float scaleX, scaleY, scaleP;
     const FrameBuff fb;
     const bool swapXY;
@@ -82,14 +83,17 @@ public:
         int minV, maxV;
         getFromDevice(ABS_X, minV, maxV);
         minX = minV;
+        maxX = maxV;
         scaleX = 1.0 / (maxV - minV) * fb.resx();
 
         getFromDevice(ABS_Y, minV, maxV);
         minY = minV;
+        maxY = maxV;
         scaleY = 1.0 / (maxV - minV) * fb.resy();
 
         getFromDevice(ABS_PRESSURE, minV, maxV);
         minP = minV;
+        maxP = maxV;
         scaleP = 1.0 / (maxV - minV);
 
         if (swapxy)
@@ -136,12 +140,10 @@ public:
             else if (ev.type == EV_ABS && ev.code == ABS_X)
             {
                 valx = (ev.value - minX) * scaleX;
-                cout << "XXXXXXXXXX" << valx << std::endl;
             }
             else if (ev.type == EV_ABS && ev.code == ABS_Y)
             {
                 valy = (ev.value - minY) * scaleY;
-                cout << "YYYYYYYY" << valy << std::endl;
             }
             else
             {
@@ -150,6 +152,9 @@ public:
             // LOG(LogLvl::DEBUG) << "valx, valy: " << valx << ", " << valy;
             x = swapXY ? valy : valx;
             y = swapXY ? valx : valy;
+            x = invX ? maxX - x : x;
+            y = invY ? maxY - y : y;
+            cout << "X, Y: " << valx << ", " << valy << std::endl;
             fb.drawSquare(x, y, 11, 11, COLOR_INDEX_T::GREEN);
         }
     }
