@@ -7,6 +7,7 @@
 #include <sys/ioctl.h>
 #include "pch.hpp"
 #include "font_small.hpp"
+#include "font_big.hpp"
 
 // default framebuffer palette
 typedef enum
@@ -121,10 +122,10 @@ public:
     void put_char(int x, int y, int c, int colidx)
     {
         int i, j, bits;
-        for (i = 0; i < font_vga_8x8.height; i++)
+        for (i = 0; i < font_ter_16x32.height; i++)
         {
-            bits = font_vga_8x8.data[font_vga_8x8.height * c + i];
-            for (j = 0; j < font_vga_8x8.width; j++, bits <<= 1)
+            bits = font_ter_16x32.data[font_ter_16x32.height * c + i];
+            for (j = 0; j < font_ter_16x32.width; j++, bits <<= 1)
                 if (bits & 0x80)
                 {
                     put_pixel_16bpp(x + j, y + i, 255, 255, 255);
@@ -135,7 +136,7 @@ public:
     void put_string(int x, int y, char *s, unsigned colidx)
     {
         int i;
-        for (i = 0; *s; i++, x += font_vga_8x8.width, s++)
+        for (i = 0; *s; i++, x += font_ter_16x32.width, s++)
             put_char(x, y, *s, colidx);
     }
 };
