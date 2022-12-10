@@ -101,6 +101,7 @@ public:
         x = y = valx = valy = savex = savey = 0;
         auto moment = std::chrono::steady_clock::now();
         int touch_on = 0;
+        bool button_click = false;
 
         struct input_event ev;
 
@@ -123,18 +124,19 @@ public:
                     auto duration = moment - std::chrono::steady_clock::now();
                     if (duration.count() > 0.5 && abs(valx - savex) / scaleX < 0.1 && abs(valy - savey) / scaleY < 0.1)
                     {
-                        LOG(LogLvl::DEBUG) << "Button click" << valx << valy;
+                        bool button_click = true;
+                        LOG(LogLvl::DEBUG) << "Button click!!!";
                     }
                 }
             }
 
             else if (ev.type == EV_ABS && ev.code == ABS_X)
             {
-                valx = (ev.value - minX) * scaleX;
+                valx = ev.value;
             }
             else if (ev.type == EV_ABS && ev.code == ABS_Y)
             {
-                valy = (ev.value - minY) * scaleY;
+                valy = ev.value;
             }
             else
             {
@@ -145,6 +147,8 @@ public:
             y = swapXY ? valx : valy;
             x = invX ? maxX - x : x;
             y = invY ? maxY - y : y;
+            x = (x - minX) * scaleX;
+            y = (y - minY) * scaleY;
             cout << "X, Y: " << x << ", " << y << std::endl;
             fb.drawSquare(x, y, 11, 11, COLOR_INDEX_T::GREEN);
         }
