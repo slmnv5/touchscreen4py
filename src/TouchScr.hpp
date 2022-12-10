@@ -97,8 +97,8 @@ public:
 
     void run()
     {
-        int x, y, valx, valy, savex, savey;
-        x = y = valx = valy = savex = savey = 0;
+        int x, y, savex, savey;
+        x = y = savex = savey = 0;
         auto started = myclock::now();
         int touch_on = 0;
         bool button_click = false;
@@ -115,15 +115,15 @@ public:
                 touch_on = ev.value;
                 if (touch_on)
                 {
-                    savex = valx;
-                    savey = valy;
+                    savex = x;
+                    savey = y;
                     started = myclock::now();
                 }
                 else
                 {
                     sec duration = myclock::now() - started;
-                    if (duration.count() > 0.5 && abs(valx - savex) / (maxX - minX) < 0.1 &&
-                        abs(valy - savey) / (maxY - minY) < 0.1)
+                    if (duration.count() > 0.5 && abs(x - savex) / (maxX - minX) < 0.1 &&
+                        abs(y - savey) / (maxY - minY) < 0.1)
                     {
                         button_click = true;
                         LOG(LogLvl::DEBUG) << "Button click!!!";
@@ -133,11 +133,11 @@ public:
 
             else if (ev.type == EV_ABS && ev.code == ABS_X)
             {
-                valx = ev.value;
+                x = ev.value;
             }
             else if (ev.type == EV_ABS && ev.code == ABS_Y)
             {
-                valy = ev.value;
+                y = ev.value;
             }
             else
             {
@@ -148,8 +148,8 @@ public:
                 button_click = false;
                 if (swapXY)
                 {
-                    x = valy;
-                    y = valx;
+                    x = y;
+                    y = x;
                 }
                 x = invX ? maxX - x : x;
                 y = invY ? maxY - y : y;
