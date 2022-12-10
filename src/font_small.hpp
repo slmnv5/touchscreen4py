@@ -4,7 +4,7 @@
 
 #define VGA8x8_IDX 0
 #define FONTDATAMAX 2048
-extern struct fbcon_font_desc font_vga_8x8;
+//extern struct fbcon_font_desc font_vga_8x8;
 
 #include <linux/types.h>
 

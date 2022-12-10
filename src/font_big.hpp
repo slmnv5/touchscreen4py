@@ -5,7 +5,7 @@
 
 #define TER16x32_IDX 0
 #define FONTDATAMAX 16384
-extern struct fbcon_font_desc font_ter_16x32;
+//extern struct fbcon_font_desc font_ter_16x32;
 
 struct fbcon_font_desc
 {
