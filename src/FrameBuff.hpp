@@ -90,13 +90,13 @@ public:
         close(fdfb);
     }
 
-    void draw_square(int x, int y, int width, int height, int c) const
+    void draw_square(int x, int y, int width, int height, int colidx) const
     {
         int h = 0;
         int w = 0;
         for (h = -height / 2; h < height / 2; h++)
             for (w = -width / 2; w < width / 2; w++)
-                put_pixel_16bpp(h + x, w + y, def_r[c], def_g[c], def_b[c]);
+                put_pixel_16bpp(h + x, w + y, def_r[colidx], def_g[colidx], def_b[colidx]);
     }
 
     void clear() const
@@ -113,7 +113,7 @@ public:
         return resY;
     }
 
-    void put_string(int x, int y, char *s, unsigned colidx)
+    void put_string(int x, int y, char *s, uint colidx)
     {
         int i;
         for (i = 0; *s; i++, x += font->width, s++)
@@ -133,22 +133,30 @@ private:
         {
             return;
         }
-        unsigned short c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
+        unsigned short colidx = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
         // write 'two bytes at once'
-        *((unsigned short *)(fbp + pix_offset)) = c;
+        *((unsigned short *)(fbp + pix_offset)) = colidx;
     }
 
-    void put_char(int x, int y, int c, int colidx)
+    void put_char(int x, int y, int font_chr, uint colidx)
     {
-
+        uint char_w = font->width / 8;
+        uint char_sz = font->height * char_w;
+        uint start = font_chr * char_sz;
         int i, j, bits;
-        for (i = 0; i < font->height; i++)
+        for (i = 0; i < char_sz; i++)
         {
-            bits = font->data[font->height * c + i];
-            for (j = 0; j < font->width; j++, bits <<= 1)
+            uint col = i % char_w;
+            uint row = i / char_w;
+            bits = fbp[start + i];
+            for (j = 0; j < 8; j++, bits <<= 1)
                 if (bits & 0x80)
                 {
-                    put_pixel_16bpp(x + j, y + i, 255, 255, 255);
+                    put_pixel_16bpp(x + col, y + row, def_r[colidx], def_g[colidx], def_b[colidx]);
+                }
+                else
+                {
+                    put_pixel_16bpp(x + col, y + row, 0, 0, 0);
                 }
         }
     }
