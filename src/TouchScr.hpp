@@ -43,7 +43,7 @@ public:
     TouchScr(bool invx, bool invy) : invX(invx), invY(invy)
     {
 
-        if (fb.resx() <= 0 || fb.resy() <= 0)
+        if (fb.res_x() <= 0 || fb.res_y() <= 0)
         {
             throw std::runtime_error("Screen resolution must be positive");
         }
@@ -75,8 +75,8 @@ public:
         auto started = myclock::now();
         int touch_on = 0;
         bool button_click = false;
-        float scaleX = 1.0 / (maxX - minX) * fb.resx();
-        float scaleY = 1.0 / (maxY - minY) * fb.resy();
+        float scaleX = 1.0 / (maxX - minX) * fb.res_x();
+        float scaleY = 1.0 / (maxY - minY) * fb.res_y();
         LOG(LogLvl::DEBUG) << "Touch screen: "
                            << "scaleX: " << scaleX << ", scaleY: " << scaleY;
 
@@ -126,7 +126,7 @@ public:
                 x = (x - minX) * scaleX;
                 y = (y - minY) * scaleY;
                 LOG(LogLvl::DEBUG) << "Button click at X, Y: " << x << " " << y;
-                fb.drawSquare(x, y, 15, 15, COLOR_INDEX_T::WHITE);
+                fb.draw_square(x, y, 15, 15, COLOR_INDEX_T::WHITE);
                 que.push(std::pair<float, float>(x, y));
             }
         }

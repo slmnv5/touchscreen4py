@@ -6,8 +6,7 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include "pch.hpp"
-// #include "font_small.hpp"
-#include "font_big.hpp"
+#include "fbfonts.hpp"
 
 // default framebuffer palette
 typedef enum
@@ -48,12 +47,13 @@ private:
     int resX, resY;      // screen resolution
     uint screensize = 0; // screen memory size in bytes
     uint linesize = 0;   // screen line size in bytes
+    fb_pixel_font *font = &font_8x8;
 
 public:
-    FrameBuff(int fbid = 1)
+    FrameBuff(int fbidx = 1)
     {
         // fb1 connected to LCD screen, dont know how to change
-        std::string fbname = "/dev/fb" + std::to_string(fbid);
+        std::string fbname = "/dev/fb" + std::to_string(fbidx);
         fdfb = open(fbname.c_str(), O_RDWR);
         if (fdfb < 0)
         {
@@ -90,19 +90,7 @@ public:
         close(fdfb);
     }
 
-    void put_pixel_16bpp(int x, int y, int r, int g, int b) const
-    {
-        int pix_offset = x * 2 + y * linesize;
-        if (pix_offset < 0 || pix_offset > (int)(this->screensize - 2))
-        {
-            return;
-        }
-        unsigned short c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-        // write 'two bytes at once'
-        *((unsigned short *)(fbp + pix_offset)) = c;
-    }
-
-    void drawSquare(int x, int y, int width, int height, int c) const
+    void draw_square(int x, int y, int width, int height, int c) const
     {
         int h = 0;
         int w = 0;
@@ -116,34 +104,53 @@ public:
         memset(fbp, 0, screensize);
     }
 
-    const int &resx() const
+    const int &res_x() const
     {
         return resX;
     }
-    const int &resy() const
+    const int &res_y() const
     {
         return resY;
-    }
-
-    void put_char(int x, int y, int c, int colidx)
-    {
-        int i, j, bits;
-        for (i = 0; i < font_ter_16x32.height; i++)
-        {
-            bits = font_ter_16x32.data[font_ter_16x32.height * c + i];
-            for (j = 0; j < font_ter_16x32.width; j++, bits <<= 1)
-                if (bits & 0x80)
-                {
-                    put_pixel_16bpp(x + j, y + i, 255, 255, 255);
-                }
-        }
     }
 
     void put_string(int x, int y, char *s, unsigned colidx)
     {
         int i;
-        for (i = 0; *s; i++, x += font_ter_16x32.width, s++)
+        for (i = 0; *s; i++, x += font->width, s++)
             put_char(x, y, *s, colidx);
+    }
+
+    void set_font(fb_pixel_font &f)
+    {
+        font = &f;
+    }
+
+private:
+    void put_pixel_16bpp(int x, int y, int r, int g, int b) const
+    {
+        int pix_offset = x * 2 + y * linesize;
+        if (pix_offset < 0 || pix_offset > (int)(this->screensize - 2))
+        {
+            return;
+        }
+        unsigned short c = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
+        // write 'two bytes at once'
+        *((unsigned short *)(fbp + pix_offset)) = c;
+    }
+
+    void put_char(int x, int y, int c, int colidx)
+    {
+
+        int i, j, bits;
+        for (i = 0; i < font->height; i++)
+        {
+            bits = font->data[font->height * c + i];
+            for (j = 0; j < font->width; j++, bits <<= 1)
+                if (bits & 0x80)
+                {
+                    put_pixel_16bpp(x + j, y + i, 255, 255, 255);
+                }
+        }
     }
 };
 
