@@ -55,9 +55,9 @@ TEST_CASE("Test 2", "[all][basic]")
 		assert(fb.resy() > 10);
 
 		LOG(LogLvl::INFO) << "====================Touch screen test============";
-		TouchScr ts(fb.resx(), fb.resy());
+		TouchScr ts(true);
 		LOG(LogLvl::INFO) << "Touch screen created";
-		ts.run(fb);
+		ts.run();
 		LOG(LogLvl::INFO) << "Screen run done!!!";
 	}
 }

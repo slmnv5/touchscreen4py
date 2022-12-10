@@ -61,7 +61,7 @@ public:
     void put_pixel_16bpp(int x, int y, int r, int g, int b) const
     {
         int pix_offset = x * 2 + y * linesize;
-        if (pix_offset < 0 || pix_offset > this->screensize - 2)
+        if (pix_offset < 0 || pix_offset > (int)(this->screensize - 2))
         {
             return;
         }

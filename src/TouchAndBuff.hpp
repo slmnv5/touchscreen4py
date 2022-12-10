@@ -16,8 +16,7 @@ private:
 public:
     TouchAndBuff1()
     {
-        FrameBuff fb;
-        ts = new TouchScr(fb, true);
+        ts = new TouchScr(true);
         run_thread = std::thread(&TouchAndBuff1::run, this);
     }
     virtual ~TouchAndBuff1()

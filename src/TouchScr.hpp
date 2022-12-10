@@ -52,13 +52,13 @@ private:
     float scaleX, scaleY, scaleP;
     const int codeX;
     const int codeY;
-    const FrameBuff &fb;
+    const FrameBuff fb;
 
 public:
     bool stopped = false;
 
-    TouchScr(FrameBuff &buff, bool swapxy)
-        : fb(buff), codeX(swapxy ? ABS_Y : ABS_X), codeY(swapxy ? ABS_X : ABS_Y)
+    TouchScr(bool swapxy)
+        : codeX(swapxy ? ABS_Y : ABS_X), codeY(swapxy ? ABS_X : ABS_Y)
     {
 
         if (fb.resx() <= 0 || fb.resy() <= 0)
@@ -103,6 +103,7 @@ public:
     void run()
     {
         int valx, valy, savex, savey;
+        valx = valy = savex = savey = 0;
         auto moment = std::chrono::steady_clock::now();
         int touch_on = 0;
 
@@ -144,8 +145,6 @@ public:
             {
                 continue;
             }
-            assert(0 <= valx <= 480);
-            assert(0 <= valy <= 320);
             // LOG(LogLvl::DEBUG) << "valx, valy: " << valx << ", " << valy;
             fb.drawSquare(valx, valy, 11, 11, COLOR_INDEX_T::GREEN);
         }
