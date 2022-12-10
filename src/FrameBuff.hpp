@@ -46,7 +46,7 @@ private:
     char *fbp = 0;       // pointer to frame buffer memory
     int resX, resY;      // screen resolution
     uint screensize = 0; // screen memory size in bytes
-    uint linesize = 0;   // screen line size in bytes
+    uint pixelsize = 0;  // pixel size in bytes
     fb_pixel_font *font = &font_8x8;
 
 public:
@@ -71,9 +71,14 @@ public:
         LOG(LogLvl::DEBUG) << "var.xoffset, var.left_margin: " << var.xoffset << ", " << var.left_margin;
         LOG(LogLvl::DEBUG) << "var.yoffset, var.upper_margin: " << var.yoffset << ", " << var.upper_margin;
 
-        linesize = resX * (var.bits_per_pixel / 8);
-        screensize = resY * linesize;
-        LOG(LogLvl::DEBUG) << "Calculated memory and line sizes: " << screensize << ", " << linesize;
+        pixelsize = var.bits_per_pixel / 8;
+        if (2 != pixelsize)
+        {
+            close(fdfb);
+            throw std::runtime_error("Cannot use this device, color depth: " + std::to_string(var.bits_per_pixel));
+        }
+        screensize = resY * resX * pixelsize;
+        LOG(LogLvl::DEBUG) << "Calculated memory and pixel sizes, bytes: " << screensize << ", " << pixelsize;
 
         fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
         int int_result = reinterpret_cast<std::intptr_t>(fbp);
@@ -94,9 +99,10 @@ public:
     {
         int h = 0;
         int w = 0;
+        unsigned short color = idx_to_color(colidx);
         for (h = -height / 2; h < height / 2; h++)
             for (w = -width / 2; w < width / 2; w++)
-                put_pixel_16bpp(h + x, w + y, def_r[colidx], def_g[colidx], def_b[colidx]);
+                put_pixel(h + x, w + y, color);
     }
 
     void clear() const
@@ -134,7 +140,7 @@ public:
             for (j = 0; j < font->width; j++, bits <<= 1)
                 if (bits & 0x80)
                 {
-                    put_pixel_16bpp(x + j, y + i, 255, 255, 255);
+                    put_pixel(x + j, y + i, 255, 255, 255);
                 }
         }
     }
@@ -143,38 +149,55 @@ public:
     {
         uint char_w = font->width / 8;
         uint char_sz = font->height * char_w;
-        uint start = font_chr * char_sz;
-        int i, j, bits;
-        for (i = 0; i < char_sz; i++)
+        uint font_offset = font_chr * char_sz;
+        uint pix_offset = y * resX * pixelsize + x * pixelsize;
+        uint color = idx_to_color(colidx);
+
+        for (int row = 0; row < font->height; row++)
         {
-            uint col = i % char_w;
-            uint row = i / char_w;
-            bits = font->data[start + i];
-            LOG(LogLvl::DEBUG) << (int)bits;
-            for (j = 0; j < 8; j++, bits <<= 1)
-                if (bits & 0x80)
+            for (int col = 0; col < font->width; col++)
+            {
+                int bits = font->data[font_offset];
+                for (int j = 0; j < 8; j++, bits <<= 1)
                 {
-                    put_pixel_16bpp(x + col, y + row, 255, 255, 255);
+                    unsigned short scr_color = (bits & 0x80) ? color : 0;
+                    *((unsigned short *)(fbp + pix_offset)) = scr_color;
                 }
-                else
-                {
-                    put_pixel_16bpp(x + col, y + row, 0, 0, 0);
-                }
+                pix_offset++;
+            }
+            pix_offset += resX * pixelsize;
         }
-        LOG(LogLvl::DEBUG) << "Done, char: " << font_chr << ", " << font->name;
     }
 
-private:
-    void put_pixel_16bpp(int x, int y, int r, int g, int b) const
+protected:
+    void put_pixel(int x, int y, int r, int g, int b) const
     {
-        int pix_offset = x * 2 + y * linesize;
+        int pix_offset = x * pixelsize + y * resX * pixelsize;
         if (pix_offset < 0 || pix_offset > (int)(this->screensize - 2))
         {
             return;
         }
-        unsigned short colidx = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
+        unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
         // write 'two bytes at once'
-        *((unsigned short *)(fbp + pix_offset)) = colidx;
+        *((unsigned short *)(fbp + pix_offset)) = color;
+    }
+
+    void put_pixel(int x, int y, unsigned short color) const
+    {
+        int pix_offset = x * pixelsize + y * resX * pixelsize;
+        if (pix_offset < 0 || pix_offset > (int)(this->screensize - 2))
+        {
+            return;
+        }
+        // write 'two bytes at once'
+        *((unsigned short *)(fbp + pix_offset)) = color;
+    }
+    unsigned short idx_to_color(int colidx) const
+    {
+        unsigned short r = def_r[colidx];
+        unsigned short g = def_g[colidx];
+        unsigned short b = def_b[colidx];
+        return ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
     }
 };
 
