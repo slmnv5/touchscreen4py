@@ -146,6 +146,7 @@ private:
         int i, j, bits;
         for (i = 0; i < char_sz; i++)
         {
+            LOG(LogLvl::DEBUG) << fbp[start + i];
             uint col = i % char_w;
             uint row = i / char_w;
             bits = fbp[start + i];
@@ -159,6 +160,7 @@ private:
                     put_pixel_16bpp(x + col, y + row, 0, 0, 0);
                 }
         }
+        LOG(LogLvl::DEBUG) << "Done, char: " << font_chr << ", " << font->name;
     }
 };
 
