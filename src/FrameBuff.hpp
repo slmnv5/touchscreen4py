@@ -153,7 +153,7 @@ private:
             for (j = 0; j < 8; j++, bits <<= 1)
                 if (bits & 0x80)
                 {
-                    put_pixel_16bpp(x + col, y + row, def_r[colidx], def_g[colidx], def_b[colidx]);
+                    put_pixel_16bpp(x + col, y + row, 255, 255, 255);
                 }
                 else
                 {
