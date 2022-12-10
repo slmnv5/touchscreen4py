@@ -115,6 +115,7 @@ public:
                 touch_on = ev.value;
                 if (touch_on)
                 {
+                    cout << "-------------\n";
                     savex = valx;
                     savey = valy;
                     moment = std::chrono::steady_clock::now();
@@ -127,6 +128,7 @@ public:
                         bool button_click = true;
                         LOG(LogLvl::DEBUG) << "Button click!!!";
                     }
+                    cout << duration.count() << "!!!!!!!!!!!!!!!!!!!\n";
                 }
             }
 
@@ -142,14 +144,16 @@ public:
             {
                 continue;
             }
-            // LOG(LogLvl::DEBUG) << "valx, valy: " << valx << ", " << valy;
-            x = swapXY ? valy : valx;
-            y = swapXY ? valx : valy;
+            if (swapXY)
+            {
+                x = valy;
+                y = valx;
+            }
             x = invX ? maxX - x : x;
             y = invY ? maxY - y : y;
             x = (x - minX) * scaleX;
             y = (y - minY) * scaleY;
-            cout << "X, Y: " << x << ", " << y << std::endl;
+            // cout << "X, Y: " << x << ", " << y << std::endl;
             fb.drawSquare(x, y, 11, 11, COLOR_INDEX_T::GREEN);
         }
     }
