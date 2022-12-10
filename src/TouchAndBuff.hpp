@@ -9,14 +9,15 @@
 class TouchAndBuff1
 {
 private:
-    FrameBuff fb;
-    TouchScr ts;
+    TouchScr *ts;
 
     std::thread run_thread;
 
 public:
-    TouchAndBuff1() : fb(), ts(fb.resx(), fb.resy(), true)
+    TouchAndBuff1()
     {
+        FrameBuff fb;
+        ts = new TouchScr(fb, true);
         run_thread = std::thread(&TouchAndBuff1::run, this);
     }
     virtual ~TouchAndBuff1()
@@ -25,11 +26,11 @@ public:
     }
     void stop()
     {
-        ts.stopped = true;
+        ts->stopped = true;
     }
     void start()
     {
-        ts.stopped = false;
+        ts->stopped = false;
     }
     int setText(const char *)
     {
@@ -38,7 +39,7 @@ public:
 
     void run()
     {
-        ts.run(fb);
+        ts->run();
     }
 };
 

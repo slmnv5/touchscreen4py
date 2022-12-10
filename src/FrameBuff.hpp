@@ -79,11 +79,11 @@ public:
                 put_pixel_16bpp(h + x, w + y, def_r[c], def_g[c], def_b[c]);
     }
 
-    float resx() const
+    const int &resx() const
     {
         return resX;
     }
-    float resy() const
+    const int &resy() const
     {
         return resY;
     }

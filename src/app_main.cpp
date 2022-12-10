@@ -59,8 +59,8 @@ void help()
 void test2()
 {
 	FrameBuff fb;
-	TouchScr ts(fb.resx(), fb.resy(), true);
-	ts.run(fb);
+	TouchScr ts(fb, true);
+	ts.run();
 }
 void test1()
 {

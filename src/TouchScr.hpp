@@ -50,18 +50,18 @@ private:
     int fdscr;
     int minX, minY, minP;
     float scaleX, scaleY, scaleP;
-    const bool swapXY;
     const int codeX;
     const int codeY;
+    const FrameBuff &fb;
 
 public:
     bool stopped = false;
 
-    TouchScr(int resx, int resy, bool swapxy)
-        : swapXY(swapxy), codeX(swapxy ? ABS_Y : ABS_X), codeY(swapxy ? ABS_X : ABS_Y)
+    TouchScr(FrameBuff &buff, bool swapxy)
+        : fb(buff), codeX(swapxy ? ABS_Y : ABS_X), codeY(swapxy ? ABS_X : ABS_Y)
     {
 
-        if (resx <= 0 || resy <= 0)
+        if (fb.resx() <= 0 || fb.resy() <= 0)
         {
             throw std::runtime_error("Screen resolution must be positive");
         }
@@ -82,11 +82,11 @@ public:
         int minV, maxV;
         getFromDevice(codeX, minV, maxV);
         minX = minV;
-        scaleX = 1.0 / (maxV - minV) * resx;
+        scaleX = 1.0 / (maxV - minV) * fb.resx();
 
         getFromDevice(codeY, minV, maxV);
         minY = minV;
-        scaleY = 1.0 / (maxV - minV) * resy;
+        scaleY = 1.0 / (maxV - minV) * fb.resy();
 
         getFromDevice(ABS_PRESSURE, minV, maxV);
         minP = minV;
@@ -100,7 +100,7 @@ public:
     }
     ~TouchScr() {}
 
-    void run(FrameBuff &fb)
+    void run()
     {
         int valx, valy, savex, savey;
         auto moment = std::chrono::steady_clock::now();
