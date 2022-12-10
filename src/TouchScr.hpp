@@ -155,6 +155,7 @@ public:
                 y = invY ? maxY - y : y;
                 x = (x - minX) * scaleX;
                 y = (y - minY) * scaleY;
+                LOG(LogLvl::DEBUG) << "Button click at X, Y: " << x << " " << y;
                 fb.drawSquare(x, y, 15, 15, COLOR_INDEX_T::WHITE);
             }
         }
