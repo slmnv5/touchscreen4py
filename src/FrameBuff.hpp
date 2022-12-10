@@ -1,11 +1,11 @@
 #ifndef FRAMEBUFF_H
 #define FRAMEBUFF_H
 
-#include <stdlib.h>
+// #include <stdlib.h>
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
-#include "lib/log.hpp"
+#include "pch.hpp"
 
 // default framebuffer palette
 typedef enum

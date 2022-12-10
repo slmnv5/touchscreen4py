@@ -2,14 +2,13 @@
 #define TOUCHSCR_H
 
 #include <linux/input.h>
-#include <fcntl.h>
-#include <linux/fb.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <stdio.h>
-#include <string.h>
+// #include <fcntl.h>
+//  #include <linux/fb.h>
+//   #include <unistd.h>
+// #include <sys/ioctl.h>
+// #include <stdio.h>
+//  #include <string.h>
 
-#include "lib/log.hpp"
 #include "FrameBuff.hpp"
 #include "pch.hpp"
 
@@ -30,19 +29,6 @@ std::string find_touchscr_event()
 
 using myclock = std::chrono::system_clock;
 using sec = std::chrono::duration<double>;
-
-const char *events[EV_MAX + 1] = {
-    events[EV_SYN] = "Sync",
-    events[EV_KEY] = "Key",
-    events[EV_REL] = "Relative",
-    events[EV_ABS] = "Absolute",
-    events[EV_MSC] = "Misc",
-    events[EV_LED] = "LED",
-    events[EV_SND] = "Sound",
-    events[EV_REP] = "Repeat",
-    events[EV_FF] = "ForceFeedback",
-    events[EV_PWR] = "Power",
-    events[EV_FF_STATUS] = "ForceFeedbackStatus"};
 
 class TouchScr
 {
@@ -126,11 +112,9 @@ public:
                         abs(y - savey) / (maxY - minY) < 0.1)
                     {
                         button_click = true;
-                        LOG(LogLvl::DEBUG) << "Button click!!!";
                     }
                 }
             }
-
             else if (ev.type == EV_ABS && ev.code == ABS_X)
             {
                 x = ev.value;
@@ -166,7 +150,6 @@ private:
     {
         // const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
         int arrPropValue[6] = {};
-
         if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
         {
             throw std::runtime_error("Cannot read touch screen device");
