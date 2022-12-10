@@ -10,10 +10,10 @@ TEST_CASE("Test 1", "[all][basic]")
 	SECTION("Section 1")
 	{
 
-		LOG(LogLvl::DEBUG) << "TEST0";
-		LOG(LogLvl::INFO) << "TEST1";
-		LOG(LogLvl::WARN) << "TEST2";
-		LOG(LogLvl::ERROR) << "TEST3";
+		LOG(LogLvl::DEBUG) << "DEBUG";
+		LOG(LogLvl::INFO) << "INFO";
+		LOG(LogLvl::WARN) << "WARN";
+		LOG(LogLvl::ERROR) << "ERROR";
 
 		REQUIRE(Log::ReportingLevel() == LogLvl::DEBUG);
 		REQUIRE(static_cast<LogLvl>(2) == LogLvl::WARN);
@@ -23,10 +23,10 @@ TEST_CASE("Test 1", "[all][basic]")
 	SECTION("Section 2")
 	{
 		LOG::ReportingLevel() = LogLvl::WARN;
-		LOG(LogLvl::DEBUG) << "TEST0";
-		LOG(LogLvl::INFO) << "TEST1";
-		LOG(LogLvl::WARN) << "TEST2";
-		LOG(LogLvl::ERROR) << "TEST3";
+		LOG(LogLvl::DEBUG) << "Should not see this !!!!!!!";
+		LOG(LogLvl::INFO) << "Should not see this !!!!!!!";
+		LOG(LogLvl::WARN) << "WARN";
+		LOG(LogLvl::ERROR) << "ERROR";
 		LOG::ReportingLevel() = LogLvl::DEBUG;
 	}
 }
@@ -64,6 +64,7 @@ TEST_CASE("Test 3", "[all][basic]")
 
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuff fb;
-		fb.put_string(20, 20, "This is test", GREEN);
+		fb.put_string(120, 120, "AA", GREEN);
+		fb.put_string(220, 220, "BB", COLOR_INDEX_T::YELLOW);
 	}
 }

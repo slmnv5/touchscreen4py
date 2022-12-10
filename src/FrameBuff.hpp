@@ -6,7 +6,7 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include "pch.hpp"
-//#include "font_small.hpp"
+// #include "font_small.hpp"
 #include "font_big.hpp"
 
 // default framebuffer palette
@@ -50,9 +50,10 @@ private:
     uint linesize = 0;   // screen line size in bytes
 
 public:
-    FrameBuff()
+    FrameBuff(int fbid = 1)
     {
-        std::string fbname("/dev/fb0");
+        // fb1 connected to LCD screen, dont know how to change
+        std::string fbname = "/dev/fb" + std::to_string(fbid);
         fdfb = open(fbname.c_str(), O_RDWR);
         if (fdfb < 0)
         {
