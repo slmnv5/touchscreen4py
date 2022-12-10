@@ -149,7 +149,7 @@ private:
             LOG(LogLvl::DEBUG) << (int)fbp[start + i];
             uint col = i % char_w;
             uint row = i / char_w;
-            bits = fbp[start + i];
+            bits = font->data[start + i];
             for (j = 0; j < 8; j++, bits <<= 1)
                 if (bits & 0x80)
                 {

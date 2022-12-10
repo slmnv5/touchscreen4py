@@ -82,7 +82,7 @@ void test1()
 			continue;
 		}
 
-		fb.drawSquare(x, y, 50, 50, COLOR_INDEX_T::GREEN);
+		fb.draw_square(x, y, 50, 50, COLOR_INDEX_T::GREEN);
 	}
 }
 
