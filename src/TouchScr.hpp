@@ -136,12 +136,12 @@ public:
             else if (ev.type == EV_ABS && ev.code == codeX)
             {
                 valx = (ev.value - minX) * scaleX;
-                cout << "XXXXXXXXXX" << valx << endl;
+                cout << "XXXXXXXXXX" << valx << std::endl;
             }
             else if (ev.type == EV_ABS && ev.code == codeY)
             {
                 valy = (ev.value - minY) * scaleY;
-                cout << "YYYYYYYY" << valy << endl;
+                cout << "YYYYYYYY" << valy << std::endl;
             }
             else
             {
