@@ -16,8 +16,7 @@ TEST_CASE("Test TS run in thread and get messages", "[all]")
 		auto started = myclock::now();
 		seconds duration = seconds(0);
 		LOG(LogLvl::INFO) << "Running duration: " << duration.count();
-		sleep(2);
-		while (duration.count() < 10)
+		while (duration.count() < 220)
 		{
 			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
 			duration = myclock::now() - started;
