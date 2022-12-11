@@ -17,7 +17,7 @@ public:
 
     TouchScreenPy() : TouchScreen(false, true)
     {
-        run_thread = std::thread(TouchScreen::run, this);
+        // run_thread = std::thread(TouchScreen::run, this);
     }
     virtual ~TouchScreenPy()
     {
@@ -58,7 +58,7 @@ extern "C"
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            auto pair = x->getClickPosition();
+            auto pair = x->mQueue.pop();
             if (pair.first < x->text_lines.size())
             {
                 auto line = x->text_lines.at(pair.first);

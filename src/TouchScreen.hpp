@@ -3,8 +3,9 @@
 
 #include <linux/input.h>
 
-#include "FrameBuffer.hpp"
 #include "pch.hpp"
+#include "FrameBuffer.hpp"
+#include "lib/SafeQueue.hpp"
 
 #define MAX_QUEUE_SZ 20
 #define MKS_QUEUE_SLEEP 100000
@@ -49,7 +50,6 @@ private:
     int mFdScr;
     int mMinX, mMinY, mMinP;
     int mMaxX, mMaxY, mMaxP;
-    std::queue<std::pair<float, float>> mQueue;
     const bool mInvertX;
     const bool mInvertY;
     std::thread mRunThread;
@@ -57,6 +57,7 @@ private:
 public:
     bool mStopped = false;
     FrameBuffer mFrameBuffer;
+    SafeQueue<std::pair<float, float>> mQueue;
 
     TouchScreen(bool invx, bool invy) : mFrameBuffer(), mInvertX(invx), mInvertY(invy)
     {
@@ -156,17 +157,6 @@ public:
                 mQueue.push(std::pair<int, int>(col, row));
             }
         }
-    }
-
-    const std::pair<int, int> &getClickPosition()
-    {
-        while(mQueue.empty())
-        {
-            usleep(MKS_QUEUE_SLEEP);
-        }
-        std::pair<int, int> pos = mQueue.front();
-        mQueue.pop();
-        return pos;
     }
 
 private:
