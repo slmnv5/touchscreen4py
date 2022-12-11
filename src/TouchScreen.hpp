@@ -66,7 +66,11 @@ public:
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << minX << "--" << maxX << ", Y: " << minY << "--" << maxY;
     }
-    ~TouchScreen() {}
+    virtual ~TouchScreen()
+    {
+        stopped = true;
+        close(fdscr);
+    }
 
     void run()
     {
@@ -134,15 +138,11 @@ public:
 
     const std::pair<int, int> &get_event()
     {
-        while (!stopped)
+        if (!que.empty())
         {
-            if (!que.empty())
-            {
-                auto item = que.front();
-                que.pop();
-                return item;
-            }
-            usleep(100000);
+            auto item = que.front();
+            que.pop();
+            return item;
         }
     }
 

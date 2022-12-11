@@ -7,67 +7,49 @@
 #include "TouchScreen.hpp"
 #include "lib/utils.hpp"
 
-class TouchAndBuff
+class TouchScreenPy : public TouchScreen
 {
 private:
     std::thread run_thread;
 
 public:
-    TouchScreen ts;
     std::vector<std::string> text_lines;
 
-    TouchAndBuff() : ts(false, true)
+    TouchScreenPy() : TouchScreen(false, true)
     {
-        run_thread = std::thread(&TouchAndBuff::run, this);
+        run_thread = std::thread(TouchScreen::run, this);
     }
-    virtual ~TouchAndBuff()
+    virtual ~TouchScreenPy()
     {
         run_thread.join();
-    }
-    void stop()
-    {
-        ts.stopped = true;
-    }
-    void start()
-    {
-        ts.stopped = false;
-    }
-    int setText(const char *)
-    {
-        return 0;
-    }
-
-    void run()
-    {
-        ts.run();
     }
 };
 
 extern "C"
 {
 
-    void *createTchScr()
+    void *createTouchScreen()
     {
-        return new (std::nothrow) TouchAndBuff;
+        return new (std::nothrow) TouchScreenPy;
     }
 
     void deleteTchScr(void *ptr)
     {
-        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
+        TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
         delete x;
     }
 
     int stop(void *ptr)
     {
-        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
-        x->stop();
+        TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+        x->stopped = true;
         return 0;
     }
 
     int start(void *ptr)
     {
-        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
-        x->start();
+        TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+        x->stopped = false;
         return 0;
     }
 
@@ -75,8 +57,8 @@ extern "C"
     {
         try
         {
-            TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
-            auto pair = x->ts.get_event();
+            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+            auto pair = x->get_event();
             if (pair.first < x->text_lines.size())
             {
                 auto line = x->text_lines.at(pair.first);
@@ -96,7 +78,7 @@ extern "C"
     {
         try
         {
-            TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
+            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
             x->text_lines = split_string(text, "\n");
             for (int i = 0; i < x->text_lines.size(); i++)
             {
