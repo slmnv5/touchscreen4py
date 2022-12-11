@@ -149,7 +149,7 @@ public:
     {
         uint char_w = font->width / 8;
         uint char_sz = font->height * char_w;
-        uint font_offset = font_chr * char_sz;
+        uint font_offset = font_chr * font->height * font->width / 8;
         uint color = idx_to_color(colidx);
 
         for (int row = 0; row < font->height; row++)
