@@ -9,8 +9,8 @@
 #define MAX_QUEUE_SZ 20
 #define MKS_QUEUE_SLEEP 100000
 
-using myclock = std::chrono::system_clock;
-using sec = std::chrono::duration<double>;
+using myclock = std::chrono::steady_clock;
+using seconds = std::chrono::duration<double>;
 
 std::string findTouchscrEvent()
 {
@@ -89,12 +89,6 @@ public:
         close(mFdScr);
     }
 
-    void sleep()
-    {
-        // test sleep 10 seconds for unut tests
-        usleep(10000000);
-    }
-
     void run()
     {
         LOG(LogLvl::INFO) << "========= Starting run =========";
@@ -124,7 +118,7 @@ public:
                 }
                 else
                 {
-                    sec duration = myclock::now() - started;
+                    seconds duration = myclock::now() - started;
                     if (duration.count() > 0.5 && abs(x - savex) / (mMaxX - mMinX) < 0.1 &&
                         abs(y - savey) / (mMaxY - mMinY) < 0.1)
                     {

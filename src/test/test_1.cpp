@@ -4,18 +4,8 @@
 #include "TouchScreen.hpp"
 
 #include "lib/log.hpp"
-
-TEST_CASE("Test TS run in thread", "[all]")
-{
-	TouchScreen ts(false, true);
-
-	SECTION("Test run TS")
-	{
-		std::thread runThread(&TouchScreen::run, ts);
-		// ts.run();
-		sleep(11);
-	}
-}
+using myclock = std::chrono::steady_clock;
+using seconds = std::chrono::duration<double>;
 
 TEST_CASE("Test TS run in thread and get messages", "[all]")
 {
@@ -23,8 +13,11 @@ TEST_CASE("Test TS run in thread and get messages", "[all]")
 	{
 		TouchScreen ts(false, true);
 		std::thread runThread(&TouchScreen::run, ts);
-		for (int i = 0; i < 10; i++)
+		auto started = myclock::now();
+		seconds duration = seconds(0);
+		while (duration.count() < 10)
 		{
+			duration = myclock::now() - started;
 			std::pair<int, int> pos = ts.getClickPosition();
 			LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
 		}

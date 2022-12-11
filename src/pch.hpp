@@ -3,14 +3,14 @@
 
 #include <alsa/asoundlib.h>
 #include <algorithm>
+#include <sstream>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <sstream>
 #include <thread>
-#include <stdexcept>
 #include <map>
 #include <queue>
+#include <chrono>
 
 #endif
