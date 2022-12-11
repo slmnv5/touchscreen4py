@@ -89,6 +89,12 @@ public:
         close(mFdScr);
     }
 
+    void sleep()
+    {
+        // test sleep 10 seconds for unut tests
+        usleep(10000000);
+    }
+
     void run()
     {
         LOG(LogLvl::INFO) << "========= Starting run =========";

@@ -9,7 +9,7 @@ TEST_CASE("Test TS run in thread", "[all]")
 	SECTION("Test click on TS")
 	{
 		TouchScreen ts(false, true);
-		std::thread runThread(&TouchScreen::run, ts);
+		std::thread runThread(&TouchScreen::sleep, ts);
 	}
 }
 
