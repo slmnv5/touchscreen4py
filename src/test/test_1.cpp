@@ -13,6 +13,7 @@ TEST_CASE("Test TS run in thread and get messages", "[all]")
 	SECTION("Test click on TS")
 	{
 		std::thread runThread(&TouchScreen::run, ts);
+		sleep(20);
 		auto started = myclock::now();
 		seconds duration = seconds(0);
 		while (duration.count() < 10)
