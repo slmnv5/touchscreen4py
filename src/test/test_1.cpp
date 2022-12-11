@@ -71,6 +71,6 @@ TEST_CASE("Test 3", "[all][basic]")
 		fb.set_font(font_8x8);
 		fb.put_string(120, 120, "ABACUS 121", COLOR_INDEX_T::GREEN);
 		fb.set_font(font_16x32);
-		fb.put_string(220, 220, "ABACUS 121", COLOR_INDEX_T::YELLOW);
+		fb.put_string(220, 220, "ABACUS 121=================>", COLOR_INDEX_T::YELLOW);
 	}
 }
