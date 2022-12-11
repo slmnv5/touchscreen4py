@@ -2,6 +2,7 @@
 #include "lib/catch.hpp"
 #include "FrameBuffer.hpp"
 #include "TouchScreen.hpp"
+#include "TouchScreenPy.hpp"
 
 #include "lib/log.hpp"
 using myclock = std::chrono::steady_clock;
@@ -9,7 +10,7 @@ using seconds = std::chrono::duration<double>;
 
 TEST_CASE("Test TS run in thread and get messages", "[long][all]")
 {
-	TouchScreen ts(false, true);
+	TouchScreenPy tsp();
 	SECTION("Test run and click on TS")
 	{
 		auto started = myclock::now();
@@ -18,8 +19,8 @@ TEST_CASE("Test TS run in thread and get messages", "[long][all]")
 		{
 			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
 			duration = myclock::now() - started;
-			std::pair<int, int> pos = ts.mQueue.pop();
-			LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
+			auto clickEvent = tsp.getClickEvent();
+			LOG(LogLvl::INFO) << "Got clickEvent: " << clickEvent;
 		}
 	}
 }

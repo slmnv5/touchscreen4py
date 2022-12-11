@@ -44,8 +44,20 @@ std::string wordAtPosition(const std::string &s, unsigned int pos, char leftSpac
     auto word = s.substr(start, stop - start + 1);
     return word;
 }
+
+//============================================================
+
 class TouchScreen
 {
+
+public:
+    std::vector<std::string> mTextLines;
+    std::string mHeaderLine;
+    bool mStopped = false;
+    FrameBuffer mFrameBuffer;
+    SafeQueue<std::pair<float, float>> mQueue;
+    float mLoopSeconds = 0;
+
 private:
     int mFdScr;
     int mMinX, mMinY, mMinP;
@@ -53,12 +65,9 @@ private:
     const bool mInvertX;
     const bool mInvertY;
     std::thread mRunThread;
+    std::thread mUpdateThread;
 
 public:
-    bool mStopped = false;
-    FrameBuffer mFrameBuffer;
-    SafeQueue<std::pair<float, float>> mQueue;
-
     TouchScreen(bool invx, bool invy) : mFrameBuffer(), mInvertX(invx), mInvertY(invy)
     {
 
@@ -85,12 +94,23 @@ public:
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
         mRunThread = std::thread(&TouchScreen::run, this);
+        mUpdateThread = std::thread(&TouchScreen::update, this);
     }
     virtual ~TouchScreen()
     {
         mStopped = true;
         mRunThread.join();
         close(mFdScr);
+    }
+
+    void update()
+    {
+        while (!mStopped)
+        {
+            mFrameBuffer.putString(0, 0, mHeaderLine.c_str(), WHITE);
+            usleep(mLoopSeconds * 1000000 / 16);
+            mFrameBuffer.putString(0, 0, mHeaderLine.c_str(), WHITE);
+        }
     }
 
     void run()

@@ -92,7 +92,7 @@ bool tryParse(std::string &input, int &output)
 	{
 		output = std::stoi(input);
 	}
-	catch (std::invalid_argument)
+	catch (std::invalid_argument &e)
 	{
 		return false;
 	}
