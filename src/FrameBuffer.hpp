@@ -7,6 +7,7 @@
 #include <sys/ioctl.h>
 #include "pch.hpp"
 #include "fbfonts.hpp"
+#include "lib/log.hpp"
 
 // default framebuffer palette
 typedef enum

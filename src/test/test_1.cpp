@@ -2,7 +2,8 @@
 #include "lib/catch.hpp"
 #include "FrameBuffer.hpp"
 #include "TouchScreen.hpp"
-#include "lib/utils.hpp"
+
+#include "lib/log.hpp"
 
 TEST_CASE("Test TS run in thread", "[all]")
 {
