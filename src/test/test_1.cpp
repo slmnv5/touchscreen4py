@@ -51,7 +51,7 @@ TEST_CASE("Test 2", "[all][basic]")
 		fb.draw_square(133, 310, 22, 22, COLOR_INDEX_T::BLUE);
 		fb.draw_square(223, 233, 22, 22, COLOR_INDEX_T::RED);
 		fb.draw_square(453, 13, 22, 22, COLOR_INDEX_T::YELLOW);
-		sleep(5);
+		sleep(2);
 		assert(fb.res_x() > 10);
 		assert(fb.res_y() > 10);
 		assert(fb.res_x() < 10000);
