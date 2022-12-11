@@ -58,11 +58,11 @@ extern "C"
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            auto pair = x->get_event();
+            auto pair = x->getClickPosition();
             if (pair.first < x->text_lines.size())
             {
                 auto line = x->text_lines.at(pair.first);
-                auto word = word_at_position(line, pair.second, '[', ']');
+                auto word = wordAtPosition(line, pair.second, '[', ']');
                 if (word.length() > 0)
                     return word.c_str();
             }
@@ -82,7 +82,7 @@ extern "C"
             x->text_lines = split_string(text, "\n");
             for (int i = 0; i < x->text_lines.size(); i++)
             {
-                x->ts.fb.put_string(32 * (1 + i), 0, text, COLOR_INDEX_T::WHITE);
+                x->mFrameBuffer.putString(32 * (1 + i), 0, text, COLOR_INDEX_T::WHITE);
             }
             return 0;
         }

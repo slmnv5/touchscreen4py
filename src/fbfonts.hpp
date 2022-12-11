@@ -2,7 +2,7 @@
 // #include "font.h"
 // #include <linux/types.h>
 
-struct fb_pixel_font
+struct FbPixelFont
 {
 	const char *name;
 	int width, height;
@@ -11,7 +11,7 @@ struct fb_pixel_font
 
 extern unsigned char fontdata_16x32[];
 
-struct fb_pixel_font font_16x32 = {
+struct FbPixelFont font_16x32 = {
 	.name = "font_16x32",
 	.width = 16,
 	.height = 32,

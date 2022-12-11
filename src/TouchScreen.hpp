@@ -7,8 +7,12 @@
 #include "pch.hpp"
 
 #define MAX_QUEUE_SZ 20
+#define MKS_QUEUE_SLEEP 100000
 
-std::string find_touchscr_event()
+using myclock = std::chrono::system_clock;
+using sec = std::chrono::duration<double>;
+
+std::string findTouchscrEvent()
 {
     const char *cmd = "grep -E 'Handlers|EV=' /proc/bus/input/devices | "
                       "grep -B1 'EV=b' | grep -Eo 'event[0-9]+' | grep -Eo '[0-9]+' | tr -d '\n'";
@@ -23,53 +27,66 @@ std::string find_touchscr_event()
     return result;
 }
 
-using myclock = std::chrono::system_clock;
-using sec = std::chrono::duration<double>;
+std::string wordAtPosition(const std::string &s, unsigned int pos, char leftSpace, char rightSpace)
+{
+    unsigned int maxPos = s.length();
 
+    unsigned int start, stop;
+    start = stop = pos;
+    while (start < maxPos and s.at(start) != leftSpace)
+        start--;
+    while (stop < maxPos and s.at(stop) != rightSpace)
+        stop++;
+    if (stop >= maxPos or start >= maxPos)
+        return "";
+
+    auto word = s.substr(start, stop - start + 1);
+    return word;
+}
 class TouchScreen
 {
 private:
-    int fdscr;
-    int minX, minY, minP;
-    int maxX, maxY, maxP;
-    std::queue<std::pair<float, float>> que;
-    const bool invX;
-    const bool invY;
+    int mFdScr;
+    int mMinX, mMinY, mMinP;
+    int mMaxX, mMaxY, mMaxP;
+    std::queue<std::pair<float, float>> mQueue;
+    const bool mInvertX;
+    const bool mInvertY;
 
 public:
     bool stopped = false;
-    FrameBuffer fb;
+    FrameBuffer mFrameBuffer;
 
-    TouchScreen(bool invx, bool invy) : fb(), invX(invx), invY(invy)
+    TouchScreen(bool invx, bool invy) : mFrameBuffer(), mInvertX(invx), mInvertY(invy)
     {
 
-        if (fb.res_x() <= 0 || fb.res_y() <= 0)
+        if (mFrameBuffer.mPixelsX <= 0 || mFrameBuffer.mPixelsY <= 0)
         {
             throw std::runtime_error("Screen resolution must be positive");
         }
-        std::string dev_id = find_touchscr_event();
+        std::string dev_id = findTouchscrEvent();
         if ("" == dev_id)
         {
             throw std::runtime_error("Cannot find touch screen device");
         }
         std::string fname = "/dev/input/event" + dev_id;
-        fdscr = open(fname.c_str(), O_RDONLY);
-        if (fdscr < 0)
+        mFdScr = open(fname.c_str(), O_RDONLY);
+        if (mFdScr < 0)
         {
             throw std::runtime_error("Could not open touch screen device file: " + fname);
         }
         char name[256] = "Unknown";
-        ioctl(fdscr, EVIOCGNAME(sizeof(name)), name);
-        getFromDevice(ABS_X, minX, maxX);
-        getFromDevice(ABS_Y, minY, maxY);
-        getFromDevice(ABS_PRESSURE, minP, maxP);
+        ioctl(mFdScr, EVIOCGNAME(sizeof(name)), name);
+        getInfoFromDevice(ABS_X, mMinX, mMaxX);
+        getInfoFromDevice(ABS_Y, mMinY, mMaxY);
+        getInfoFromDevice(ABS_PRESSURE, mMinP, mMaxP);
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
-                          << ", X: " << minX << "--" << maxX << ", Y: " << minY << "--" << maxY;
+                          << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
     }
     virtual ~TouchScreen()
     {
         stopped = true;
-        close(fdscr);
+        close(mFdScr);
     }
 
     void run()
@@ -79,12 +96,12 @@ public:
         auto started = myclock::now();
         int touch_on = 0;
         bool button_click = false;
-        float scaleX = 1.0 / (maxX - minX) * fb.res_x();
-        float scaleY = 1.0 / (maxY - minY) * fb.res_y();
+        float scaleX = 1.0 / (mMaxX - mMinX) * mFrameBuffer.mPixelsX;
+        float scaleY = 1.0 / (mMaxY - mMinY) * mFrameBuffer.mPixelsY;
 
         struct input_event ev;
 
-        while (read(fdscr, &ev, sizeof(struct input_event)) != -1)
+        while (read(mFdScr, &ev, sizeof(struct input_event)) != -1)
         {
             if (stopped)
                 break;
@@ -101,8 +118,8 @@ public:
                 else
                 {
                     sec duration = myclock::now() - started;
-                    if (duration.count() > 0.5 && abs(x - savex) / (maxX - minX) < 0.1 &&
-                        abs(y - savey) / (maxY - minY) < 0.1)
+                    if (duration.count() > 0.5 && abs(x - savex) / (mMaxX - mMinX) < 0.1 &&
+                        abs(y - savey) / (mMaxY - mMinY) < 0.1)
                     {
                         button_click = true;
                     }
@@ -120,45 +137,39 @@ public:
             {
                 continue;
             }
-            if (button_click and que.size() < MAX_QUEUE_SZ)
+            if (button_click and mQueue.size() < MAX_QUEUE_SZ)
             {
                 button_click = false;
-                x = invX ? maxX - x : x;
-                y = invY ? maxY - y : y;
-                x = (x - minX) * scaleX;
-                y = (y - minY) * scaleY;
+                x = mInvertX ? mMaxX - x : x;
+                y = mInvertY ? mMaxY - y : y;
+                x = (x - mMinX) * scaleX;
+                y = (y - mMinY) * scaleY;
 
-                fb.draw_square(x, y, 15, 15, COLOR_INDEX_T::WHITE);
-                int col = x / fb.font.width;
-                int row = y / fb.font.height;
-                que.push(std::pair<int, int>(col, row));
+                mFrameBuffer.draw_square(x, y, 15, 15, COLOR_INDEX_T::WHITE);
+                int col = x / mFrameBuffer.mFont.width;
+                int row = y / mFrameBuffer.mFont.height;
+                mQueue.push(std::pair<int, int>(col, row));
             }
         }
     }
 
-    const std::pair<int, int> &get_event()
+    const std::pair<int, int> &getClickPosition()
     {
-        if (!que.empty())
+        if (mQueue.empty())
         {
-            auto item = que.front();
-            que.pop();
-            return item;
+            usleep(MKS_QUEUE_SLEEP);
         }
+        std::pair<int, int> pos = mQueue.front();
+        mQueue.pop();
+        return pos;
     }
 
 private:
-    std::pair<int, int> pixels_to_position(std::pair<float, float> pixels)
-    {
-        int col = pixels.first / fb.font.width;
-        int row = pixels.second / fb.font.height;
-        return std::pair<int, int>(col, row);
-    }
-
-    void getFromDevice(int propId, int &minV, int &maxV)
+    void getInfoFromDevice(int propId, int &minV, int &maxV)
     {
         // const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
         int arrPropValue[6] = {};
-        if (ioctl(fdscr, EVIOCGABS(propId), arrPropValue) < 0)
+        if (ioctl(mFdScr, EVIOCGABS(propId), arrPropValue) < 0)
         {
             throw std::runtime_error("Cannot read touch screen device");
         }
