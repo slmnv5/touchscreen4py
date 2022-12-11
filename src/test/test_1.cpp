@@ -10,6 +10,7 @@ TEST_CASE("Test TS run in thread", "[all]")
 	{
 		TouchScreen ts(false, true);
 		ts.sleep();
+		LOG(LogLvl::INFO) << "===== Sleep in thread ========";
 		std::thread runThread(&TouchScreen::sleep, ts);
 	}
 }
