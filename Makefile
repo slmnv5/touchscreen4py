@@ -14,12 +14,12 @@ CPPFLAGS := -I$(SRC_DIR) -MMD -MP
 CXXFLAGS := -std=c++11 -g -Wno-psabi -Wall
  
 app_t: $(OBJ_TST)
-	@echo "build app test and run unit tests"
+	@echo "==========> Build app_t to run unit tests"
 	cd $(PROJECT_ROOT)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^  $(LDFLAGS)
-	./app_t
 
 app_d: $(OBJ_APP)
+	@echo "==========> Build app_d with debug settings"
 	cd $(PROJECT_ROOT)
 	@echo "build debug version"
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^  $(LDFLAGS)
@@ -27,7 +27,7 @@ app_d: $(OBJ_APP)
 
 app: CXXFLAGS = -std=c++11 -O2 -Wall
 app: $(OBJ_APP)
-	@echo "Build release version"
+	@echo "==========> Build app release version"
 	cd $(PROJECT_ROOT)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^  $(LDFLAGS)
  
