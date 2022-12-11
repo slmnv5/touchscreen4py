@@ -4,12 +4,20 @@
 #include "TouchScreen.hpp"
 #include "lib/utils.hpp"
 
-TEST_CASE("Test TS 1", "[all][basic]")
+TEST_CASE("Test TS 1", "[all]")
+{
+	SECTION("Test run TS")
+	{
+		LOG(LogLvl::INFO) << "Touch screen device: " << findTouchscrEvent();
+		TouchScreen ts(false, true);
+		ts.run();
+	}
+}
+
+TEST_CASE("Test TS 2", "[all]")
 {
 	SECTION("Test click on TS")
 	{
-		LOG(LogLvl::INFO) << "Touch screen device: " << findTouchscrEvent();
-		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		TouchScreen ts(false, true);
 		std::thread runThread(&TouchScreen::run, ts);
 		for (int i = 0; i < 10; i++)
