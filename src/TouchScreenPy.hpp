@@ -18,15 +18,14 @@ public:
     {
     }
 
-    const char *getClickEvent()
+    std::string getClickEvent()
     {
         auto pair = this->mQueue.pop();
         if (pair.first < this->mTextLines.size())
         {
             auto line = this->mTextLines.at(pair.first);
             auto word = wordAtPosition(line, pair.second, '[', ']');
-            if (word.length() > 0)
-                return word.c_str();
+            return word;
         }
         return "";
     }
@@ -80,12 +79,11 @@ extern "C"
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            auto pair = x->mQueue.pop();
-            return x->getClickEvent();
+            return x->getClickEvent().c_str();
         }
         catch (...)
         {
-            return "-1";
+            return "";
         }
     }
 

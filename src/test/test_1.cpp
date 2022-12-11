@@ -10,7 +10,7 @@ using seconds = std::chrono::duration<double>;
 
 TEST_CASE("Test TS run in thread and get messages", "[long][all]")
 {
-	TouchScreenPy tsp();
+	TouchScreenPy tsp;
 	SECTION("Test run and click on TS")
 	{
 		auto started = myclock::now();
@@ -19,8 +19,8 @@ TEST_CASE("Test TS run in thread and get messages", "[long][all]")
 		{
 			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
 			duration = myclock::now() - started;
-			std::string clickEvent(tsp.getClickEvent());
-			LOG(LogLvl::INFO) << "Got clickEvent: " << clickEvent;
+			auto word = tsp.getClickEvent();
+			LOG(LogLvl::INFO) << "Got clickEvent: " << word;
 		}
 	}
 }
