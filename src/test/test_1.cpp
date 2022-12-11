@@ -19,7 +19,7 @@ TEST_CASE("Test TS run in thread and get messages", "[long][all]")
 		{
 			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
 			duration = myclock::now() - started;
-			auto clickEvent = tsp.getClickEvent();
+			std::string clickEvent(tsp.getClickEvent());
 			LOG(LogLvl::INFO) << "Got clickEvent: " << clickEvent;
 		}
 	}
