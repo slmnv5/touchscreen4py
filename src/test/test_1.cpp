@@ -104,3 +104,4 @@ TEST_CASE("Test TS 1", "[all][basic]")
 			LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
 		}
 	}
+}
