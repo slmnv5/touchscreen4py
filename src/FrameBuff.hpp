@@ -131,24 +131,8 @@ public:
         font = &f;
     }
 
-    void put_char(int x, int y, int c, int colidx)
+    void put_char(int x, int y, unsigned char font_chr, uint colidx)
     {
-        int i, j, bits;
-        for (i = 0; i < font->height; i++)
-        {
-            bits = font->data[font->height * c + i];
-            for (j = 0; j < font->width; j++, bits <<= 1)
-                if (bits & 0x80)
-                {
-                    put_pixel(x + j, y + i, 255, 255, 255);
-                }
-        }
-    }
-
-    void put_char111(int x, int y, unsigned char font_chr, uint colidx)
-    {
-        uint char_w = font->width / 8;
-        uint char_sz = font->height * char_w;
         uint font_offset = font_chr * font->height * font->width / 8;
         uint color = idx_to_color(colidx);
 

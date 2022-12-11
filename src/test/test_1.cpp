@@ -69,8 +69,8 @@ TEST_CASE("Test 3", "[all][basic]")
 		FrameBuff fb;
 		fb.clear();
 		fb.set_font(font_8x8);
-		fb.put_char111(120, 120, 'A', COLOR_INDEX_T::GREEN);
+		fb.put_string(120, 120, "ABACUS 121", COLOR_INDEX_T::GREEN);
 		fb.set_font(font_16x32);
-		fb.put_char111(220, 220, 'A', COLOR_INDEX_T::YELLOW);
+		fb.put_string(220, 220, "ABACUS 121", COLOR_INDEX_T::YELLOW);
 	}
 }
