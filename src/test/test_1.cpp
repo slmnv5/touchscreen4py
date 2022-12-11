@@ -20,8 +20,9 @@ TEST_CASE("Test TS run in thread and get messages", "[all]")
 		{
 			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
 			duration = myclock::now() - started;
-			std::pair<int, int> pos = ts.getClickPosition();
-			LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
+			sleep(1);
+			// std::pair<int, int> pos = ts.getClickPosition();
+			// LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
 		}
 	}
 }
