@@ -51,10 +51,12 @@ class TouchScreen
 {
 
 public:
+    FrameBuffer mFrameBuffer;
+    bool mStopped = false;
+
+protected:
     std::vector<std::string> mTextLines;
     std::string mHeaderLine;
-    bool mStopped = false;
-    FrameBuffer mFrameBuffer;
     SafeQueue<std::pair<float, float>> mQueue;
     float mLoopSeconds = 0;
 

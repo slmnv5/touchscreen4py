@@ -35,7 +35,7 @@ public:
         this->mTextLines = split_string(text, "\n");
         for (uint i = 0; i < this->mTextLines.size(); i++)
         {
-            this->mFrameBuffer.putString(32 * (1 + i), 0, text, COLOR_INDEX_T::WHITE);
+            this->mFrameBuffer.putString(0, 32 * (1 + i), text, COLOR_INDEX_T::WHITE);
         }
     }
 
