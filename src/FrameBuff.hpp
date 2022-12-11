@@ -147,9 +147,8 @@ public:
 
     void put_char111(int x, int y, unsigned char font_chr, uint colidx)
     {
-        uint char_w = font->width / 8;
-        uint char_sz = font->height * char_w;
-        uint font_offset = font_chr * char_sz;
+
+        uint font_offset = font_chr * font->width * font->height;
         uint color = idx_to_color(colidx);
 
         for (int row = 0; row < font->height; row++)
