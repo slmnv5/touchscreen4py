@@ -39,7 +39,7 @@ static unsigned short def_b[] =
     {0, 172, 0, 168, 0, 172, 0, 168,
      84, 255, 84, 255, 84, 255, 84, 255};
 
-class FrameBuff
+class FrameBuffer
 {
 private:
     int fdfb = -1;       // file descriptor
@@ -50,7 +50,7 @@ private:
     fb_pixel_font *font = &font_16x32;
 
 public:
-    FrameBuff(int fbidx = 1)
+    FrameBuffer(int fbidx = 1)
     {
         // fb1 connected to LCD screen, dont know how to change
         std::string fbname = "/dev/fb" + std::to_string(fbidx);
@@ -89,7 +89,7 @@ public:
         }
         LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
     }
-    virtual ~FrameBuff()
+    virtual ~FrameBuffer()
     {
         munmap(fbp, screensize);
         close(fdfb);

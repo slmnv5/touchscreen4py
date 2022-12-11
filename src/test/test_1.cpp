@@ -1,8 +1,8 @@
 #include "pch.hpp"
 #include "lib/catch.hpp"
 #include "TouchAndBuff.hpp"
-#include "FrameBuff.hpp"
-#include "TouchScr.hpp"
+#include "FrameBuffer.hpp"
+#include "TouchScreen.hpp"
 
 TEST_CASE("Test 1", "[all][basic]")
 {
@@ -42,7 +42,7 @@ TEST_CASE("Test 2", "[all][basic]")
 	SECTION("Section 2")
 	{
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
-		FrameBuff fb;
+		FrameBuffer fb;
 		LOG(LogLvl::INFO) << "Frame buffer created";
 		fb.draw_square(12, 12, 15, 15, COLOR_INDEX_T::RED);
 		LOG(LogLvl::INFO) << "Square draw done!!!";
@@ -66,11 +66,9 @@ TEST_CASE("Test 3", "[all][basic]")
 	{
 
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
-		FrameBuff fb;
+		FrameBuffer fb;
 		fb.clear();
-		fb.set_font(font_8x8);
 		fb.put_string(120, 120, "ABACUS 121", COLOR_INDEX_T::GREEN);
-		fb.set_font(font_16x32);
 		fb.put_string(220, 220, "ABACUS 121=================>", COLOR_INDEX_T::YELLOW);
 	}
 }

@@ -3,20 +3,20 @@
 
 #include "pch.hpp"
 
-#include "FrameBuff.hpp"
-#include "TouchScr.hpp"
+#include "FrameBuffer.hpp"
+#include "TouchScreen.hpp"
 
 class TouchAndBuff1
 {
 private:
-    TouchScr *ts;
+    TouchScreen *ts;
 
     std::thread run_thread;
 
 public:
     TouchAndBuff1()
     {
-        ts = new TouchScr(false, true);
+        TouchScreen ts(false, true);
         run_thread = std::thread(&TouchAndBuff1::run, this);
     }
     virtual ~TouchAndBuff1()

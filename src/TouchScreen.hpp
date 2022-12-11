@@ -3,7 +3,7 @@
 
 #include <linux/input.h>
 
-#include "FrameBuff.hpp"
+#include "FrameBuffer.hpp"
 #include "pch.hpp"
 
 #define MAX_QUEUE_SZ 20
@@ -26,21 +26,21 @@ std::string find_touchscr_event()
 using myclock = std::chrono::system_clock;
 using sec = std::chrono::duration<double>;
 
-class TouchScr
+class TouchScreen
 {
 private:
     int fdscr;
     int minX, minY, minP;
     int maxX, maxY, maxP;
     std::queue<std::pair<float, float>> que;
-    const FrameBuff fb;
+    FrameBuffer fb;
     const bool invX;
     const bool invY;
 
 public:
     bool stopped = false;
 
-    TouchScr(bool invx, bool invy) : invX(invx), invY(invy)
+    TouchScreen(bool invx, bool invy) : invX(invx), invY(invy)
     {
 
         if (fb.res_x() <= 0 || fb.res_y() <= 0)
@@ -66,7 +66,7 @@ public:
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << minX << "--" << maxX << ", Y: " << minY << "--" << maxY;
     }
-    ~TouchScr() {}
+    ~TouchScreen() {}
 
     void run()
     {
@@ -77,8 +77,6 @@ public:
         bool button_click = false;
         float scaleX = 1.0 / (maxX - minX) * fb.res_x();
         float scaleY = 1.0 / (maxY - minY) * fb.res_y();
-        LOG(LogLvl::DEBUG) << "Touch screen: "
-                           << "scaleX: " << scaleX << ", scaleY: " << scaleY;
 
         struct input_event ev;
 
@@ -125,10 +123,24 @@ public:
                 y = invY ? maxY - y : y;
                 x = (x - minX) * scaleX;
                 y = (y - minY) * scaleY;
-                LOG(LogLvl::DEBUG) << "Button click at X, Y: " << x << " " << y;
+
                 fb.draw_square(x, y, 15, 15, COLOR_INDEX_T::WHITE);
                 que.push(std::pair<float, float>(x, y));
             }
+        }
+    }
+
+    std::pair<float, float> &get_event()
+    {
+        while (true)
+        {
+            if (!que.empty())
+            {
+                auto item = que.front();
+                que.pop();
+                return item;
+            }
+            usleep(100000);
         }
     }
 

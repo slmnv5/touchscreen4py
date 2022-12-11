@@ -58,12 +58,12 @@ void help()
 
 void test2()
 {
-	TouchScr ts(false, true);
+	TouchScreen ts(false, true);
 	ts.run();
 }
 void test1()
 {
-	FrameBuff fb;
+	FrameBuffer fb;
 	std::string input;
 	int x, y;
 
