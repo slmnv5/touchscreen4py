@@ -52,9 +52,10 @@ private:
     std::queue<std::pair<float, float>> mQueue;
     const bool mInvertX;
     const bool mInvertY;
+    std::thread mRunThread;
 
 public:
-    bool stopped = false;
+    bool mStopped = false;
     FrameBuffer mFrameBuffer;
 
     TouchScreen(bool invx, bool invy) : mFrameBuffer(), mInvertX(invx), mInvertY(invy)
@@ -82,10 +83,12 @@ public:
         getInfoFromDevice(ABS_PRESSURE, mMinP, mMaxP);
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
+        mRunThread = std::thread(&TouchScreen::run, this);
     }
     virtual ~TouchScreen()
     {
-        stopped = true;
+        mStopped = true;
+        mRunThread.join();
         close(mFdScr);
     }
 
@@ -104,7 +107,7 @@ public:
 
         while (read(mFdScr, &ev, sizeof(struct input_event)) != -1)
         {
-            if (stopped)
+            if (mStopped)
                 break;
 
             if (ev.type == EV_KEY && ev.code == BTN_TOUCH)

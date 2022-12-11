@@ -42,14 +42,14 @@ extern "C"
     int stop(void *ptr)
     {
         TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-        x->stopped = true;
+        x->mStopped = true;
         return 0;
     }
 
     int start(void *ptr)
     {
         TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-        x->stopped = false;
+        x->mStopped = false;
         return 0;
     }
 

@@ -12,7 +12,7 @@ TEST_CASE("Test TS run in thread and get messages", "[all]")
 	TouchScreen ts(false, true);
 	SECTION("Test click on TS")
 	{
-		std::thread runThread(&TouchScreen::run, ts);
+
 		auto started = myclock::now();
 		seconds duration = seconds(0);
 		LOG(LogLvl::INFO) << "Running duration: " << duration.count();
