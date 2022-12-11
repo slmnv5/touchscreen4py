@@ -22,7 +22,7 @@ public:
     {
         auto pair = this->mQueue.pop();
         LOG(LogLvl::INFO) << "Got clickEvent pair: " << pair.first << ":" << pair.second << ", " << this->mTextLines.size();
-        if (pair.first < this->mTextLines.size())
+        if (pair.second < this->mTextLines.size())
         {
             auto line = this->mTextLines.at(pair.first);
             LOG(LogLvl::INFO) << "Got clickEvent line: " << line;
