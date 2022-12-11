@@ -21,9 +21,11 @@ public:
     std::string getClickEvent()
     {
         auto pair = this->mQueue.pop();
+        LOG(LogLvl::INFO) << "Got clickEvent pair: " << pair.first << ":" << pair.second << ", " << this->mTextLines.size();
         if (pair.first < this->mTextLines.size())
         {
             auto line = this->mTextLines.at(pair.first);
+            LOG(LogLvl::INFO) << "Got clickEvent line: " << line;
             auto word = wordAtPosition(line, pair.second, '[', ']');
             return word;
         }
@@ -35,7 +37,8 @@ public:
         this->mTextLines = split_string(text, "\n");
         for (uint i = 0; i < this->mTextLines.size(); i++)
         {
-            this->mFrameBuffer.putString(0, 32 * (1 + i), text, COLOR_INDEX_T::WHITE);
+            auto line = this->mTextLines.at(i);
+            this->mFrameBuffer.putString(0, 32 * (1 + i), line.c_str(), COLOR_INDEX_T::WHITE);
         }
     }
 
