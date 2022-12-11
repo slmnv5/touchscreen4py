@@ -91,6 +91,7 @@ public:
 
     void run()
     {
+        LOG(LogLvl::INFO) << "========= Starting run =========";
         int x, y, savex, savey;
         x = y = savex = savey = 0;
         auto started = myclock::now();
@@ -148,6 +149,7 @@ public:
                 mFrameBuffer.draw_square(x, y, 15, 15, COLOR_INDEX_T::WHITE);
                 int col = x / mFrameBuffer.mFont.width;
                 int row = y / mFrameBuffer.mFont.height;
+                LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;
                 mQueue.push(std::pair<int, int>(col, row));
             }
         }
