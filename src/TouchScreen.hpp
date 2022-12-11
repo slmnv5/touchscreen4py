@@ -42,6 +42,8 @@ std::string wordAtPosition(const std::string &s, unsigned int pos, char leftSpac
         return "";
 
     auto word = s.substr(start, stop - start + 1);
+    LOG(LogLvl::DEBUG) << "===" << word << "==="
+                       << "pos" << s;
     return word;
 }
 
