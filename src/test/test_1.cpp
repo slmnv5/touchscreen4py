@@ -7,10 +7,10 @@
 using myclock = std::chrono::steady_clock;
 using seconds = std::chrono::duration<double>;
 
-TEST_CASE("Test TS get messages", "[long][all]")
+TEST_CASE("Test TS run in thread and get messages", "[long][all]")
 {
 	TouchScreen ts(false, true);
-	SECTION("Test click on TS")
+	SECTION("Test run and click on TS")
 	{
 		auto started = myclock::now();
 		seconds duration(0);
@@ -20,25 +20,6 @@ TEST_CASE("Test TS get messages", "[long][all]")
 			duration = myclock::now() - started;
 			sleep(1);
 			std::pair<int, int> pos = ts.getClickPosition();
-			// LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
-		}
-	}
-}
-
-TEST_CASE("Test TS run in thread and get messages", "[long][all]")
-{
-	TouchScreen ts(false, true);
-	SECTION("Test run and click on TS")
-	{
-
-		auto started = myclock::now();
-		seconds duration(0);
-		while (duration.count() < 220)
-		{
-			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
-			duration = myclock::now() - started;
-			sleep(1);
-			// std::pair<int, int> pos = ts.getClickPosition();
 			// LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
 		}
 	}
