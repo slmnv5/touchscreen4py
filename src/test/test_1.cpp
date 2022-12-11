@@ -4,17 +4,25 @@
 #include "TouchScreen.hpp"
 #include "lib/utils.hpp"
 
-TEST_CASE("Test TS 1", "[all]")
+TEST_CASE("Test TS run in thread", "[all]")
+{
+	SECTION("Test click on TS")
+	{
+		TouchScreen ts(false, true);
+		std::thread runThread(&TouchScreen::run, ts);
+	}
+}
+
+TEST_CASE("Test TS run", "[all]")
 {
 	SECTION("Test run TS")
 	{
-		LOG(LogLvl::INFO) << "Touch screen device: " << findTouchscrEvent();
 		TouchScreen ts(false, true);
 		ts.run();
 	}
 }
 
-TEST_CASE("Test TS 2", "[all]")
+TEST_CASE("Test TS run in thread and get messages", "[all]")
 {
 	SECTION("Test click on TS")
 	{
@@ -28,11 +36,13 @@ TEST_CASE("Test TS 2", "[all]")
 	}
 }
 
-TEST_CASE("Test logger", "[all][basic]")
+TEST_CASE("Test simple things", "[all][basic]")
 {
 
 	SECTION("Test all levels")
 	{
+		LOG(LogLvl::INFO) << "Touch screen device: " << findTouchscrEvent();
+
 		LOG(LogLvl::DEBUG) << "DEBUG";
 		LOG(LogLvl::INFO) << "INFO";
 		LOG(LogLvl::WARN) << "WARN";
