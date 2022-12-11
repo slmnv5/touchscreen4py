@@ -61,9 +61,8 @@ std::vector<std::string> split_string(const std::string &s, const std::string &d
 std::string word_at_position(const std::string &s, int pos, char left_space, char right_space)
 {
     if (pos < 0 or pos >= s.length())
-    {
         return "";
-    }
+    
     int start, stop;
     start = stop = pos;
     while (s.at(start) != left_space and start-- > 0)
@@ -76,7 +75,6 @@ std::string word_at_position(const std::string &s, int pos, char left_space, cha
         return "";
 
     auto word = s.substr(start, stop - start + 1);
-    cout << "=======" << start << "=====" << stop << "====" << word << "=====\n";
     return word;
 }
 
