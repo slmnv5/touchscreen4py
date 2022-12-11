@@ -160,7 +160,7 @@ public:
 
     const std::pair<int, int> &getClickPosition()
     {
-        if (mQueue.empty())
+        while(mQueue.empty())
         {
             usleep(MKS_QUEUE_SLEEP);
         }
