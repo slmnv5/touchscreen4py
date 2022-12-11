@@ -11,7 +11,7 @@ DEPENDS := $(shell find . -name "*.d")
 
 LDFLAGS := -pthread -lasound
 CPPFLAGS := -I$(SRC_DIR) -MMD -MP
-CXXFLAGS := -std=c++11 -g -Wno-psabi -Wall
+CXXFLAGS := -std=c++11 -g -Wno-psabi -Wall -pthread
  
 app_t: $(OBJ_TST)
 	@echo "==========> Build app_t to run unit tests"
