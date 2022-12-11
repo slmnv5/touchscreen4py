@@ -47,7 +47,7 @@ private:
     int resX, resY;      // screen resolution
     uint screensize = 0; // screen memory size in bytes
     uint pixelsize = 0;  // pixel size in bytes
-    fb_pixel_font *font = &font_8x8;
+    fb_pixel_font *font = &font_16x32;
 
 public:
     FrameBuff(int fbidx = 1)
@@ -78,7 +78,7 @@ public:
             throw std::runtime_error("Cannot use this device, color depth: " + std::to_string(var.bits_per_pixel));
         }
         screensize = resY * resX * pixelsize;
-        LOG(LogLvl::DEBUG) << "Calculated memory and pixel sizes, bytes: " << screensize << ", " << pixelsize;
+        LOG(LogLvl::DEBUG) << "Memory and pixel sizes, bytes: " << screensize << ", " << pixelsize;
 
         fbp = (char *)mmap(0, screensize, PROT_READ | PROT_WRITE, MAP_SHARED, fdfb, 0);
         int int_result = reinterpret_cast<std::intptr_t>(fbp);
@@ -89,7 +89,7 @@ public:
         }
         LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
     }
-    ~FrameBuff()
+    virtual ~FrameBuff()
     {
         munmap(fbp, screensize);
         close(fdfb);
@@ -124,11 +124,6 @@ public:
         int i;
         for (i = 0; *s; i++, x += font->width, s++)
             put_char(x, y, *s, colidx);
-    }
-
-    void set_font(fb_pixel_font &f)
-    {
-        font = &f;
     }
 
     void put_char(int x, int y, unsigned char font_chr, uint colidx)
