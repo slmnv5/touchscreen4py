@@ -9,14 +9,15 @@ using seconds = std::chrono::duration<double>;
 
 TEST_CASE("Test TS run in thread and get messages", "[all]")
 {
+	TouchScreen ts(false, true);
 	SECTION("Test click on TS")
 	{
-		TouchScreen ts(false, true);
 		std::thread runThread(&TouchScreen::run, ts);
 		auto started = myclock::now();
 		seconds duration = seconds(0);
 		while (duration.count() < 10)
 		{
+			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
 			duration = myclock::now() - started;
 			std::pair<int, int> pos = ts.getClickPosition();
 			LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
