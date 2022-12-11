@@ -155,7 +155,7 @@ public:
         for (int row = 0; row < font->height; row++)
         {
             uint pix_offset = ((y + row) * resX + x) * pixelsize;
-            for (int col = 0; col < font->width; col++)
+            for (int col = 0; col < font->width / 8; col++)
             {
                 unsigned char bits = font->data[font_offset++];
                 for (int j = 0; j < 8; j++, bits <<= 1)
