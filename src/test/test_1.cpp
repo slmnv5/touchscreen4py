@@ -7,17 +7,15 @@
 
 TEST_CASE("Test TS run in thread", "[all]")
 {
+	TouchScreen ts(false, true);
+
 	SECTION("Test click on TS")
 	{
-		TouchScreen ts(false, true);
-		ts.sleep();
 		LOG(LogLvl::INFO) << "===== Sleep in thread ========";
 		std::thread runThread(&TouchScreen::sleep, ts);
+		LOG(LogLvl::INFO) << "===== Sleep ========";
+		ts.sleep();
 	}
-}
-
-TEST_CASE("Test TS run", "[all]")
-{
 	SECTION("Test run TS")
 	{
 		TouchScreen ts(false, true);
