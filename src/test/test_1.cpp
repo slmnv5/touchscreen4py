@@ -4,10 +4,26 @@
 #include "TouchScreen.hpp"
 #include "lib/utils.hpp"
 
-TEST_CASE("Test 1", "[all][basic]")
+TEST_CASE("Test TS 1", "[all][basic]")
+{
+	SECTION("Test click on TS")
+	{
+		LOG(LogLvl::INFO) << "Touch screen device: " << findTouchscrEvent();
+		LOG(LogLvl::INFO) << "====================Frame buffer test============";
+		TouchScreen ts(false, true);
+		std::thread runThread(&TouchScreen::run, ts);
+		for (int i = 0; i < 10; i++)
+		{
+			std::pair<int, int> pos = ts.getClickPosition();
+			LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
+		}
+	}
+}
+
+TEST_CASE("Test logger", "[all][basic]")
 {
 
-	SECTION("Section 1")
+	SECTION("Test all levels")
 	{
 		LOG(LogLvl::DEBUG) << "DEBUG";
 		LOG(LogLvl::INFO) << "INFO";
@@ -19,11 +35,11 @@ TEST_CASE("Test 1", "[all][basic]")
 		REQUIRE(Log::toString(static_cast<LogLvl>(3)) == "ERROR");
 	}
 
-	SECTION("Section 2")
+	SECTION("Test some levels")
 	{
 		LOG::ReportingLevel() = LogLvl::WARN;
-		LOG(LogLvl::DEBUG) << "Should not see this !!!!!!!";
-		LOG(LogLvl::INFO) << "Should not see this !!!!!!!";
+		LOG(LogLvl::DEBUG) << "!!!!!!!!!!!!!! Should not see this !!!!!!!";
+		LOG(LogLvl::INFO) << "!!!!!!!!!!!!!!! Should not see this !!!!!!!";
 		LOG(LogLvl::WARN) << "WARN";
 		LOG(LogLvl::ERROR) << "ERROR";
 		LOG::ReportingLevel() = LogLvl::DEBUG;
@@ -33,23 +49,16 @@ TEST_CASE("Test 1", "[all][basic]")
 TEST_CASE("Test FB 1", "[all][basic]")
 {
 
-	SECTION("Section 1a")
+	SECTION("Find word at position")
 	{
-		std::string word = wordAtPosition(" Test [once we] do", 11, '[', ']');
+		std::string word;
+		word = wordAtPosition(" Test [once we] do", 11, '[', ']');
 		LOG(LogLvl::INFO) << "====" << word << "========";
 		assert(word == "[once we]");
-	}
-
-	SECTION("Section 1b")
-	{
-		std::string word = wordAtPosition(" Test [once we] do", 0, '[', ']');
+		word = wordAtPosition(" Test [once we] do", 0, '[', ']');
 		LOG(LogLvl::INFO) << "====" << word << "========";
 		assert(word == "");
-	}
-
-	SECTION("Section 1c")
-	{
-		std::string word = wordAtPosition(" Test [once we] do", 11111, '[', ']');
+		word = wordAtPosition(" Test [once we] do", 11111, '[', ']');
 		LOG(LogLvl::INFO) << "====" << word << "========";
 		assert(word == "");
 	}
@@ -87,21 +96,5 @@ TEST_CASE("Test FB 2", "[all][basic]")
 		fb.putString(120, 0, "ABACUS 121", COLOR_INDEX_T::GREEN);
 		fb.putString(120, 0 + fb.mFont.height, "BIBIGON 321", COLOR_INDEX_T::RED);
 		fb.putString(220, 220, "ABACUS 121=================>", COLOR_INDEX_T::YELLOW);
-	}
-}
-
-TEST_CASE("Test TS 1", "[all][basic]")
-{
-	SECTION("Test click on TS")
-	{
-		LOG(LogLvl::INFO) << "Touch screen device: " << findTouchscrEvent();
-		LOG(LogLvl::INFO) << "====================Frame buffer test============";
-		TouchScreen ts(false, true);
-		std::thread runThread(&TouchScreen::run, ts);
-		for (int i = 0; i < 10; i++)
-		{
-			std::pair<int, int> pos = ts.getClickPosition();
-			LOG(LogLvl::INFO) << "=============" << pos.first << ":" << pos.second;
-		}
 	}
 }
