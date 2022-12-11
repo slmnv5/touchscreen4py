@@ -47,9 +47,10 @@ private:
     int resX, resY;      // screen resolution
     uint screensize = 0; // screen memory size in bytes
     uint pixelsize = 0;  // pixel size in bytes
-    fb_pixel_font *font = &font_16x32;
 
 public:
+    fb_pixel_font &font = font_16x32;
+
     FrameBuffer(int fbidx = 1)
     {
         // fb1 connected to LCD screen, dont know how to change
@@ -119,24 +120,24 @@ public:
         return resY;
     }
 
-    void put_string(int x, int y, char *s, uint colidx)
+    void put_string(int x, int y, const char *s, uint colidx)
     {
         int i;
-        for (i = 0; *s; i++, x += font->width, s++)
+        for (i = 0; *s; i++, x += font.width, s++)
             put_char(x, y, *s, colidx);
     }
 
     void put_char(int x, int y, unsigned char font_chr, uint colidx)
     {
-        uint font_offset = font_chr * font->height * font->width / 8;
+        uint font_offset = font_chr * font.height * font.width / 8;
         uint color = idx_to_color(colidx);
 
-        for (int row = 0; row < font->height; row++)
+        for (int row = 0; row < font.height; row++)
         {
             uint pix_offset = ((y + row) * resX + x) * pixelsize;
-            for (int col = 0; col < font->width / 8; col++)
+            for (int col = 0; col < font.width / 8; col++)
             {
-                unsigned char bits = font->data[font_offset++];
+                unsigned char bits = font.data[font_offset++];
                 for (int j = 0; j < 8; j++, bits <<= 1)
                 {
                     unsigned short scr_color = (bits & 0x80) ? color : 0;

@@ -125,12 +125,14 @@ public:
                 y = (y - minY) * scaleY;
 
                 fb.draw_square(x, y, 15, 15, COLOR_INDEX_T::WHITE);
-                que.push(std::pair<float, float>(x, y));
+                int col = x / fb.font.width;
+                int row = y / fb.font.height;
+                que.push(std::pair<int, int>(col, row));
             }
         }
     }
 
-    std::pair<float, float> &get_event()
+    const std::pair<int, int> &get_event()
     {
         while (!stopped)
         {
@@ -145,6 +147,13 @@ public:
     }
 
 private:
+    std::pair<int, int> pixels_to_position(std::pair<float, float> pixels)
+    {
+        int col = pixels.first / fb.font.width;
+        int row = pixels.second / fb.font.height;
+        return std::pair<int, int>(col, row);
+    }
+
     void getFromDevice(int propId, int &minV, int &maxV)
     {
         // const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};

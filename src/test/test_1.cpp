@@ -9,7 +9,6 @@ TEST_CASE("Test 1", "[all][basic]")
 
 	SECTION("Section 1")
 	{
-
 		LOG(LogLvl::DEBUG) << "DEBUG";
 		LOG(LogLvl::INFO) << "INFO";
 		LOG(LogLvl::WARN) << "WARN";
@@ -36,11 +35,25 @@ TEST_CASE("Test 2", "[all][basic]")
 
 	SECTION("Section 1")
 	{
-		LOG(LogLvl::INFO) << "Touch screen device: " << find_touchscr_event();
+		std::string word = word_at_position(" Test [once more we] do it", 11, '[', ']');
+		assert(word == "[once more we]");
+	}
+
+	SECTION("Section 1a")
+	{
+		auto word = word_at_position(" Test [once more we] do it", 0, '[', ']');
+		assert(word == "");
+	}
+
+	SECTION("Section 1b")
+	{
+		auto word = word_at_position(" Test once more we do it", 11111, '[', ']');
+		assert(word == "");
 	}
 
 	SECTION("Section 2")
 	{
+
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuffer fb;
 		LOG(LogLvl::INFO) << "Frame buffer created";
@@ -64,7 +77,7 @@ TEST_CASE("Test 3", "[all][basic]")
 
 	SECTION("Section 1")
 	{
-
+		LOG(LogLvl::INFO) << "Touch screen device: " << find_touchscr_event();
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuffer fb;
 		fb.clear();
