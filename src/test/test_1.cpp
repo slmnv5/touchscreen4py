@@ -19,6 +19,7 @@ TEST_CASE("Test TS run in thread and get messages", "[long][all]")
 		{
 			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
 			duration = myclock::now() - started;
+			tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
 			auto word = tsp.getClickEvent();
 			LOG(LogLvl::INFO) << "Got clickEvent: " << word;
 		}
