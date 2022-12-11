@@ -157,16 +157,15 @@ public:
         {
             for (int col = 0; col < font->width; col++)
             {
-                int bits = font->data[font_offset];
+                int bits = font->data[font_offset++];
                 for (int j = 0; j < 8; j++, bits <<= 1)
                 {
                     unsigned short scr_color = (bits & 0x80) ? color : 0;
                     *((unsigned short *)(fbp + pix_offset)) = scr_color;
                     pix_offset++;
                 }
-                font_offset++;
             }
-            pix_offset += resX * pixelsize - font->width * 8;
+            pix_offset += resX - font->width * 8;
         }
     }
 
