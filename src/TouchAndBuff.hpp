@@ -6,30 +6,28 @@
 #include "FrameBuffer.hpp"
 #include "TouchScreen.hpp"
 
-class TouchAndBuff1
+class TouchAndBuff
 {
 private:
-    TouchScreen *ts;
-
+    TouchScreen ts;
     std::thread run_thread;
 
 public:
-    TouchAndBuff1()
+    TouchAndBuff() : ts(false, true)
     {
-        TouchScreen ts(false, true);
-        run_thread = std::thread(&TouchAndBuff1::run, this);
+        run_thread = std::thread(&TouchAndBuff::run, this);
     }
-    virtual ~TouchAndBuff1()
+    virtual ~TouchAndBuff()
     {
         run_thread.join();
     }
     void stop()
     {
-        ts->stopped = true;
+        ts.stopped = true;
     }
     void start()
     {
-        ts->stopped = false;
+        ts.stopped = false;
     }
     int setText(const char *)
     {
@@ -38,7 +36,7 @@ public:
 
     void run()
     {
-        ts->run();
+        ts.run();
     }
 };
 
@@ -47,25 +45,25 @@ extern "C"
 
     void *createTchScr()
     {
-        return new (std::nothrow) TouchAndBuff1;
+        return new (std::nothrow) TouchAndBuff;
     }
 
     void deleteTchScr(void *ptr)
     {
-        TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
+        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
         delete x;
     }
 
     int stop(void *ptr)
     {
-        TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
+        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
         x->stop();
         return 0;
     }
 
     int start(void *ptr)
     {
-        TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
+        TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
         x->start();
         return 0;
     }
@@ -74,7 +72,7 @@ extern "C"
     {
         try
         {
-            TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
+            TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
             std::string temp = "x->getID()";
             return temp.c_str();
         }
@@ -89,7 +87,7 @@ extern "C"
 
         try
         {
-            TouchAndBuff1 *x = static_cast<TouchAndBuff1 *>(ptr);
+            TouchAndBuff *x = static_cast<TouchAndBuff *>(ptr);
             return x->setText(aa);
         }
         catch (...)

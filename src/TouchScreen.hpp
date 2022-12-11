@@ -33,14 +33,14 @@ private:
     int minX, minY, minP;
     int maxX, maxY, maxP;
     std::queue<std::pair<float, float>> que;
-    FrameBuffer fb;
     const bool invX;
     const bool invY;
 
 public:
     bool stopped = false;
+    FrameBuffer fb;
 
-    TouchScreen(bool invx, bool invy) : invX(invx), invY(invy)
+    TouchScreen(bool invx, bool invy) : fb(), invX(invx), invY(invy)
     {
 
         if (fb.res_x() <= 0 || fb.res_y() <= 0)
@@ -132,7 +132,7 @@ public:
 
     std::pair<float, float> &get_event()
     {
-        while (true)
+        while (!stopped)
         {
             if (!que.empty())
             {
