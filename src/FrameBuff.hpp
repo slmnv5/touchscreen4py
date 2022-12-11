@@ -150,21 +150,21 @@ public:
         uint char_w = font->width / 8;
         uint char_sz = font->height * char_w;
         uint font_offset = font_chr * char_sz;
-        uint pix_offset = (y * resX + x) * pixelsize;
         uint color = idx_to_color(colidx);
 
         for (int row = 0; row < font->height; row++)
         {
+            uint pix_offset = ((y + row) * resX + x) * pixelsize;
             for (int col = 0; col < font->width; col++)
             {
-                int bits = font->data[font_offset++];
+                unsigned char bits = font->data[font_offset++];
                 for (int j = 0; j < 8; j++, bits <<= 1)
                 {
                     unsigned short scr_color = (bits & 0x80) ? color : 0;
-                    *((unsigned short *)(fbp + pix_offset++)) = scr_color;
+                    *((unsigned short *)(fbp + pix_offset)) = scr_color;
+                    pix_offset += pixelsize;
                 }
             }
-            pix_offset += (resX - font->width) * pixelsize;
         }
     }
 
