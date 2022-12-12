@@ -5,7 +5,6 @@ using myclock = std::chrono::steady_clock;
 using seconds = std::chrono::duration<double>;
 void help();
 bool tryParse(std::string &, int &);
-void test1();
 void test2();
 
 int main(int argc, char *argv[])

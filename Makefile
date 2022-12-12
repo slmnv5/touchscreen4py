@@ -9,9 +9,9 @@ OBJ_APP := $(SRC_APP:%=%.o)
 OBJ_TST := $(SRC_TST:%=%.o)
 DEPENDS := $(shell find . -name "*.d")
 
-LDFLAGS := -pthread -shared 
+LDFLAGS := -shared 
 CPPFLAGS := -I$(SRC_DIR) -MMD -MP
-CXXFLAGS := -std=c++11 -g -Wno-psabi -Wall -pthread
+CXXFLAGS := -std=c++11 -g -Wno-psabi -Wall -pthread -fPIC
  
 app_t: $(OBJ_TST)
 	@echo "==========> Build app_t to run unit tests"
@@ -25,7 +25,7 @@ app_d: $(OBJ_APP)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^  $(LDFLAGS)
 	
 
-app: CXXFLAGS = -std=c++11 -O2 -Wall
+app: CXXFLAGS = -std=c++11 -O2 -Wall -pthread -fPIC
 app: $(OBJ_APP)
 	@echo "==========> Build app release version"
 	cd $(PROJECT_ROOT)

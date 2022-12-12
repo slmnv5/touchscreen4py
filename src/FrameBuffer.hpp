@@ -1,10 +1,12 @@
 #ifndef FRAMEBUFF_H
 #define FRAMEBUFF_H
 
-// #include <stdlib.h>
-#include <linux/fb.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
+#include <fcntl.h>     // For O_RDWR
+#include <unistd.h>    // For open(), creat()
+#include <cstring>     // memset
+#include <linux/fb.h>  // FBIOGET_VSCREENINFO
+#include <sys/mman.h>  // PROT_READ
+#include <sys/ioctl.h> // ioctl
 #include "pch.hpp"
 #include "fbfonts.hpp"
 #include "lib/log.hpp"
