@@ -70,18 +70,16 @@ extern "C"
         x->mFrameBuffer.clear();
     }
 
-    int stop(void *ptr)
+    void stop(void *ptr)
     {
         TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
         x->mStopped = true;
-        return 0;
     }
 
-    int start(void *ptr)
+    void start(void *ptr)
     {
         TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
         x->mStopped = false;
-        return 0;
     }
 
     const char *getClickEvent(void *ptr)
