@@ -23,7 +23,7 @@ public:
         while (this->mTextLines.size())
         {
             auto pairColRow = this->mQueue.pop();
-            if (pairColRow.second > this->mTextLines.size())
+            if (pairColRow.second >= this->mTextLines.size())
                 continue;
 
             auto line = this->mTextLines.at(pairColRow.second);
