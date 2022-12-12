@@ -1,8 +1,8 @@
 #include "pch.hpp"
 #include "TouchScreenPy.hpp"
 
-using namespace std;
-
+using myclock = std::chrono::steady_clock;
+using seconds = std::chrono::duration<double>;
 void help();
 bool tryParse(std::string &, int &);
 void test1();
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 	{
 		test2();
 	}
-	catch (exception &e)
+	catch (std::exception &e)
 	{
 		LOG(LogLvl::ERROR) << "Completed with error: " << e.what();
 		return 1;
@@ -58,31 +58,19 @@ void help()
 
 void test2()
 {
-	TouchScreen ts(false, true);
-	ts.readScreen();
-}
-void test1()
-{
-	FrameBuffer fb;
-	std::string input;
-	int x, y;
+	TouchScreenPy tsp;
+	tsp.mFrameBuffer.clear();
+	tsp.setLoopSeconds(21.0, 0.55);
+	tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
 
-	while (true)
+	auto started = myclock::now();
+	seconds duration(0);
+	while (duration.count() < 220)
 	{
-		std::cout << "Enter X: ";
-		getline(std::cin, input);
-		if (!tryParse(input, x))
-		{
-			continue;
-		}
-		std::cout << "Enter Y: ";
-		getline(std::cin, input);
-		if (!tryParse(input, y))
-		{
-			continue;
-		}
-
-		fb.putSquare(x, y, 50, 50, COLOR_INDEX::GREEN);
+		LOG(LogLvl::INFO) << "Running duration: " << duration.count();
+		duration = myclock::now() - started;
+		auto word = tsp.getClickEvent();
+		LOG(LogLvl::INFO) << "Got clickEvent: " << word;
 	}
 }
 
