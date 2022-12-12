@@ -9,9 +9,9 @@ OBJ_APP := $(SRC_APP:%=%.o)
 OBJ_TST := $(SRC_TST:%=%.o)
 DEPENDS := $(shell find . -name "*.d")
 
-LDFLAGS := -pthread -lasound -shared 
+LDFLAGS := -pthread -shared 
 CPPFLAGS := -I$(SRC_DIR) -MMD -MP
-CXXFLAGS := -std=c++11 -g -Wno-psabi -Wall -pthread
+CXXFLAGS := -std=c++11 -g -Wno-psabi -Wall 
  
 app_t: $(OBJ_TST)
 	@echo "==========> Build app_t to run unit tests"
