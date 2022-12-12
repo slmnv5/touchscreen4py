@@ -56,8 +56,12 @@ public:
 
 protected:
     std::vector<std::string> mTextLines;         // text on top of screen
+    std::vector<std::string> mContentLines;      // text to show loops
     SafeQueue<std::pair<double, double>> mQueue; // queue for click events <col, row>
-    double mLoopSeconds = 0;                     // loop length in seconds
+    double mLoopSeconds = 1.0;                   // loop length in seconds
+    double mLoopPosition = 0.0;                  // loop postion 0 to 1
+    bool mIsRec = false;                         // is recording
+    bool mIsStop = true;                         // is stopped
 
 private:
     int mFdScr;                // file descriptor of touch screen
@@ -108,14 +112,17 @@ public:
     void updateScreen()
     {
         LOG(LogLvl::INFO) << "Starting updateScreen()";
-        double pos = 0.0;
-        while (!mStopped)
+        while (true)
         {
-            usleep(1000000);
-            pos += 1 / 16.0;
-            pos = pos - floor(pos);
-            uint startX = pos * mFrameBuffer.mPixelsX;
-            mFrameBuffer.putSquareInv(startX, 0, 16, 32);
+            usleep(mLoopSeconds / 16);
+            if (mIsStop)
+            {
+                continue;
+            }
+            mLoopPosition += 1.0 / 16;
+            for (; mLoopPosition > 1; mLoopPosition -= 1)
+                ;
+            mFrameBuffer.putSquareInv(mLoopPosition * mFrameBuffer.mPixelsX, 0, 16, 32);
         }
     }
 

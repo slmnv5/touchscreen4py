@@ -44,9 +44,32 @@ public:
         }
     }
 
-    void setLoopSeconds(double loopSeconds, double position)
+    void setContent(const char *content)
+    {
+        uint row_offset = mTextLines.size();
+        this->mContentLines = split_string(content, "\n");
+        for (uint i = 0; i < this->mContentLines.size(); i++)
+        {
+            auto line = this->mTextLines.at(i);
+            unsigned short color = WHITE;
+            if (line.rfind("*", 0) == 0)
+            {
+                color = mIsRec ? RED : GREEN;
+            }
+            else if (line.rfind("~", 0) == 0)
+            {
+                color = YELLOW;
+            }
+            this->mFrameBuffer.putString(0, row_offset + 32 * i, line.c_str(), color);
+        }
+    }
+
+    void setLoop(double loopSeconds, double loopPosition, bool isRec, bool isStop)
     {
         this->mLoopSeconds = loopSeconds;
+        this->mLoopPosition = loopPosition;
+        this->mIsRec = isRec;
+        this->mIsStop = isStop;
     }
 };
 
@@ -95,12 +118,12 @@ extern "C"
         }
     }
 
-    int setLoopSeconds(void *ptr, double loopSeconds, double position)
+    int setLoop(void *ptr, double loopSeconds, double loopPosition, bool isRec, bool isStop)
     {
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setLoopSeconds(loopSeconds, position);
+            x->setLoop(loopSeconds, loopPosition, isRec, isStop);
             return 0;
         }
         catch (...)
