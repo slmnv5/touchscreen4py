@@ -7,8 +7,8 @@
 #include "FrameBuffer.hpp"
 #include "lib/SafeQueue.hpp"
 
-#define MAX_QUEUE_SZ 20
-#define MKS_QUEUE_SLEEP 100000
+#define MAX_QUEUE_SZ 20    // used to stop putting events in touch screen queue
+#define MIN_TOUCH_TIME 0.2 // min time to hold button for click in seconds
 
 using myclock = std::chrono::steady_clock;
 using seconds = std::chrono::duration<double>;
@@ -149,7 +149,7 @@ public:
                 else
                 {
                     seconds duration = myclock::now() - started;
-                    if (duration.count() > 0.5 && abs(x - savex) / (mMaxX - mMinX) < 0.1 &&
+                    if (duration.count() > MIN_TOUCH_TIME && abs(x - savex) / (mMaxX - mMinX) < 0.1 &&
                         abs(y - savey) / (mMaxY - mMinY) < 0.1)
                     {
                         button_click = true;
@@ -176,7 +176,6 @@ public:
                 x = (x - mMinX) * scaleX;
                 y = (y - mMinY) * scaleY;
 
-                mFrameBuffer.putSquare(x, y, 15, 15, COLOR_INDEX::WHITE);
                 int col = x / mFrameBuffer.mFont.width;
                 int row = y / mFrameBuffer.mFont.height;
                 LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;

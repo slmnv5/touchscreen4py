@@ -20,14 +20,18 @@ public:
 
     std::string getClickEvent()
     {
-        auto pairColRow = this->mQueue.pop();
-        if (pairColRow.second < this->mTextLines.size())
+        while (this->mTextLines.size())
         {
+            auto pairColRow = this->mQueue.pop();
+            if (pairColRow.second > this->mTextLines.size())
+                continue;
+
             auto line = this->mTextLines.at(pairColRow.second);
             auto word = wordAtPosition(line, pairColRow.first, '[', ']');
-            return word;
+            if (word.length() > 0)
+                return word;
         }
-        return "beyond the text";
+        return "";
     }
 
     void setText(const char *text)
