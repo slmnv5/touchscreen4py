@@ -24,7 +24,6 @@ public:
         if (pairColRow.second < this->mTextLines.size())
         {
             auto line = this->mTextLines.at(pairColRow.second);
-            LOG(LogLvl::INFO) << "Got clickEvent line: " << line;
             auto word = wordAtPosition(line, pairColRow.first, '[', ']');
             return word;
         }

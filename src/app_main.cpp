@@ -59,7 +59,7 @@ void help()
 void test2()
 {
 	TouchScreen ts(false, true);
-	ts.run();
+	ts.readScreen();
 }
 void test1()
 {

@@ -94,8 +94,8 @@ public:
         getInfoFromDevice(ABS_PRESSURE, mMinP, mMaxP);
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
-        mRunThread = std::thread(&TouchScreen::run, this);
-        mUpdateThread = std::thread(&TouchScreen::update, this);
+        mRunThread = std::thread(&TouchScreen::readScreen, this);
+        mUpdateThread = std::thread(&TouchScreen::updateScreen, this);
     }
     virtual ~TouchScreen()
     {
@@ -105,8 +105,9 @@ public:
         close(mFdScr);
     }
 
-    void update()
+    void updateScreen()
     {
+        LOG(LogLvl::INFO) << "Starting updateScreen()";
         double pos = 0.0;
         while (!mStopped)
         {
@@ -118,9 +119,9 @@ public:
         }
     }
 
-    void run()
+    void readScreen()
     {
-        LOG(LogLvl::INFO) << "Starting run()";
+        LOG(LogLvl::INFO) << "Starting readScreen()";
         int x, y, savex, savey;
         x = y = savex = savey = 0;
         auto started = myclock::now();

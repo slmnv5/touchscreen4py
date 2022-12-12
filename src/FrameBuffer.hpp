@@ -97,13 +97,11 @@ public:
         close(mFdFb);
     }
 
-    void putSquare(int x, int y, int width, int height, int colidx) const
+    void putSquare(uint x, uint y, uint width, uint height, uint colorIdx) const
     {
-        int h = 0;
-        int w = 0;
-        unsigned short color = idxToColor(colidx);
-        for (h = -height / 2; h < height / 2; h++)
-            for (w = -width / 2; w < width / 2; w++)
+        unsigned short color = idxToColor(colorIdx);
+        for (uint h = 0; h < height; h++)
+            for (uint w = 0; w < width; w++)
                 putPixel(h + x, w + y, color);
     }
 
@@ -112,18 +110,38 @@ public:
         memset(mFbPtr, 0, mScrSize);
     }
 
-    void putString(int x, int y, const char *s, uint colidx)
+    void putString(int x, int y, const char *s, uint colorIdx)
     {
-        int i;
-        for (i = 0; *s; i++, x += mFont.width, s++)
-            putChar(x, y, *s, colidx);
+        for (uint i = 0; *s; i++, x += mFont.width, s++)
+            putChar(x, y, *s, colorIdx);
+    }
+
+    void putStringNice(int x, int y, const char *s)
+    {
+        auto colorIdx = COLOR_INDEX::WHITE;
+        bool normal = true;
+        for (; *s; x += mFont.width, s++)
+        {
+            if (normal and *s == '[')
+            {
+                normal = false;
+                colorIdx = COLOR_INDEX::YELLOW;
+            }
+            else if (not normal and *s == ']')
+            {
+                normal = true;
+                colorIdx = COLOR_INDEX::WHITE;
+            }
+            putChar(x, y, *s, colorIdx);
+        }
     }
 
 protected:
-    void putChar(int x, int y, unsigned char chr, uint colidx)
+    void
+    putChar(int x, int y, unsigned char chr, uint colorIdx)
     {
         uint font_offset = chr * mFont.height * mFont.width / 8;
-        uint color = idxToColor(colidx);
+        uint color = idxToColor(colorIdx);
 
         for (int row = 0; row < mFont.height; row++)
         {
@@ -163,11 +181,11 @@ protected:
         // write 'two bytes at once'
         *((unsigned short *)(mFbPtr + pix_offset)) = color;
     }
-    unsigned short idxToColor(int colidx) const
+    unsigned short idxToColor(int colorIdx) const
     {
-        unsigned short r = def_r[colidx];
-        unsigned short g = def_g[colidx];
-        unsigned short b = def_b[colidx];
+        unsigned short r = def_r[colorIdx];
+        unsigned short g = def_g[colorIdx];
+        unsigned short b = def_b[colorIdx];
         return ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
     }
 };
