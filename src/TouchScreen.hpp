@@ -42,8 +42,6 @@ std::string wordAtPosition(const std::string &s, unsigned int pos, char leftSpac
         return "";
 
     auto word = s.substr(start, stop - start + 1);
-    LOG(LogLvl::DEBUG) << "===" << word << "==="
-                       << "pos" << s;
     return word;
 }
 
@@ -112,17 +110,17 @@ public:
         double pos = 0.0;
         while (!mStopped)
         {
-            usleep(mLoopSeconds * 1000000 / 16);
+            usleep(1000000);
             pos += 1 / 16.0;
             pos = pos - floor(pos);
             auto newLen = pos * mFrameBuffer.mPixelsX;
-            mFrameBuffer.putSquare(0, mFrameBuffer.mFont.height - 2, newLen, 2, COLOR_INDEX::YELLOW);
+            mFrameBuffer.putSquare(0, 0, newLen, 2, COLOR_INDEX::YELLOW);
         }
     }
 
     void run()
     {
-        LOG(LogLvl::INFO) << "========= Starting run =========";
+        LOG(LogLvl::INFO) << "Starting run()";
         int x, y, savex, savey;
         x = y = savex = savey = 0;
         auto started = myclock::now();
