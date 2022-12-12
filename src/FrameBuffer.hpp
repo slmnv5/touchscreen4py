@@ -113,11 +113,11 @@ public:
                 putPixel(h + x, w + y, color);
     }
 
-    void putSquareColor(uint x, uint y, uint width, uint height, unsigned short color) const
+    void putSquareInv(uint x, uint y, uint width, uint height) const
     {
         for (uint h = 0; h < height; h++)
             for (uint w = 0; w < width; w++)
-                putPixel(h + x, w + y, color);
+                putPixelInv(h + x, w + y);
     }
 
     void clear() const
@@ -195,6 +195,17 @@ protected:
         }
         // write 'two bytes at once'
         *((unsigned short *)(mFbPtr + pix_offset)) = color;
+    }
+
+    void putPixelInv(uint x, uint y) const
+    {
+        uint pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
+        if (pix_offset < 0 || pix_offset > this->mScrSize - mPixelSize)
+        {
+            return;
+        }
+        unsigned short color = *((unsigned short *)(mFbPtr + pix_offset));
+        *((unsigned short *)(mFbPtr + pix_offset)) = ~color;
     }
 };
 
