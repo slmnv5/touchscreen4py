@@ -55,10 +55,10 @@ extern "C"
 
     void *createTouchScreen()
     {
-        return new (std::nothrow) TouchScreenPy;
+        return new (std::nothrow) TouchScreenPy();
     }
 
-    void deleteTchScr(void *ptr)
+    void deleteTouchScreen(void *ptr)
     {
         TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
         delete x;

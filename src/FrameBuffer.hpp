@@ -127,8 +127,9 @@ public:
 
     void putString(int x, int y, const char *s, uint colorIdx)
     {
+        unsigned short color = idxToColor(colorIdx);
         for (uint i = 0; *s; i++, x += mFont.width, s++)
-            putChar(x, y, *s, colorIdx);
+            putChar(x, y, *s, color);
     }
 
     void putStringNice(int x, int y, const char *s)
@@ -153,11 +154,9 @@ public:
 
 protected:
     void
-    putChar(uint x, uint y, unsigned char chr, uint colorIdx)
+    putChar(uint x, uint y, unsigned char chr, unsigned short color)
     {
         uint font_offset = chr * mFont.height * mFont.width / 8;
-        uint color = idxToColor(colorIdx);
-
         for (uint row = 0; row < mFont.height; row++)
         {
             uint pix_offset = ((y + row) * mPixelsX + x) * mPixelSize;
