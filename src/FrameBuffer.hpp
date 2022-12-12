@@ -40,6 +40,14 @@ static unsigned short def_b[] =
     {0, 172, 0, 168, 0, 172, 0, 168,
      84, 255, 84, 255, 84, 255, 84, 255};
 
+unsigned short idxToColor(uint colorIdx)
+{
+    unsigned short r = def_r[colorIdx];
+    unsigned short g = def_g[colorIdx];
+    unsigned short b = def_b[colorIdx];
+    return ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
+}
+
 class FrameBuffer
 {
 private:
@@ -100,6 +108,13 @@ public:
     void putSquare(uint x, uint y, uint width, uint height, uint colorIdx) const
     {
         unsigned short color = idxToColor(colorIdx);
+        for (uint h = 0; h < height; h++)
+            for (uint w = 0; w < width; w++)
+                putPixel(h + x, w + y, color);
+    }
+
+    void putSquareColor(uint x, uint y, uint width, uint height, unsigned short color) const
+    {
         for (uint h = 0; h < height; h++)
             for (uint w = 0; w < width; w++)
                 putPixel(h + x, w + y, color);
@@ -180,13 +195,6 @@ protected:
         }
         // write 'two bytes at once'
         *((unsigned short *)(mFbPtr + pix_offset)) = color;
-    }
-    unsigned short idxToColor(uint colorIdx) const
-    {
-        unsigned short r = def_r[colorIdx];
-        unsigned short g = def_g[colorIdx];
-        unsigned short b = def_b[colorIdx];
-        return ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
     }
 };
 

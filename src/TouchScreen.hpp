@@ -109,13 +109,14 @@ public:
     {
         LOG(LogLvl::INFO) << "Starting updateScreen()";
         double pos = 0.0;
+        unsigned short color = idxToColor(COLOR_INDEX::YELLOW);
         while (!mStopped)
         {
             usleep(1000000);
             pos += 1 / 16.0;
             pos = pos - floor(pos);
             uint startX = pos * mFrameBuffer.mPixelsX;
-            mFrameBuffer.putSquare(startX, 0, 16, 32, COLOR_INDEX::YELLOW);
+            mFrameBuffer.putSquareColor(startX, 0, 16, 32, color);
         }
     }
 
