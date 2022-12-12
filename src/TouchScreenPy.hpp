@@ -20,12 +20,12 @@ public:
 
     std::string getClickEvent()
     {
-        auto pair = this->mQueue.pop();
-        if (pair.second < this->mTextLines.size())
+        auto pairColRow = this->mQueue.pop();
+        if (pairColRow.second < this->mTextLines.size())
         {
-            auto line = this->mTextLines.at(pair.first);
+            auto line = this->mTextLines.at(pairColRow.second);
             LOG(LogLvl::INFO) << "Got clickEvent line: " << line;
-            auto word = wordAtPosition(line, pair.second, '[', ']');
+            auto word = wordAtPosition(line, pairColRow.first, '[', ']');
             return word;
         }
         return "beyond the text";

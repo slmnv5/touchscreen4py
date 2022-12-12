@@ -58,7 +58,7 @@ public:
 
 protected:
     std::vector<std::string> mTextLines;         // text on top of screen
-    SafeQueue<std::pair<double, double>> mQueue; // queue for click events
+    SafeQueue<std::pair<double, double>> mQueue; // queue for click events <col, row>
     double mLoopSeconds = 0;                     // loop length in seconds
 
 private:
@@ -97,7 +97,7 @@ public:
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
         mRunThread = std::thread(&TouchScreen::run, this);
-        mUpdateThread = std::thread(&TouchScreen::update, this);
+        // mUpdateThread = std::thread(&TouchScreen::update, this);
     }
     virtual ~TouchScreen()
     {
