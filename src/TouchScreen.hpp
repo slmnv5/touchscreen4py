@@ -95,7 +95,7 @@ public:
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
         mRunThread = std::thread(&TouchScreen::run, this);
-        // mUpdateThread = std::thread(&TouchScreen::update, this);
+        mUpdateThread = std::thread(&TouchScreen::update, this);
     }
     virtual ~TouchScreen()
     {
