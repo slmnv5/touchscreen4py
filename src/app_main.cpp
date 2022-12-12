@@ -4,8 +4,6 @@
 using myclock = std::chrono::steady_clock;
 using seconds = std::chrono::duration<double>;
 void help();
-bool tryParse(std::string &, int &);
-void test2();
 
 int main(int argc, char *argv[])
 {
@@ -35,7 +33,20 @@ int main(int argc, char *argv[])
 
 	try
 	{
-		test2();
+		TouchScreenPy tsp;
+		tsp.mFrameBuffer.clear();
+		tsp.setLoopSeconds(21.0, 0.55);
+		tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
+
+		auto started = myclock::now();
+		seconds duration(0);
+		while (duration.count() < 220)
+		{
+			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
+			duration = myclock::now() - started;
+			auto word = tsp.getClickEvent();
+			LOG(LogLvl::INFO) << "Got clickEvent: " << word;
+		}
 	}
 	catch (std::exception &e)
 	{
@@ -53,35 +64,4 @@ void help()
 			"  -vv more verbose\n"
 			"  -vvv even more verbose\n"
 			"  -h displays this info\n";
-}
-
-void test2()
-{
-	TouchScreenPy tsp;
-	tsp.mFrameBuffer.clear();
-	tsp.setLoopSeconds(21.0, 0.55);
-	tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
-
-	auto started = myclock::now();
-	seconds duration(0);
-	while (duration.count() < 220)
-	{
-		LOG(LogLvl::INFO) << "Running duration: " << duration.count();
-		duration = myclock::now() - started;
-		auto word = tsp.getClickEvent();
-		LOG(LogLvl::INFO) << "Got clickEvent: " << word;
-	}
-}
-
-bool tryParse(std::string &input, int &output)
-{
-	try
-	{
-		output = std::stoi(input);
-	}
-	catch (std::invalid_argument &e)
-	{
-		return false;
-	}
-	return true;
 }
