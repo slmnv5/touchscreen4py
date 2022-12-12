@@ -136,21 +136,21 @@ public:
 
     void putStringNice(int x, int y, const char *s)
     {
-        auto colorIdx = COLOR_INDEX::WHITE;
-        bool normal = true;
+        unsigned short colorNormal = idxToColor(COLOR_INDEX::WHITE);
+        unsigned short colorActive = idxToColor(COLOR_INDEX::YELLOW);
+
+        auto color = colorNormal;
         for (; *s; x += mFont.width, s++)
         {
-            if (normal and *s == '[')
+            if (color == colorNormal and *s == '[')
             {
-                normal = false;
-                colorIdx = COLOR_INDEX::YELLOW;
+                color = colorActive;
             }
-            else if (not normal and *s == ']')
+            else if (color != colorNormal and *s == ']')
             {
-                normal = true;
-                colorIdx = COLOR_INDEX::WHITE;
+                color = colorNormal;
             }
-            putChar(x, y, *s, colorIdx);
+            putChar(x, y, *s, color);
         }
     }
 
