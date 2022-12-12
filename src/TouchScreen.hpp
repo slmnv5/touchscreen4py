@@ -114,8 +114,8 @@ public:
             usleep(1000000);
             pos += 1 / 16.0;
             pos = pos - floor(pos);
-            uint newLen = pos * mFrameBuffer.mPixelsX;
-            mFrameBuffer.putSquare(0, 0, newLen, 2, COLOR_INDEX::YELLOW);
+            uint startX = pos * mFrameBuffer.mPixelsX;
+            mFrameBuffer.putSquare(startX, 0, 16, 32, COLOR_INDEX::YELLOW);
         }
     }
 
