@@ -5,7 +5,7 @@
 struct FbPixelFont
 {
 	const char *name;
-	int width, height;
+	uint width, height;
 	unsigned char *data;
 };
 

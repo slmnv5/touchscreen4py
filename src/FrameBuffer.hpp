@@ -138,18 +138,18 @@ public:
 
 protected:
     void
-    putChar(int x, int y, unsigned char chr, uint colorIdx)
+    putChar(uint x, uint y, unsigned char chr, uint colorIdx)
     {
         uint font_offset = chr * mFont.height * mFont.width / 8;
         uint color = idxToColor(colorIdx);
 
-        for (int row = 0; row < mFont.height; row++)
+        for (uint row = 0; row < mFont.height; row++)
         {
             uint pix_offset = ((y + row) * mPixelsX + x) * mPixelSize;
-            for (int col = 0; col < mFont.width / 8; col++)
+            for (uint col = 0; col < mFont.width / 8; col++)
             {
                 unsigned char bits = mFont.data[font_offset++];
-                for (int j = 0; j < 8; j++, bits <<= 1)
+                for (uint j = 0; j < 8; j++, bits <<= 1)
                 {
                     unsigned short scr_color = (bits & 0x80) ? color : 0;
                     *((unsigned short *)(mFbPtr + pix_offset)) = scr_color;
@@ -159,10 +159,10 @@ protected:
         }
     }
 
-    void putPixel(int x, int y, int r, int g, int b) const
+    void putPixel(uint x, uint y, uint r, uint g, uint b) const
     {
-        int pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
-        if (pix_offset < 0 || pix_offset > (int)(this->mScrSize - mPixelSize))
+        uint pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
+        if (pix_offset < 0 || pix_offset > this->mScrSize - mPixelSize)
         {
             return;
         }
@@ -171,17 +171,17 @@ protected:
         *((unsigned short *)(mFbPtr + pix_offset)) = color;
     }
 
-    void putPixel(int x, int y, unsigned short color) const
+    void putPixel(uint x, uint y, unsigned short color) const
     {
-        int pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
-        if (pix_offset < 0 || pix_offset > (int)(this->mScrSize - mPixelSize))
+        uint pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
+        if (pix_offset < 0 || pix_offset > this->mScrSize - mPixelSize)
         {
             return;
         }
         // write 'two bytes at once'
         *((unsigned short *)(mFbPtr + pix_offset)) = color;
     }
-    unsigned short idxToColor(int colorIdx) const
+    unsigned short idxToColor(uint colorIdx) const
     {
         unsigned short r = def_r[colorIdx];
         unsigned short g = def_g[colorIdx];
