@@ -28,7 +28,7 @@ typedef enum
     LIGHT_PURPLE = 13, /* 255,  84, 255 */
     YELLOW = 14,       /* 255, 255,  84 */
     WHITE = 15         /* 255, 255, 255 */
-} COLOR_INDEX_T;
+} COLOR_INDEX;
 
 static unsigned short def_r[] =
     {0, 0, 0, 0, 172, 172, 172, 168,
@@ -97,14 +97,14 @@ public:
         close(mFdFb);
     }
 
-    void draw_square(int x, int y, int width, int height, int colidx) const
+    void putSquare(int x, int y, int width, int height, int colidx) const
     {
         int h = 0;
         int w = 0;
-        unsigned short color = idx_to_color(colidx);
+        unsigned short color = idxToColor(colidx);
         for (h = -height / 2; h < height / 2; h++)
             for (w = -width / 2; w < width / 2; w++)
-                put_pixel(h + x, w + y, color);
+                putPixel(h + x, w + y, color);
     }
 
     void clear() const
@@ -123,7 +123,7 @@ protected:
     void putChar(int x, int y, unsigned char chr, uint colidx)
     {
         uint font_offset = chr * mFont.height * mFont.width / 8;
-        uint color = idx_to_color(colidx);
+        uint color = idxToColor(colidx);
 
         for (int row = 0; row < mFont.height; row++)
         {
@@ -153,7 +153,7 @@ protected:
         *((unsigned short *)(mFbPtr + pix_offset)) = color;
     }
 
-    void put_pixel(int x, int y, unsigned short color) const
+    void putPixel(int x, int y, unsigned short color) const
     {
         int pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
         if (pix_offset < 0 || pix_offset > (int)(this->mScrSize - mPixelSize))
@@ -163,7 +163,7 @@ protected:
         // write 'two bytes at once'
         *((unsigned short *)(mFbPtr + pix_offset)) = color;
     }
-    unsigned short idx_to_color(int colidx) const
+    unsigned short idxToColor(int colidx) const
     {
         unsigned short r = def_r[colidx];
         unsigned short g = def_g[colidx];

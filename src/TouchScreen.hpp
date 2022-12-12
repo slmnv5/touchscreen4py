@@ -57,19 +57,18 @@ public:
     bool mStopped = false;
 
 protected:
-    std::vector<std::string> mTextLines;
-    std::string mHeaderLine;
-    SafeQueue<std::pair<float, float>> mQueue;
-    float mLoopSeconds = 0;
+    std::vector<std::string> mTextLines;       // text on top of screen
+    SafeQueue<std::pair<float, float>> mQueue; // queue for click events
+    float mLoopSeconds = 0;                    // loop length in seconds
 
 private:
-    int mFdScr;
-    int mMinX, mMinY, mMinP;
-    int mMaxX, mMaxY, mMaxP;
-    const bool mInvertX;
-    const bool mInvertY;
-    std::thread mRunThread;
-    std::thread mUpdateThread;
+    int mFdScr;                // file descriptor of touch screen
+    int mMinX, mMinY, mMinP;   // min values for X, Y, P
+    int mMaxX, mMaxY, mMaxP;   // max values for X, Y, P
+    const bool mInvertX;       // Invert touch screen X
+    const bool mInvertY;       // Invert touch screen Y
+    std::thread mRunThread;    // Thread read toch events
+    std::thread mUpdateThread; // Thread draw updates
 
 public:
     TouchScreen(bool invx, bool invy) : mFrameBuffer(), mInvertX(invx), mInvertY(invy)
@@ -104,16 +103,20 @@ public:
     {
         mStopped = true;
         mRunThread.join();
+        mUpdateThread.join();
         close(mFdScr);
     }
 
     void update()
     {
+        float pos = 0.0;
         while (!mStopped)
         {
-            mFrameBuffer.putString(0, 0, mHeaderLine.c_str(), WHITE);
             usleep(mLoopSeconds * 1000000 / 16);
-            mFrameBuffer.putString(0, 0, mHeaderLine.c_str(), WHITE);
+            pos += 1 / 16.0;
+            pos = std::modf(pos, nullptr);
+            auto newLen = pos * mFrameBuffer.mPixelsX;
+            mFrameBuffer.putSquare(0, mFrameBuffer.mFont.height - 2, newLen, 2, COLOR_INDEX::YELLOW);
         }
     }
 
@@ -174,7 +177,7 @@ public:
                 x = (x - mMinX) * scaleX;
                 y = (y - mMinY) * scaleY;
 
-                mFrameBuffer.draw_square(x, y, 15, 15, COLOR_INDEX_T::WHITE);
+                mFrameBuffer.putSquare(x, y, 15, 15, COLOR_INDEX::WHITE);
                 int col = x / mFrameBuffer.mFont.width;
                 int row = y / mFrameBuffer.mFont.height;
                 LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;

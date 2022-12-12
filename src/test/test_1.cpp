@@ -12,7 +12,7 @@ TEST_CASE("Test TS run in thread and get messages", "[long][all]")
 {
 	TouchScreenPy tsp;
 	tsp.mFrameBuffer.clear();
-	tsp.setHeader("AAAAAAA", 21.0);
+	tsp.setLoopSeconds(21.0, 0.55);
 	tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
 
 	SECTION("Test run and click on TS")
@@ -80,13 +80,13 @@ TEST_CASE("Test FB 1", "[all][basic]")
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuffer fb;
 		LOG(LogLvl::INFO) << "Frame buffer created";
-		fb.draw_square(12, 12, 15, 15, COLOR_INDEX_T::RED);
+		fb.putSquare(12, 12, 15, 15, COLOR_INDEX::RED);
 		LOG(LogLvl::INFO) << "Square draw done!!!";
 		fb.clear();
-		fb.draw_square(473, 233, 22, 22, COLOR_INDEX_T::WHITE);
-		fb.draw_square(133, 310, 22, 22, COLOR_INDEX_T::BLUE);
-		fb.draw_square(223, 233, 22, 22, COLOR_INDEX_T::RED);
-		fb.draw_square(453, 13, 22, 22, COLOR_INDEX_T::YELLOW);
+		fb.putSquare(473, 233, 22, 22, COLOR_INDEX::WHITE);
+		fb.putSquare(133, 310, 22, 22, COLOR_INDEX::BLUE);
+		fb.putSquare(223, 233, 22, 22, COLOR_INDEX::RED);
+		fb.putSquare(453, 13, 22, 22, COLOR_INDEX::YELLOW);
 		sleep(2);
 		assert(fb.mPixelsX > 10);
 		assert(fb.mPixelsY > 10);
@@ -104,8 +104,8 @@ TEST_CASE("Test FB 2", "[all][basic]")
 		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuffer fb;
 		fb.clear();
-		fb.putString(120, 0, "ABACUS 121", COLOR_INDEX_T::GREEN);
-		fb.putString(120, 0 + fb.mFont.height, "BIBIGON 321", COLOR_INDEX_T::RED);
-		fb.putString(220, 220, "ABACUS 121=================>", COLOR_INDEX_T::YELLOW);
+		fb.putString(120, 0, "ABACUS 121", COLOR_INDEX::GREEN);
+		fb.putString(120, 0 + fb.mFont.height, "BIBIGON 321", COLOR_INDEX::RED);
+		fb.putString(220, 220, "ABACUS 121=================>", COLOR_INDEX::YELLOW);
 	}
 }

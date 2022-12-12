@@ -21,7 +21,6 @@ public:
     std::string getClickEvent()
     {
         auto pair = this->mQueue.pop();
-        LOG(LogLvl::INFO) << "Got clickEvent pair: " << pair.first << ":" << pair.second << ", " << this->mTextLines.size();
         if (pair.second < this->mTextLines.size())
         {
             auto line = this->mTextLines.at(pair.first);
@@ -29,7 +28,7 @@ public:
             auto word = wordAtPosition(line, pair.second, '[', ']');
             return word;
         }
-        return "";
+        return "beyond the text";
     }
 
     void setText(const char *text)
@@ -38,13 +37,12 @@ public:
         for (uint i = 0; i < this->mTextLines.size(); i++)
         {
             auto line = this->mTextLines.at(i);
-            this->mFrameBuffer.putString(0, 32 * (1 + i), line.c_str(), COLOR_INDEX_T::WHITE);
+            this->mFrameBuffer.putString(0, 32 * i, line.c_str(), COLOR_INDEX::WHITE);
         }
     }
 
-    void setHeader(const char *header, double loopSeconds)
+    void setLoopSeconds(double loopSeconds, double position)
     {
-        this->mHeaderLine = header;
         this->mLoopSeconds = loopSeconds;
     }
 };
@@ -90,12 +88,12 @@ extern "C"
         }
     }
 
-    int setHeader(void *ptr, const char *header, float loopSeconds)
+    int setLoopSeconds(void *ptr, double loopSeconds, double position)
     {
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setHeader(header, loopSeconds);
+            x->setLoopSeconds(loopSeconds, position);
             return 0;
         }
         catch (...)
