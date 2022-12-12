@@ -64,6 +64,12 @@ extern "C"
         delete x;
     }
 
+    void clear(void *ptr)
+    {
+        TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+        x->mFrameBuffer.clear();
+    }
+
     int stop(void *ptr)
     {
         TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
