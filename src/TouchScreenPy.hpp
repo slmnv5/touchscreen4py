@@ -36,7 +36,7 @@ public:
         for (uint i = 0; i < this->mTextLines.size(); i++)
         {
             auto line = this->mTextLines.at(i);
-            this->mFrameBuffer.putString(0, 32 * i, line.c_str(), COLOR_INDEX::WHITE);
+            this->mFrameBuffer.putStringNice(0, 32 * i, line.c_str());
         }
     }
 
