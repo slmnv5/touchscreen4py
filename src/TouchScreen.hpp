@@ -65,7 +65,7 @@ private:
     int mMaxX, mMaxY, mMaxP;   // max values for X, Y, P
     const bool mInvertX;       // Invert touch screen X
     const bool mInvertY;       // Invert touch screen Y
-    std::thread mRunThread;    // Thread read toch events
+    std::thread mReadThread;   // Thread read toch events
     std::thread mUpdateThread; // Thread draw updates
 
 public:
@@ -94,13 +94,13 @@ public:
         getInfoFromDevice(ABS_PRESSURE, mMinP, mMaxP);
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
-        mRunThread = std::thread(&TouchScreen::readScreen, this);
+        mReadThread = std::thread(&TouchScreen::readScreen, this);
         mUpdateThread = std::thread(&TouchScreen::updateScreen, this);
     }
     virtual ~TouchScreen()
     {
         mStopped = true;
-        mRunThread.join();
+        mReadThread.join();
         mUpdateThread.join();
         close(mFdScr);
     }
@@ -114,7 +114,7 @@ public:
             usleep(1000000);
             pos += 1 / 16.0;
             pos = pos - floor(pos);
-            auto newLen = pos * mFrameBuffer.mPixelsX;
+            uint newLen = pos * mFrameBuffer.mPixelsX;
             mFrameBuffer.putSquare(0, 0, newLen, 2, COLOR_INDEX::YELLOW);
         }
     }

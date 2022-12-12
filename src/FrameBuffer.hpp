@@ -50,7 +50,7 @@ private:
 
 public:
     FbPixelFont &mFont = font_16x32; // font
-    int mPixelsX, mPixelsY;          // screen resolution
+    uint mPixelsX, mPixelsY;         // screen resolution
 
     FrameBuffer(int fbidx = 1)
     {
