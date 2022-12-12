@@ -61,8 +61,8 @@ protected:
 
 private:
     int mFdScr;                // file descriptor of touch screen
-    int mMinX, mMinY, mMinP;   // min values for X, Y, P
-    int mMaxX, mMaxY, mMaxP;   // max values for X, Y, P
+    uint mMinX, mMinY, mMinP;  // min values for X, Y, P
+    uint mMaxX, mMaxY, mMaxP;  // max values for X, Y, P
     const bool mInvertX;       // Invert touch screen X
     const bool mInvertY;       // Invert touch screen Y
     std::thread mReadThread;   // Thread read toch events
@@ -122,10 +122,10 @@ public:
     void readScreen()
     {
         LOG(LogLvl::INFO) << "Starting readScreen()";
-        int x, y, savex, savey;
+        uint x, y, savex, savey;
         x = y = savex = savey = 0;
         auto started = myclock::now();
-        int touch_on = 0;
+        bool touch_on = false;
         bool button_click = false;
         double scaleX = 1.0 / (mMaxX - mMinX) * mFrameBuffer.mPixelsX;
         double scaleY = 1.0 / (mMaxY - mMinY) * mFrameBuffer.mPixelsY;
@@ -148,9 +148,10 @@ public:
                 }
                 else
                 {
+                    bool sameX = abs(x - savex + 0.0) / (mMaxX - mMinX) < 0.1;
+                    bool sameY = abs(y - savey + 0.0) / (mMaxY - mMinY) < 0.1;
                     seconds duration = myclock::now() - started;
-                    if (duration.count() > MIN_TOUCH_TIME && abs(x - savex) / (mMaxX - mMinX) < 0.1 &&
-                        abs(y - savey) / (mMaxY - mMinY) < 0.1)
+                    if (duration.count() > MIN_TOUCH_TIME and sameX and sameY)
                     {
                         button_click = true;
                     }
@@ -176,16 +177,16 @@ public:
                 x = (x - mMinX) * scaleX;
                 y = (y - mMinY) * scaleY;
 
-                int col = x / mFrameBuffer.mFont.width;
-                int row = y / mFrameBuffer.mFont.height;
+                uint col = x / mFrameBuffer.mFont.width;
+                uint row = y / mFrameBuffer.mFont.height;
                 LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;
-                mQueue.push(std::pair<int, int>(col, row));
+                mQueue.push(std::pair<uint, uint>(col, row));
             }
         }
     }
 
 private:
-    void getInfoFromDevice(int propId, int &minV, int &maxV)
+    void getInfoFromDevice(int propId, uint &minV, uint &maxV)
     {
         // const char *arrPropName[6] = {"Value", "Min", "Max", "Fuzz", "Flat", "Resolution"};
         int arrPropValue[6] = {};
