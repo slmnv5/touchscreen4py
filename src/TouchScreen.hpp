@@ -57,9 +57,9 @@ public:
     bool mStopped = false;
 
 protected:
-    std::vector<std::string> mTextLines;       // text on top of screen
-    SafeQueue<std::pair<float, float>> mQueue; // queue for click events
-    float mLoopSeconds = 0;                    // loop length in seconds
+    std::vector<std::string> mTextLines;         // text on top of screen
+    SafeQueue<std::pair<double, double>> mQueue; // queue for click events
+    double mLoopSeconds = 0;                     // loop length in seconds
 
 private:
     int mFdScr;                // file descriptor of touch screen
@@ -109,12 +109,12 @@ public:
 
     void update()
     {
-        float pos = 0.0;
+        double pos = 0.0;
         while (!mStopped)
         {
             usleep(mLoopSeconds * 1000000 / 16);
             pos += 1 / 16.0;
-            pos = std::modf(pos, nullptr);
+            pos = pos - floor(pos);
             auto newLen = pos * mFrameBuffer.mPixelsX;
             mFrameBuffer.putSquare(0, mFrameBuffer.mFont.height - 2, newLen, 2, COLOR_INDEX::YELLOW);
         }
@@ -128,8 +128,8 @@ public:
         auto started = myclock::now();
         int touch_on = 0;
         bool button_click = false;
-        float scaleX = 1.0 / (mMaxX - mMinX) * mFrameBuffer.mPixelsX;
-        float scaleY = 1.0 / (mMaxY - mMinY) * mFrameBuffer.mPixelsY;
+        double scaleX = 1.0 / (mMaxX - mMinX) * mFrameBuffer.mPixelsX;
+        double scaleY = 1.0 / (mMaxY - mMinY) * mFrameBuffer.mPixelsY;
 
         struct input_event ev;
 
