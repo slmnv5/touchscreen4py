@@ -8,27 +8,6 @@
 using myclock = std::chrono::steady_clock;
 using seconds = std::chrono::duration<double>;
 
-TEST_CASE("Test TS run in thread and get messages", "[long][all]")
-{
-	TouchScreenPy tsp;
-	tsp.mFrameBuffer.clear();
-	tsp.setLoopSeconds(21.0, 0.55);
-	tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
-
-	SECTION("Test run and click on TS")
-	{
-		auto started = myclock::now();
-		seconds duration(0);
-		while (duration.count() < 220)
-		{
-			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
-			duration = myclock::now() - started;
-			auto word = tsp.getClickEvent();
-			LOG(LogLvl::INFO) << "Got clickEvent: " << word;
-		}
-	}
-}
-
 TEST_CASE("Test simple things", "[all][basic]")
 {
 
@@ -107,5 +86,26 @@ TEST_CASE("Test FB 2", "[all][basic]")
 		fb.putString(120, 0, "ABACUS 121", COLOR_INDEX::GREEN);
 		fb.putString(120, 0 + fb.mFont.height, "BIBIGON 321", COLOR_INDEX::RED);
 		fb.putString(220, 220, "ABACUS 121=================>", COLOR_INDEX::YELLOW);
+	}
+}
+
+TEST_CASE("Test TS run in thread and get messages", "[long][all]")
+{
+	TouchScreenPy tsp;
+	tsp.mFrameBuffer.clear();
+	tsp.setLoopSeconds(21.0, 0.55);
+	tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
+
+	SECTION("Test run and click on TS")
+	{
+		auto started = myclock::now();
+		seconds duration(0);
+		while (duration.count() < 220)
+		{
+			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
+			duration = myclock::now() - started;
+			auto word = tsp.getClickEvent();
+			LOG(LogLvl::INFO) << "Got clickEvent: " << word;
+		}
 	}
 }
