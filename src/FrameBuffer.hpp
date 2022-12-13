@@ -56,7 +56,7 @@ private:
     int mFdFb = -1;      // file descriptor
     char *mFbPtr = 0;    // pointer to frame buffer memory
     uint mScrSize = 0;   // screen memory size in bytes
-    uint mPixelSize = 0; // pixel size in bytes
+    uint mColorSize = 0; // screen color size in bytes
 
 public:
     FbPixelFont &mFont = font_16x32; // font
@@ -83,14 +83,14 @@ public:
         LOG(LogLvl::DEBUG) << "var.xoffset, var.left_margin: " << var.xoffset << ", " << var.left_margin;
         LOG(LogLvl::DEBUG) << "var.yoffset, var.upper_margin: " << var.yoffset << ", " << var.upper_margin;
 
-        mPixelSize = var.bits_per_pixel / 8;
-        if (2 != mPixelSize)
+        mColorSize = var.bits_per_pixel / 8;
+        if (2 != mColorSize)
         {
             close(mFdFb);
             throw std::runtime_error("Cannot use this device, color depth: " + std::to_string(var.bits_per_pixel));
         }
-        mScrSize = mPixelsY * mPixelsX * mPixelSize;
-        LOG(LogLvl::DEBUG) << "Memory and pixel sizes, bytes: " << mScrSize << ", " << mPixelSize;
+        mScrSize = mPixelsY * mPixelsX * mColorSize;
+        LOG(LogLvl::DEBUG) << "Memory and pixel sizes, bytes: " << mScrSize << ", " << mColorSize;
 
         mFbPtr = (char *)mmap(0, mScrSize, PROT_READ | PROT_WRITE, MAP_SHARED, mFdFb, 0);
         int int_result = reinterpret_cast<std::intptr_t>(mFbPtr);
@@ -158,25 +158,26 @@ protected:
     void
     putChar(uint x, uint y, unsigned char chr, unsigned short color)
     {
-        unsigned short bit_mask = pow(2, mFont.width);
-        uint font_offset = chr * mFont.height * mFont.width / 8;
+        unsigned short bitMask = std::pow(2, mFont.width);
+        uint bytesPerChar = std::ceil(mFont.height * mFont.width / 8.0);
+        uint fontOffset = chr * bytesPerChar;
         for (uint row = 0; row < mFont.height; row++)
         {
-            uint pix_offset = ((y + row) * mPixelsX + x) * mPixelSize;
-            unsigned short bits = mFont.data[font_offset++];
+            uint pixOffset = ((y + row) * mPixelsX + x) * mColorSize;
+            unsigned short bits = mFont.data[fontOffset++];
             for (uint j = 0; j < mFont.width; j++, bits <<= 1)
             {
-                unsigned short scr_color = (bits & bit_mask) ? color : 0;
-                *((unsigned short *)(mFbPtr + pix_offset)) = scr_color;
-                pix_offset += mPixelSize;
+                unsigned short scr_color = (bits & bitMask) ? color : 0;
+                *((unsigned short *)(mFbPtr + pixOffset)) = scr_color;
+                pixOffset += mColorSize;
             }
         }
     }
 
     void putPixel(uint x, uint y, uint r, uint g, uint b) const
     {
-        uint pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
-        if (pix_offset < 0 || pix_offset > this->mScrSize - mPixelSize)
+        uint pix_offset = x * mColorSize + y * mPixelsX * mColorSize;
+        if (pix_offset < 0 || pix_offset > this->mScrSize - mColorSize)
         {
             return;
         }
@@ -187,8 +188,8 @@ protected:
 
     void putPixel(uint x, uint y, unsigned short color) const
     {
-        uint pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
-        if (pix_offset < 0 || pix_offset > this->mScrSize - mPixelSize)
+        uint pix_offset = x * mColorSize + y * mPixelsX * mColorSize;
+        if (pix_offset < 0 || pix_offset > this->mScrSize - mColorSize)
         {
             return;
         }
@@ -198,8 +199,8 @@ protected:
 
     void putPixelInv(uint x, uint y) const
     {
-        uint pix_offset = x * mPixelSize + y * mPixelsX * mPixelSize;
-        if (pix_offset < 0 || pix_offset > this->mScrSize - mPixelSize)
+        uint pix_offset = x * mColorSize + y * mPixelsX * mColorSize;
+        if (pix_offset < 0 || pix_offset > this->mScrSize - mColorSize)
         {
             return;
         }
