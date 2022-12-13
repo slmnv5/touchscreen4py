@@ -142,8 +142,6 @@ public:
             if (mStopped)
                 break;
 
-            LOG(LogLvl::DEBUG) << "Ev code: " << ev.code;
-
             if (ev.type == EV_KEY && ev.code == BTN_TOUCH)
             {
                 touch_on = ev.value;
@@ -177,8 +175,10 @@ public:
             {
                 continue;
             }
+
             if (button_click and mQueue.size() < MAX_QUEUE_SZ)
             {
+                cout << "bbbbbbbbbbb" << std::endl;
                 button_click = false;
                 x = mInvertX ? mMaxX - x : x;
                 y = mInvertY ? mMaxY - y : y;
@@ -187,6 +187,7 @@ public:
 
                 uint col = x / mFrameBuffer.mFont.width;
                 uint row = y / mFrameBuffer.mFont.height;
+                cout << "aaaaaaaaa" << std::endl;
                 LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;
                 mQueue.push(std::pair<uint, uint>(col, row));
             }
