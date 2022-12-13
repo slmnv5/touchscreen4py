@@ -23,9 +23,9 @@ struct FbPixelFont font_16x32 = {
 };
 
 struct FbPixelFont font_12x27 = {
-	.name = "font_16x32",
-	.width = 16,
-	.height = 32,
+	.name = "font_12x27",
+	.width = 12,
+	.height = 27,
 	.data = fontdata_12x27
 };
 
