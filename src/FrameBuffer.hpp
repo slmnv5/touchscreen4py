@@ -59,7 +59,7 @@ private:
     uint mPixelSize = 0; // pixel size in bytes
 
 public:
-    FbPixelFont &mFont = font_12x27; // font
+    FbPixelFont &mFont = font_16x32; // font
     uint mPixelsX, mPixelsY;         // screen resolution
 
     FrameBuffer(int fbidx = 1)
