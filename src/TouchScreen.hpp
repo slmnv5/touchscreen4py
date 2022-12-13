@@ -94,10 +94,10 @@ public:
         getInfoFromDevice(ABS_X, mMinX, mMaxX);
         getInfoFromDevice(ABS_Y, mMinY, mMaxY);
         getInfoFromDevice(ABS_PRESSURE, mMinP, mMaxP);
-        LOG(LogLvl::INFO) << "Opened touch screen device: " << name
-                          << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
         mReadThread = std::thread(&TouchScreen::readScreen, this);
         mUpdateThread = std::thread(&TouchScreen::updateScreen, this);
+        LOG(LogLvl::INFO) << "Opened touch screen device: " << name
+                          << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
     }
     virtual ~TouchScreen()
     {
