@@ -53,10 +53,11 @@ unsigned short idxToColor(uint colorIdx)
 class FrameBuffer
 {
 private:
-    int mFdFb = -1;      // file descriptor
-    char *mFbPtr = 0;    // pointer to frame buffer memory
-    uint mScrSize = 0;   // screen memory size in bytes
-    uint mColorSize = 0; // screen color size in bytes
+    int mFdFb = -1;         // file descriptor
+    char *mFbPtr = 0;       // pointer to frame buffer memory
+    uint mScrSize = 0;      // screen memory size in bytes
+    uint mColorSize = 0;    // screen color size in bytes
+    uint mFontCharSize = 0; // size of char in font file
 
 public:
     FbPixelFont &mFont = font_16x32; // font
@@ -90,7 +91,7 @@ public:
             throw std::runtime_error("Cannot use this device, color depth: " + std::to_string(var.bits_per_pixel));
         }
         mScrSize = mPixelsY * mPixelsX * mColorSize;
-        LOG(LogLvl::DEBUG) << "Memory and pixel sizes, bytes: " << mScrSize << ", " << mColorSize;
+        LOG(LogLvl::DEBUG) << "Memory and color sizes, bytes: " << mScrSize << ", " << mColorSize;
 
         mFbPtr = (char *)mmap(0, mScrSize, PROT_READ | PROT_WRITE, MAP_SHARED, mFdFb, 0);
         int int_result = reinterpret_cast<std::intptr_t>(mFbPtr);
@@ -100,6 +101,8 @@ public:
             throw std::runtime_error("Cannot map frame buffer memory");
         }
         LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
+        mFontCharSize = std::ceil(mFont.height * mFont.width / 8.0);
+        LOG(LogLvl::DEBUG) << "Size of char in font: " << mFontCharSize;
     }
     virtual ~FrameBuffer()
     {
@@ -158,9 +161,8 @@ protected:
     void
     putChar(uint x, uint y, unsigned char chr, unsigned short color)
     {
-        unsigned short bitMask = std::pow(2, mFont.width);
-        uint bytesPerChar = std::ceil(mFont.height * mFont.width / 8.0);
-        uint fontOffset = chr * bytesPerChar;
+        unsigned short bitMask = std::pow(2, mFontCharSize);
+        uint fontOffset = chr * mFontCharSize;
         for (uint row = 0; row < mFont.height; row++)
         {
             uint pixOffset = ((y + row) * mPixelsX + x) * mColorSize;
