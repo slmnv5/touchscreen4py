@@ -45,6 +45,7 @@ public:
 
     void setText(const char *text)
     {
+        mFrameBuffer.clear();
         mTextLines = split_string(text, LINE_DELIMTER_CHAR);
         LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
         for (uint i = 0; i < mTextLines.size(); i++)
@@ -58,17 +59,18 @@ public:
     {
         uint row_offset = mTextLines.size();
         this->mContentLines = split_string(content, LINE_DELIMTER_CHAR);
+        LOG(LogLvl::DEBUG) << content << ", lines: " << mContentLines.size() << " offset: " << row_offset;
         for (uint i = 0; i < this->mContentLines.size(); i++)
         {
             auto line = this->mTextLines.at(i);
-            unsigned short color = WHITE;
+            unsigned short color = COLOR_INDEX::WHITE;
             if (line.rfind("*", 0) == 0)
             {
-                color = mIsRec ? RED : GREEN;
+                color = mIsRec ? COLOR_INDEX::RED : COLOR_INDEX::GREEN;
             }
             else if (line.rfind("~", 0) == 0)
             {
-                color = YELLOW;
+                color = COLOR_INDEX::YELLOW;
             }
             this->mFrameBuffer.putString(0, row_offset + 32 * i, line.c_str(), color);
         }
