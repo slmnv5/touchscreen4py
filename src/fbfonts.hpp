@@ -10,12 +10,22 @@ struct FbPixelFont
 };
 
 extern unsigned char fontdata_16x32[];
+extern unsigned char fontdata_12x27[];
 
 struct FbPixelFont font_16x32 = {
 	.name = "font_16x32",
 	.width = 16,
 	.height = 32,
-	.data = fontdata_12x27};
+	.data = fontdata_12x27
+};
+
+struct FbPixelFont font_12x27 = {
+	.name = "font_16x32",
+	.width = 16,
+	.height = 32,
+	.data = fontdata_12x27
+};
+
 
 unsigned char fontdata_12x27[] = {
 
