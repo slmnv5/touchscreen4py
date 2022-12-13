@@ -8,7 +8,7 @@
 #include "lib/utils.hpp"
 #include "lib/log.hpp"
 
-#define LINE_DELIMTER_CHAR 10
+static const char LINE_DELIMTER_CHAR = 10;
 
 class TouchScreenPy : public TouchScreen
 {
