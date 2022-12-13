@@ -14,7 +14,7 @@ class TouchScreenPy : public TouchScreen
 {
 
 public:
-    TouchScreenPy() : TouchScreen(false, true)
+    TouchScreenPy(int fbId = 1) : TouchScreen(fbId, false, true)
     {
         LOG::ReportingLevel() = LogLvl::ERROR;
     }

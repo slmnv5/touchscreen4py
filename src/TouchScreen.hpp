@@ -71,7 +71,7 @@ private:
     std::thread mUpdateThread; // Thread draw updates
 
 public:
-    TouchScreen(bool invx, bool invy) : mFrameBuffer(), mInvertX(invx), mInvertY(invy)
+    TouchScreen(uint fbId, bool invx, bool invy) : mFrameBuffer(fbId), mInvertX(invx), mInvertY(invy)
     {
 
         if (mFrameBuffer.mPixelsX <= 0 || mFrameBuffer.mPixelsY <= 0)

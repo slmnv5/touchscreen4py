@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 {
 
 	LOG::ReportingLevel() = LogLvl::ERROR;
+	const char *fbId = nullptr;
 
 	for (int i = 1; i < argc; i++)
 	{
@@ -24,6 +25,10 @@ int main(int argc, char *argv[])
 		{
 			LOG::ReportingLevel() = LogLvl::DEBUG;
 		}
+		else if (strcmp(argv[i], "-f") == 0 && i + 1 < argc)
+		{
+			fbId = argv[i + 1];
+		}
 		else if (strcmp(argv[i], "-h") == 0)
 		{
 			help();
@@ -33,7 +38,12 @@ int main(int argc, char *argv[])
 
 	try
 	{
-		TouchScreenPy tsp;
+		uint fbIdInt = 0;
+		if (nullptr != fbId)
+		{
+			fbIdInt = std::stoi(fbId);
+		}
+		TouchScreenPy tsp(fbIdInt);
 		tsp.mFrameBuffer.clear();
 		tsp.setLoop(21.0, 0.55, true, false);
 		tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
