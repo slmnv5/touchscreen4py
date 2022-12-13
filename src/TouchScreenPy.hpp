@@ -40,7 +40,7 @@ public:
         for (uint i = 0; i < this->mTextLines.size(); i++)
         {
             auto line = this->mTextLines.at(i);
-            this->mFrameBuffer.putStringNice(0, 32 * i, line.c_str());
+            this->mFrameBuffer.putStringNice(0, mFrameBuffer.mFont.height * i, line.c_str());
         }
     }
 

@@ -127,14 +127,14 @@ public:
         memset(mFbPtr, 0, mScrSize);
     }
 
-    void putString(int x, int y, const char *s, uint colorIdx)
+    void putString(uint x, uint y, const char *s, uint colorIdx)
     {
         unsigned short color = idxToColor(colorIdx);
         for (uint i = 0; *s; i++, x += mFont.width, s++)
             putChar(x, y, *s, color);
     }
 
-    void putStringNice(int x, int y, const char *s)
+    void putStringNice(uint x, uint y, const char *s)
     {
         unsigned short colorNormal = idxToColor(COLOR_INDEX::WHITE);
         unsigned short colorActive = idxToColor(COLOR_INDEX::YELLOW);
