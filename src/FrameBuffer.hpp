@@ -53,11 +53,10 @@ unsigned short idxToColor(uint colorIdx)
 class FrameBuffer
 {
 private:
-    int mFdFb = -1;         // file descriptor
-    char *mFbPtr = 0;       // pointer to frame buffer memory
-    uint mScrSize = 0;      // screen memory size in bytes
-    uint mColorSize = 0;    // screen color size in bytes
-    uint mFontLineSize = 0; // font char width in bytes
+    int mFdFb = -1;      // file descriptor
+    char *mFbPtr = 0;    // pointer to frame buffer memory
+    uint mScrSize = 0;   // screen memory size in bytes
+    uint mColorSize = 0; // screen color size in bytes
 
 public:
     FbPixelFont &mFont = font_12x27; // font
@@ -101,8 +100,6 @@ public:
             throw std::runtime_error("Cannot map frame buffer memory");
         }
         LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
-        mFontLineSize = std::ceil(mFont.width / 8.0);
-        LOG(LogLvl::DEBUG) << "Size of charline in font: " << mFontLineSize;
     }
     virtual ~FrameBuffer()
     {
@@ -161,12 +158,12 @@ protected:
     void
     putChar(uint x, uint y, unsigned char chr, unsigned short color)
     {
-        uint bitMask = std::pow(2, 8 * mFontLineSize);
-        uint fontOffset = chr * mFontLineSize * mFont.height;
+        uint mFontStep = std::ceil(mFont.width / 8.0);
+        uint fontOffset = chr * mFontStep * mFont.height;
         for (uint row = 0; row < mFont.height; row++)
         {
             uint pixOffset = ((y + row) * mPixelsX + x) * mColorSize;
-            for (uint i = 0; i < mFontLineSize; i++)
+            for (uint i = 0; i < mFontStep; i++)
             {
                 char bits = mFont.data[fontOffset++];
                 for (uint j = 0; j < 8; j++, bits <<= 1)
