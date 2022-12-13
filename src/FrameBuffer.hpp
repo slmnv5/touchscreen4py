@@ -158,19 +158,17 @@ protected:
     void
     putChar(uint x, uint y, unsigned char chr, unsigned short color)
     {
+        unsigned short bit_mask = pow(2, mFont.width);
         uint font_offset = chr * mFont.height * mFont.width / 8;
         for (uint row = 0; row < mFont.height; row++)
         {
             uint pix_offset = ((y + row) * mPixelsX + x) * mPixelSize;
-            for (uint col = 0; col < mFont.width / 8; col++)
+            unsigned short bits = mFont.data[font_offset++];
+            for (uint j = 0; j < mFont.width; j++, bits <<= 1)
             {
-                unsigned char bits = mFont.data[font_offset++];
-                for (uint j = 0; j < 8; j++, bits <<= 1)
-                {
-                    unsigned short scr_color = (bits & 0x80) ? color : 0;
-                    *((unsigned short *)(mFbPtr + pix_offset)) = scr_color;
-                    pix_offset += mPixelSize;
-                }
+                unsigned short scr_color = (bits & bit_mask) ? color : 0;
+                *((unsigned short *)(mFbPtr + pix_offset)) = scr_color;
+                pix_offset += mPixelSize;
             }
         }
     }

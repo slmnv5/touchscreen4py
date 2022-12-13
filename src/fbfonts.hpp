@@ -30,7 +30,7 @@ struct FbPixelFont font_12x27 = {
 };
 
 
-unsigned char fontdata_12x27[] = {
+unsigned char fontdata_12x27[16*27*256/8] = {
 
     /*
      * code=0, hex=0x00, ascii="^@"
