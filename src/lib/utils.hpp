@@ -3,8 +3,6 @@
 
 #include "pch.hpp"
 
-//==================== utility functions ===================================
-
 std::string exec_command(const std::string &cmd)
 {
     char buffer[128];

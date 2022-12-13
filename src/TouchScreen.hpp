@@ -45,8 +45,6 @@ std::string wordAtPosition(const std::string &s, unsigned int pos, char leftSpac
     return word;
 }
 
-//============================================================
-
 class TouchScreen
 {
 

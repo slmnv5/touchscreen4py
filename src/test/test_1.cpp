@@ -43,20 +43,16 @@ TEST_CASE("Test FB 1", "[all][basic]")
 	{
 		std::string word;
 		word = wordAtPosition(" Test [once we] do", 11, '[', ']');
-		LOG(LogLvl::INFO) << "====" << word << "========";
 		assert(word == "[once we]");
 		word = wordAtPosition(" Test [once we] do", 0, '[', ']');
-		LOG(LogLvl::INFO) << "====" << word << "========";
 		assert(word == "");
 		word = wordAtPosition(" Test [once we] do", 11111, '[', ']');
-		LOG(LogLvl::INFO) << "====" << word << "========";
 		assert(word == "");
 	}
 
 	SECTION("Test FB squares, colors")
 	{
 
-		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuffer fb;
 		LOG(LogLvl::INFO) << "Frame buffer created";
 		fb.putSquare(12, 12, 15, 15, COLOR_INDEX::RED);
@@ -80,11 +76,10 @@ TEST_CASE("Test FB 2", "[all][basic]")
 	SECTION("Test text strings")
 	{
 
-		LOG(LogLvl::INFO) << "====================Frame buffer test============";
 		FrameBuffer fb;
 		fb.clear();
 		fb.putString(120, 0, "ABACUS 121", COLOR_INDEX::GREEN);
 		fb.putString(120, 0 + fb.mFont.height, "BIBIGON 321", COLOR_INDEX::RED);
-		fb.putString(220, 220, "ABACUS 121=================>", COLOR_INDEX::YELLOW);
+		fb.putString(220, 220, "ABACUS 121 ~~~~~~~~~~~~~~~~~~>", COLOR_INDEX::YELLOW);
 	}
 }
