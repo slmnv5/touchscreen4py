@@ -101,7 +101,7 @@ public:
             throw std::runtime_error("Cannot map frame buffer memory");
         }
         LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
-        mFontCharSize = std::ceil(mFont.height * mFont.width / 8.0);
+        mFontCharSize = std::ceil(mFont.width / 8.0);
         LOG(LogLvl::DEBUG) << "Size of char in font: " << mFontCharSize;
     }
     virtual ~FrameBuffer()
