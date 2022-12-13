@@ -8,7 +8,7 @@
 #include "lib/utils.hpp"
 #include "lib/log.hpp"
 
-#define LINE_DELIMTER "\n"
+#define LINE_DELIMTER_CHAR '|'
 
 class TouchScreenPy : public TouchScreen
 {
@@ -45,7 +45,7 @@ public:
 
     void setText(const char *text)
     {
-        mTextLines = split_string(text, LINE_DELIMTER);
+        mTextLines = split_string(text, LINE_DELIMTER_CHAR);
         LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
         for (uint i = 0; i < mTextLines.size(); i++)
         {
@@ -57,7 +57,7 @@ public:
     void setContent(const char *content)
     {
         uint row_offset = mTextLines.size();
-        this->mContentLines = split_string(content, LINE_DELIMTER);
+        this->mContentLines = split_string(content, LINE_DELIMTER_CHAR);
         for (uint i = 0; i < this->mContentLines.size(); i++)
         {
             auto line = this->mTextLines.at(i);
