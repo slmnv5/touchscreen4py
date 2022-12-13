@@ -45,7 +45,7 @@ public:
     void setText(const char *text, uint startRow)
     {
         auto lines = splitString(text, LINE_DELIMTER);
-        LOG(LogLvl::DEBUG) << text << ", lines: " << lines.size() << " offset: " << startRow;
+        LOG(LogLvl::DEBUG) << text << ", lines: " << lines.size() << " startRow: " << startRow;
         for (uint i = 0; i < lines.size(); i++)
         {
             auto line = lines.at(i);
@@ -58,7 +58,7 @@ public:
             {
                 color = COLOR_INDEX::YELLOW;
             }
-            this->mFrameBuffer.putString(0, startRow + 32 * i, line.c_str(), color);
+            this->mFrameBuffer.putString(0, (startRow + i) * mFrameBuffer.mFont.height, line.c_str(), color);
         }
         if (startRow == 0)
             mTextLines = lines;
