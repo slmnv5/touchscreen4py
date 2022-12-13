@@ -42,23 +42,10 @@ public:
         return "";
     }
 
-    void setText(const char *text)
+    void setText(const char *text, uint startRow)
     {
-        mFrameBuffer.clear();
-        mTextLines = splitString(text, LINE_DELIMTER);
-        LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
-        for (uint i = 0; i < mTextLines.size(); i++)
-        {
-            auto line = mTextLines.at(i);
-            this->mFrameBuffer.putStringNice(0, mFrameBuffer.mFont.height * i, line.c_str());
-        }
-    }
-
-    void setContent(const char *content)
-    {
-        uint row_offset = mTextLines.size();
-        this->mContentLines = splitString(content, LINE_DELIMTER);
-        LOG(LogLvl::DEBUG) << content << ", lines: " << mContentLines.size() << " offset: " << row_offset;
+        this->mContentLines = splitString(text, LINE_DELIMTER);
+        LOG(LogLvl::DEBUG) << text << ", lines: " << mContentLines.size() << " offset: " << startRow;
         for (uint i = 0; i < this->mContentLines.size(); i++)
         {
             auto line = this->mTextLines.at(i);
@@ -71,7 +58,7 @@ public:
             {
                 color = COLOR_INDEX::YELLOW;
             }
-            this->mFrameBuffer.putString(0, row_offset + 32 * i, line.c_str(), color);
+            this->mFrameBuffer.putString(0, startRow + 32 * i, line.c_str(), color);
         }
     }
 
