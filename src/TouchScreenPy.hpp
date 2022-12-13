@@ -28,10 +28,10 @@ public:
 
     std::string getClickEvent()
     {
-        while (this->mTextLines.size())
+        while (true)
         {
             auto pairColRow = this->mQueue.pop();
-            if (pairColRow.second >= this->mTextLines.size())
+            if (pairColRow.second > mTextRows)
                 continue;
 
             auto line = this->mTextLines.at(pairColRow.second);
