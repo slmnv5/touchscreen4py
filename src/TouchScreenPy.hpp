@@ -144,6 +144,20 @@ extern "C"
             return -1;
         }
     }
+
+    int setContent(void *ptr, const char *content)
+    {
+        try
+        {
+            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+            x->setContent(content);
+            return 0;
+        }
+        catch (...)
+        {
+            return -1;
+        }
+    }
 }
 
 #endif
