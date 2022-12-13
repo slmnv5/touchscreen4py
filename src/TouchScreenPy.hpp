@@ -8,7 +8,7 @@
 #include "lib/utils.hpp"
 #include "lib/log.hpp"
 
-#define LINE_DELIMTER "|"
+#define LINE_DELIMTER "\n"
 
 class TouchScreenPy : public TouchScreen
 {
