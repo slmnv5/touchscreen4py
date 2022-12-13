@@ -112,7 +112,7 @@ public:
         LOG(LogLvl::INFO) << "Starting updateScreen()";
         while (true)
         {
-            usleep(mLoopSeconds / 16);
+            usleep(mLoopSeconds * 1000000 / 16);
             if (mIsStop)
             {
                 continue;
@@ -141,6 +141,8 @@ public:
         {
             if (mStopped)
                 break;
+
+            LOG(LogLvl::DEBUG) << "Ev code: " << ev.code;
 
             if (ev.type == EV_KEY && ev.code == BTN_TOUCH)
             {
