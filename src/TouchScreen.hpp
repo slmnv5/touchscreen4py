@@ -7,10 +7,10 @@
 #include "FrameBuffer.hpp"
 #include "lib/SafeQueue.hpp"
 
-static const uint MAX_QUEUE_SZ = 20;    // used to stop putting events in touch screen queue
-static const float MIN_TOUCH_TIME = 0.2 // min time to hold button for click in seconds
+static const uint MAX_QUEUE_SZ = 20;     // used to stop putting events in touch screen queue
+static const float MIN_TOUCH_TIME = 0.2; // min time to hold button for click in seconds
 
-    using myclock = std::chrono::steady_clock;
+using myclock = std::chrono::steady_clock;
 using seconds = std::chrono::duration<double>;
 
 std::string findTouchscrEvent()
