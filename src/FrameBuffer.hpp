@@ -166,7 +166,8 @@ protected:
         for (uint row = 0; row < mFont.height; row++)
         {
             uint pixOffset = ((y + row) * mPixelsX + x) * mColorSize;
-            unsigned short bits = mFont.data[fontOffset++];
+            unsigned short bits = mFont.data[fontOffset];
+            fontOffset += mFontCharSize;
             for (uint j = 0; j < mFont.width; j++, bits <<= 1)
             {
                 unsigned short scr_color = (bits & bitMask) ? color : 0;
