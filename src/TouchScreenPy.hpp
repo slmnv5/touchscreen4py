@@ -6,6 +6,9 @@
 #include "FrameBuffer.hpp"
 #include "TouchScreen.hpp"
 #include "lib/utils.hpp"
+#include "lib/log.hpp"
+
+#define LINE_DELIMTER "|"
 
 class TouchScreenPy : public TouchScreen
 {
@@ -13,9 +16,15 @@ class TouchScreenPy : public TouchScreen
 public:
     TouchScreenPy() : TouchScreen(false, true)
     {
+        LOG::ReportingLevel() = LogLvl::ERROR;
     }
     virtual ~TouchScreenPy()
     {
+    }
+
+    void setLogLevel(uint lvl) const
+    {
+        LOG::ReportingLevel() = static_cast<LogLvl>(lvl);
     }
 
     std::string getClickEvent()
@@ -36,10 +45,11 @@ public:
 
     void setText(const char *text)
     {
-        this->mTextLines = split_string(text, "\n");
-        for (uint i = 0; i < this->mTextLines.size(); i++)
+        mTextLines = split_string(text, LINE_DELIMTER);
+        LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
+        for (uint i = 0; i < mTextLines.size(); i++)
         {
-            auto line = this->mTextLines.at(i);
+            auto line = mTextLines.at(i);
             this->mFrameBuffer.putStringNice(0, mFrameBuffer.mFont.height * i, line.c_str());
         }
     }
@@ -47,7 +57,7 @@ public:
     void setContent(const char *content)
     {
         uint row_offset = mTextLines.size();
-        this->mContentLines = split_string(content, "\n");
+        this->mContentLines = split_string(content, LINE_DELIMTER);
         for (uint i = 0; i < this->mContentLines.size(); i++)
         {
             auto line = this->mTextLines.at(i);
@@ -151,6 +161,20 @@ extern "C"
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
             x->setContent(content);
+            return 0;
+        }
+        catch (...)
+        {
+            return -1;
+        }
+    }
+
+    int setLogLevel(void *ptr, int lvl)
+    {
+        try
+        {
+            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+            x->setLogLevel(lvl);
             return 0;
         }
         catch (...)
