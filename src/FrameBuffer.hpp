@@ -162,7 +162,7 @@ protected:
     putChar(uint x, uint y, unsigned char chr, unsigned short color)
     {
         uint bitMask = std::pow(2, 8 * mFontLineSize);
-        uint fontOffset = chr * mFontLineSize;
+        uint fontOffset = chr * mFontLineSize * mFont.height;
         for (uint row = 0; row < mFont.height; row++)
         {
             uint pixOffset = ((y + row) * mPixelsX + x) * mColorSize;
