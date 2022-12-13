@@ -28,7 +28,7 @@ std::string exec_command(const std::string &cmd)
     return result;
 }
 
-std::vector<std::string> split_string(const std::string &s, char chrDelim)
+std::vector<std::string> split_string(const char *s, char chrDelim)
 {
     std::stringstream strSream(s);
     std::string segment;
