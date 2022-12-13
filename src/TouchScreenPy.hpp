@@ -129,26 +129,12 @@ extern "C"
             return -1;
         }
     }
-    int setText(void *ptr, const char *text)
+    int setText(void *ptr, const char *text, int startRow)
     {
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setText(text);
-            return 0;
-        }
-        catch (...)
-        {
-            return -1;
-        }
-    }
-
-    int setContent(void *ptr, const char *content)
-    {
-        try
-        {
-            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setContent(content);
+            x->setText(text, startRow);
             return 0;
         }
         catch (...)

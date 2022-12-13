@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 		TouchScreenPy tsp(fbIdInt);
 		tsp.mFrameBuffer.clear();
 		tsp.setLoop(21.0, 0.55, true, false);
-		tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset");
+		tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset", 0);
 
 		auto started = myclock::now();
 		seconds duration(0);
