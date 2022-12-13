@@ -57,7 +57,7 @@ TEST_CASE("Test FB 1", "[all][basic]")
 		LOG(LogLvl::INFO) << "Frame buffer created";
 		fb.putSquare(12, 12, 15, 15, COLOR_INDEX::RED);
 		LOG(LogLvl::INFO) << "Square draw done!!!";
-		fb.clear();
+
 		fb.putSquare(473, 233, 22, 22, COLOR_INDEX::WHITE);
 		fb.putSquare(133, 310, 22, 22, COLOR_INDEX::BLUE);
 		fb.putSquare(223, 233, 22, 22, COLOR_INDEX::RED);
@@ -77,7 +77,6 @@ TEST_CASE("Test FB 2", "[all][basic]")
 	{
 
 		FrameBuffer fb;
-		fb.clear();
 		fb.putString(120, 0, "ABACUS 121", COLOR_INDEX::GREEN);
 		fb.putString(120, 0 + fb.mFont.height, "BIBIGON 321", COLOR_INDEX::RED);
 		fb.putString(220, 220, "ABACUS 121 ~~~~~~~~~~~~~~~~~~>", COLOR_INDEX::YELLOW);

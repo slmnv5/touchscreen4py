@@ -46,6 +46,8 @@ public:
     {
         auto lines = splitString(text, LINE_DELIMTER);
         LOG(LogLvl::DEBUG) << text << ", lines: " << lines.size() << " startRow: " << startRow;
+        if (lines.size())
+            mFrameBuffer.clear(startRow, startRow + lines.size() - 1);
         for (uint i = 0; i < lines.size(); i++)
         {
             auto line = lines.at(i);
@@ -85,12 +87,6 @@ extern "C"
     {
         TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
         delete x;
-    }
-
-    void clear(void *ptr)
-    {
-        TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-        x->mFrameBuffer.clear();
     }
 
     void stop(void *ptr)

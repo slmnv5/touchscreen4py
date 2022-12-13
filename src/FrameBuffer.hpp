@@ -115,16 +115,17 @@ public:
                 putPixel(h + x, w + y, color);
     }
 
+    void clear(uint row1, uint row2) const
+    {
+        auto sz = mColorSize * mPixelsX * (row2 - row1);
+        memset(mFbPtr + mColorSize * mPixelsX * row1, 0, sz);
+    }
+
     void putSquareInv(uint x, uint y, uint width, uint height) const
     {
         for (uint h = 0; h < height; h++)
             for (uint w = 0; w < width; w++)
                 putPixelInv(h + x, w + y);
-    }
-
-    void clear() const
-    {
-        memset(mFbPtr, 0, mScrSize);
     }
 
     void putString(uint x, uint y, const char *s, uint colorIdx)
