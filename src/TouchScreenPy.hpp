@@ -31,7 +31,7 @@ public:
         while (true)
         {
             auto pairColRow = this->mQueue.pop();
-            if (pairColRow.second > mTextRows)
+            if (pairColRow.second > mTextLines.size())
                 continue;
 
             auto line = this->mTextLines.at(pairColRow.second);
@@ -44,11 +44,11 @@ public:
 
     void setText(const char *text, uint startRow)
     {
-        this->mContentLines = splitString(text, LINE_DELIMTER);
-        LOG(LogLvl::DEBUG) << text << ", lines: " << mContentLines.size() << " offset: " << startRow;
-        for (uint i = 0; i < this->mContentLines.size(); i++)
+        auto lines = splitString(text, LINE_DELIMTER);
+        LOG(LogLvl::DEBUG) << text << ", lines: " << lines.size() << " offset: " << startRow;
+        for (uint i = 0; i < lines.size(); i++)
         {
-            auto line = this->mTextLines.at(i);
+            auto line = lines.at(i);
             unsigned short color = COLOR_INDEX::WHITE;
             if (line.rfind("*", 0) == 0)
             {
@@ -60,6 +60,8 @@ public:
             }
             this->mFrameBuffer.putString(0, startRow + 32 * i, line.c_str(), color);
         }
+        if (startRow == 0)
+            mTextLines = lines;
     }
 
     void setLoop(double loopSeconds, double loopPosition, bool isRec, bool isStop)

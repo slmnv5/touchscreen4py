@@ -53,7 +53,7 @@ public:
     bool mStopped = false;
 
 protected:
-    uint mTextRows = 0;                          // text on top of screen, number of rows
+    std::vector<std::string> mTextLines;         // text on top of screen
     SafeQueue<std::pair<double, double>> mQueue; // queue for click events <col, row>
     double mLoopSeconds = 1.0;                   // loop length in seconds
     double mLoopPosition = 0.0;                  // loop postion 0 to 1
