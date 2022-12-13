@@ -110,6 +110,7 @@ public:
     void updateScreen()
     {
         LOG(LogLvl::INFO) << "Starting updateScreen()";
+        uint pos = 0;
         while (true)
         {
             usleep(mLoopSeconds * 1000000 / 16);
@@ -120,7 +121,9 @@ public:
             mLoopPosition += 1.0 / 16;
             for (; mLoopPosition > 1; mLoopPosition -= 1)
                 ;
-            mFrameBuffer.putSquareInv(mLoopPosition * mFrameBuffer.mPixelsX, 0, 16, 32);
+            mFrameBuffer.putSquareInv(pos, 0, mFrameBuffer.mFont.width, mFrameBuffer.mFont.height);
+            pos = mLoopPosition * mFrameBuffer.mPixelsX;
+            mFrameBuffer.putSquareInv(pos, 0, mFrameBuffer.mFont.width, mFrameBuffer.mFont.height);
         }
     }
 
