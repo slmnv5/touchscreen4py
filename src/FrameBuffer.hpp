@@ -161,7 +161,7 @@ protected:
     void
     putChar(uint x, uint y, unsigned char chr, unsigned short color)
     {
-        unsigned short bitMask = std::pow(2, mFontCharSize);
+        unsigned short bitMask = std::pow(2, 8 * mFontCharSize);
         uint fontOffset = chr * mFontCharSize;
         for (uint row = 0; row < mFont.height; row++)
         {
