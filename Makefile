@@ -31,18 +31,19 @@ app: $(OBJ_APP)
 	@echo "==========> Build app release version"
 	cd $(PROJECT_ROOT)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^  $(LDFLAGS)
+	cp app touchscr5
  
 $(SRC_DIR)/pch.hpp.gch: $(SRC_DIR)/pch.hpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++-header -c $< -o $@
 
 $(SRC_DIR)/%.cpp.o: $(SRC_DIR)/%.cpp $(SRC_DIR)/pch.hpp.gch
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@	
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 	
 -include $(DEPENDS)
 
 clean:
 	cd $(PROJECT_ROOT)
-	rm -fv  $(OBJ_APP) $(OBJ_TST) ${DEPENDS} mimap_t mimap_d mimap5 $(SRC_DIR)/pch.hpp.gch 
+	rm -fv  $(OBJ_APP) $(OBJ_TST) ${DEPENDS} app_t app_d app $(SRC_DIR)/pch.hpp.gch 
 
 	
 info:
