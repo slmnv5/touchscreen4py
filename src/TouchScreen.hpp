@@ -169,7 +169,6 @@ public:
             else if (ev.type == EV_ABS && ev.code == ABS_Y)
             {
                 y = ev.value;
-                LOG(LogLvl::DEBUG) << "YYYYY: " << y;
             }
             else
             {
