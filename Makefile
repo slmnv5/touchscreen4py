@@ -9,7 +9,7 @@ OBJ_APP := $(SRC_APP:%=%.o)
 OBJ_TST := $(SRC_TST:%=%.o)
 DEPENDS := $(shell find . -name "*.d")
 
-LDFLAGS := 
+LDFLAGS := -pthread
 CPPFLAGS := -I$(SRC_DIR) -MMD -MP
 CXXFLAGS := -std=c++11 -g -Wno-psabi -Wall -pthread
  
