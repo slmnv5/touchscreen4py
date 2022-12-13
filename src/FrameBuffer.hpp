@@ -166,13 +166,15 @@ protected:
         for (uint row = 0; row < mFont.height; row++)
         {
             uint pixOffset = ((y + row) * mPixelsX + x) * mColorSize;
-            unsigned short bits = mFont.data[fontOffset];
-            fontOffset += 2;
-            for (uint j = 0; j < mFont.width; j++, bits <<= 1)
+            for (uint i = 0; i < mFontLineSize; i++)
             {
-                unsigned short scr_color = (bits & 0b1000000000000000) ? color : 0;
-                *((unsigned short *)(mFbPtr + pixOffset)) = scr_color;
-                pixOffset += mColorSize;
+                char bits = mFont.data[fontOffset++];
+                for (uint j = 0; j < 8; j++, bits <<= 1)
+                {
+                    unsigned short scr_color = (bits & 0x80) ? color : 0;
+                    *((unsigned short *)(mFbPtr + pixOffset)) = scr_color;
+                    pixOffset += mColorSize;
+                }
             }
         }
     }
