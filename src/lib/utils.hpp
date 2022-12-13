@@ -26,17 +26,32 @@ std::string exec_command(const std::string &cmd)
     return result;
 }
 
-std::vector<std::string> split_string(const char *s, char chrDelim)
+std::vector<std::string> splitString(const char *s, char chrDelim)
 {
     std::stringstream strSream(s);
     std::string segment;
-    std::vector<std::string> segVector;
+    std::vector<std::string> tokens;
 
     while (std::getline(strSream, segment, chrDelim))
     {
-        segVector.push_back(segment);
+        tokens.push_back(segment);
     }
-    return segVector;
+    return tokens;
+}
+
+std::vector<std::string> splitString(const std::string &s, const std::string &strDelim)
+{
+    std::vector<std::string> tokens;
+    uint start = 0U;
+    auto stop = s.find(strDelim);
+    while (stop != std::string::npos)
+    {
+        tokens.push_back(s.substr(start, stop - start));
+        start = stop + strDelim.length();
+        stop = s.find(strDelim, start);
+    }
+    tokens.push_back(s.substr(start, stop));
+    return tokens;
 }
 
 #endif
