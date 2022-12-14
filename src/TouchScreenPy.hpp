@@ -45,6 +45,7 @@ public:
     void setText(const char *text)
     {
         mTextLines = splitString(text, LINE_DELIMTER);
+        mFrameBuffer.clearScr();
         LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
         for (uint i = 0; i < mTextLines.size(); i++)
         {

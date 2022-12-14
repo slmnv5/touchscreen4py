@@ -115,7 +115,7 @@ public:
                 putPixel(h + x, w + y, color);
     }
 
-    void clear() const
+    void clearScr() const
     {
         memset(mFbPtr, 0, mScrSize);
     }
