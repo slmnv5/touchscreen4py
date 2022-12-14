@@ -7,7 +7,6 @@
 #include "FrameBuffer.hpp"
 #include "lib/SafeQueue.hpp"
 
-static const uint MAX_QUEUE_SZ = 20;     // used to stop putting events in touch screen queue
 static const float MIN_TOUCH_TIME = 0.2; // min time to hold button for click in seconds
 
 using myclock = std::chrono::steady_clock;
@@ -53,12 +52,11 @@ public:
     bool mStopped = false;
 
 protected:
-    std::vector<std::string> mTextLines;         // text on screen
-    SafeQueue<std::pair<double, double>> mQueue; // queue for click events <col, row>
-    double mLoopSeconds = 1.0;                   // loop length in seconds
-    double mLoopPosition = 0.0;                  // loop postion 0 to 1
-    bool mIsRec = false;                         // is recording
-    bool mIsStop = true;                         // is stopped
+    std::vector<std::string> mTextLines; // text on screen
+    double mLoopSeconds = 1.0;           // loop length in seconds
+    double mLoopPosition = 0.0;          // loop postion 0 to 1
+    bool mIsRec = false;                 // is recording
+    bool mIsStop = true;                 // is stopped
 
 private:
     int mFdScr;                // file descriptor of touch screen
@@ -68,6 +66,8 @@ private:
     const bool mInvertY;       // Invert touch screen Y
     std::thread mReadThread;   // Thread read toch events
     std::thread mUpdateThread; // Thread draw updates
+    double mScaleX;            // scale for touch scren values
+    double mScaleY;            // scale for touch scren values
 
 public:
     TouchScreen(uint fbId, bool invx, bool invy) : mFrameBuffer(fbId), mInvertX(invx), mInvertY(invy)
@@ -93,7 +93,9 @@ public:
         getInfoFromDevice(ABS_X, mMinX, mMaxX);
         getInfoFromDevice(ABS_Y, mMinY, mMaxY);
         getInfoFromDevice(ABS_PRESSURE, mMinP, mMaxP);
-        mReadThread = std::thread(&TouchScreen::readScreen, this);
+        mScaleX = 1.0 / (mMaxX - mMinX) * mFrameBuffer.mPixelsX;
+        mScaleY = 1.0 / (mMaxY - mMinY) * mFrameBuffer.mPixelsY;
+
         mUpdateThread = std::thread(&TouchScreen::updateScreen, this);
         LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                           << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
@@ -126,16 +128,14 @@ public:
         }
     }
 
-    void readScreen()
+    std::pair<uint, uint> getClickEventColRow()
     {
-        LOG(LogLvl::INFO) << "Starting readScreen()";
+
         uint x, y, savex, savey;
         x = y = savex = savey = 0;
         auto started = myclock::now();
         bool touch_on = false;
         bool button_click = false;
-        double scaleX = 1.0 / (mMaxX - mMinX) * mFrameBuffer.mPixelsX;
-        double scaleY = 1.0 / (mMaxY - mMinY) * mFrameBuffer.mPixelsY;
 
         struct input_event ev;
 
@@ -177,23 +177,24 @@ public:
                 continue;
             }
 
-            if (button_click and mQueue.size() < MAX_QUEUE_SZ)
+            if (button_click)
             {
 
                 button_click = false;
                 x = mInvertX ? mMaxX - x : x;
                 y = mInvertY ? mMaxY - y : y;
-                x = (x - mMinX) * scaleX;
-                y = (y - mMinY) * scaleY;
+                x = (x - mMinX) * mScaleX;
+                y = (y - mMinY) * mScaleY;
 
                 uint col = x / mFrameBuffer.mFont.width;
                 uint row = y / mFrameBuffer.mFont.height;
                 if (row >= mTextLines.size())
                     continue;
                 LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;
-                mQueue.push(std::pair<uint, uint>(col, row));
+                return std::pair<uint, uint>(col, row);
             }
         }
+        return std::pair<uint, uint>(0, 0);
     }
 
 private:

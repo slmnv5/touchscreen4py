@@ -28,7 +28,7 @@ public:
 
     std::string getClickEvent()
     {
-        auto pairColRow = this->mQueue.pop();
+        auto pairColRow = this->getClickEventColRow();
         auto line = this->mTextLines.at(pairColRow.second);
         auto word = wordAtPosition(line, pairColRow.first, '[', ']');
         LOG(LogLvl::DEBUG) << line << ", word: " << mTextLines.size();
