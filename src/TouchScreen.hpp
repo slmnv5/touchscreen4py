@@ -120,11 +120,15 @@ public:
                 continue;
             }
             mLoopPosition += 1.0 / 16;
-            for (; mLoopPosition > 1; mLoopPosition -= 1)
-                ;
+            if (mLoopPosition > 1)
+                mLoopPosition -= 1.0;
 
             pos = mLoopPosition * mFrameBuffer.mPixelsX;
-            mFrameBuffer.putSquareInv(0, 0, pos, mFrameBuffer.mFont.height);
+            mFrameBuffer.putSquare(0, 0, pos, 2, YELLOW);
+            mFrameBuffer.putSquare(pos, 0, mFrameBuffer.mPixelsX - pos, 2, BLACK);
+
+            mFrameBuffer.putSquare(0, mFrameBuffer.mFont.height - 2, pos, 2, YELLOW);
+            mFrameBuffer.putSquare(pos, mFrameBuffer.mFont.height - 2, mFrameBuffer.mPixelsX - pos, 2, BLACK);
         }
     }
 
