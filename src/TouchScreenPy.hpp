@@ -42,15 +42,13 @@ public:
         return "";
     }
 
-    void setText(const char *text, uint startRow)
+    void setText(const char *text)
     {
-        auto lines = splitString(text, LINE_DELIMTER);
-        LOG(LogLvl::DEBUG) << text << ", lines: " << lines.size() << " startRow: " << startRow;
-        if (lines.size())
-            mFrameBuffer.clear(startRow, startRow + lines.size() - 1);
-        for (uint i = 0; i < lines.size(); i++)
+        mTextLines = splitString(text, LINE_DELIMTER);
+        LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
+        for (uint i = 0; i < mTextLines.size(); i++)
         {
-            auto line = lines.at(i);
+            auto line = mTextLines.at(i);
             unsigned short color = COLOR_INDEX::WHITE;
             if (line.rfind("*", 0) == 0)
             {
@@ -60,10 +58,8 @@ public:
             {
                 color = COLOR_INDEX::YELLOW;
             }
-            this->mFrameBuffer.putString(0, (startRow + i) * mFrameBuffer.mFont.height, line.c_str(), color);
+            this->mFrameBuffer.putString(0, i * mFrameBuffer.mFont.height, line.c_str(), color);
         }
-        if (startRow == 0)
-            mTextLines = lines;
     }
 
     void setLoop(double loopSeconds, double loopPosition, bool isRec, bool isStop)
@@ -127,12 +123,12 @@ extern "C"
             return -1;
         }
     }
-    int setText(void *ptr, const char *text, int startRow)
+    int setText(void *ptr, const char *text)
     {
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setText(text, startRow);
+            x->setText(text);
             return 0;
         }
         catch (...)

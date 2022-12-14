@@ -115,10 +115,9 @@ public:
                 putPixel(h + x, w + y, color);
     }
 
-    void clear(uint row1, uint row2) const
+    void clear() const
     {
-        auto sz = mColorSize * mPixelsX * (row2 - row1);
-        memset(mFbPtr + mColorSize * mPixelsX * row1, 0, sz);
+        memset(mFbPtr, 0, mScrSize);
     }
 
     void putSquareInv(uint x, uint y, uint width, uint height) const
