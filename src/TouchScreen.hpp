@@ -64,7 +64,6 @@ private:
     uint mMaxX, mMaxY, mMaxP;  // max values for X, Y, P
     const bool mInvertX;       // Invert touch screen X
     const bool mInvertY;       // Invert touch screen Y
-    std::thread mReadThread;   // Thread read toch events
     std::thread mUpdateThread; // Thread draw updates
     double mScaleX;            // scale for touch scren values
     double mScaleY;            // scale for touch scren values
@@ -103,7 +102,6 @@ public:
     virtual ~TouchScreen()
     {
         mStopped = true;
-        mReadThread.join();
         mUpdateThread.join();
         close(mFdScr);
     }

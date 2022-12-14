@@ -29,12 +29,12 @@ std::string exec_command(const std::string &cmd)
 std::vector<std::string> splitString(const char *s, char chrDelim)
 {
     std::stringstream strSream(s);
-    std::string segment;
+    std::string el;
     std::vector<std::string> tokens;
 
-    while (std::getline(strSream, segment, chrDelim))
+    while (std::getline(strSream, el, chrDelim))
     {
-        tokens.push_back(segment);
+        tokens.push_back(el);
     }
     return tokens;
 }

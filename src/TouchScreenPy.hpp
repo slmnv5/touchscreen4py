@@ -8,7 +8,27 @@
 #include "lib/utils.hpp"
 #include "lib/log.hpp"
 
-static const char LINE_DELIMTER = 10;
+std::vector<std::string> splitString(std::string s, uint screenWidth, char chrDelim)
+{
+    std::vector<std::string> resultVector;
+    std::vector<std::string> tokens1 = splitString(s.c_str(), chrDelim);
+    for (auto element1 : tokens1)
+    {
+        std::string oneLine;
+        std::vector<std::string> tokens2 = splitString(element1.c_str(), ' ');
+        for (std::string element2 : tokens2)
+        {
+            if (oneLine.size() + element2.size() > screenWidth)
+            {
+                oneLine += chrDelim;
+                break;
+            }
+            oneLine += element2;
+        }
+        resultVector.push_back(oneLine);
+    }
+    return resultVector;
+}
 
 class TouchScreenPy : public TouchScreen
 {
@@ -16,6 +36,7 @@ class TouchScreenPy : public TouchScreen
 public:
     TouchScreenPy(int fbId = 1) : TouchScreen(fbId, false, true)
     {
+        LOG::ReportingLevel() = LogLvl::ERROR;
     }
     virtual ~TouchScreenPy()
     {
@@ -37,12 +58,14 @@ public:
 
     void setText(const char *text)
     {
-        mTextLines = splitString(text, LINE_DELIMTER);
+        const char LINE_DELIMTER = 10;
+        uint screenWidth = mFrameBuffer.mPixelsX / mFrameBuffer.mFont.width;
+        mTextLines = splitString(text, screenWidth, LINE_DELIMTER);
         mFrameBuffer.clearScr();
         LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
-        for (uint i = 0; i < mTextLines.size(); i++)
+        uint i = 0;
+        for (auto line : mTextLines)
         {
-            auto line = mTextLines.at(i);
             unsigned short color = COLOR_INDEX::WHITE;
             if (line.rfind("*", 0) == 0)
             {
@@ -52,7 +75,7 @@ public:
             {
                 color = COLOR_INDEX::YELLOW;
             }
-            this->mFrameBuffer.putString(0, i * mFrameBuffer.mFont.height, line.c_str(), color);
+            this->mFrameBuffer.putString(0, i++ * mFrameBuffer.mFont.height, line.c_str(), color);
         }
     }
 
