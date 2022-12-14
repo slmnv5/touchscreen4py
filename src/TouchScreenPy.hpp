@@ -31,7 +31,7 @@ public:
         auto pairColRow = this->getClickEventColRow();
         auto line = this->mTextLines.at(pairColRow.second);
         auto word = wordAtPosition(line, pairColRow.first, '[', ']');
-        LOG(LogLvl::DEBUG) << line << ", word: " << mTextLines.size();
+        LOG(LogLvl::DEBUG) << line << ", word: " << word;
         return (word.length() > 0) ? word : "";
     }
 
