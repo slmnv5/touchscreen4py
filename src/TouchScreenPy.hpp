@@ -28,18 +28,11 @@ public:
 
     std::string getClickEvent()
     {
-        while (true)
-        {
-            auto pairColRow = this->mQueue.pop();
-            if (pairColRow.second > mTextLines.size())
-                continue;
-
-            auto line = this->mTextLines.at(pairColRow.second);
-            auto word = wordAtPosition(line, pairColRow.first, '[', ']');
-            if (word.length() > 0)
-                return word;
-        }
-        return "";
+        auto pairColRow = this->mQueue.pop();
+        auto line = this->mTextLines.at(pairColRow.second);
+        auto word = wordAtPosition(line, pairColRow.first, '[', ']');
+        LOG(LogLvl::DEBUG) << line << ", word: " << mTextLines.size();
+        return (word.length() > 0) ? word : "";
     }
 
     void setText(const char *text)

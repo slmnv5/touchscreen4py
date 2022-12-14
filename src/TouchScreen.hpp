@@ -120,9 +120,9 @@ public:
             mLoopPosition += 1.0 / 16;
             for (; mLoopPosition > 1; mLoopPosition -= 1)
                 ;
-            mFrameBuffer.putSquareInv(pos, 0, mFrameBuffer.mFont.width, mFrameBuffer.mFont.height);
+
             pos = mLoopPosition * mFrameBuffer.mPixelsX;
-            mFrameBuffer.putSquareInv(pos, 0, mFrameBuffer.mFont.width, mFrameBuffer.mFont.height);
+            mFrameBuffer.putSquareInv(0, 0, pos, mFrameBuffer.mFont.height);
         }
     }
 
@@ -188,7 +188,8 @@ public:
 
                 uint col = x / mFrameBuffer.mFont.width;
                 uint row = y / mFrameBuffer.mFont.height;
-
+                if (row >= mTextLines.size())
+                    continue;
                 LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;
                 mQueue.push(std::pair<uint, uint>(col, row));
             }
