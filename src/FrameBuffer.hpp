@@ -59,7 +59,7 @@ private:
     uint mColorSize = 0; // screen color size in bytes
 
 public:
-    FbPixelFont &mFont = font_12x27; // font
+    FbPixelFont &mFont = font_16x32; // font
     uint mPixelsX, mPixelsY;         // screen resolution
 
     FrameBuffer(int fbidx = 1)
@@ -87,7 +87,7 @@ public:
         if (2 != mColorSize)
         {
             close(mFdFb);
-            throw std::runtime_error("Cannot use this device, color depth: " + std::to_string(var.bits_per_pixel));
+            throw std::runtime_error("Device color depth not supported: " + std::to_string(var.bits_per_pixel));
         }
         mScrSize = mPixelsY * mPixelsX * mColorSize;
         LOG(LogLvl::DEBUG) << "Memory and color sizes, bytes: " << mScrSize << ", " << mColorSize;
@@ -124,7 +124,7 @@ public:
     {
         for (uint h = 0; h < height; h++)
             for (uint w = 0; w < width; w++)
-                putPixelInv(h + x, w + y);
+                putPixelInv(x + w, y + h);
     }
 
     void putString(uint x, uint y, const char *s, uint colorIdx)
