@@ -1,5 +1,6 @@
 #include "FrameBuffer.hpp"
 #include "fbfonts.hpp"
+#include "lib/log.hpp"
 
 FrameBuffer::FrameBuffer(int fbidx)
 {

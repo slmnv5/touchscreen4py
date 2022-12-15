@@ -1,6 +1,7 @@
 
 
 #include "TouchScreen.hpp"
+#include "lib/log.hpp"
 
 using myclock = std::chrono::steady_clock;
 using seconds = std::chrono::duration<double>;
