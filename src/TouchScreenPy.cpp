@@ -53,11 +53,15 @@ void TouchScreenPy::setText(const char *text)
     mTextLines = splitString(text, screenWidth, LINE_DELIMTER);
     mFrameBuffer.clearScr();
     LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
-    uint i = 0;
-    for (auto line : mTextLines)
+    for (uint i = 0; i < mTextLines.size(); i++)
     {
-        unsigned short color = COLOR_INDEX::WHITE;
-        if (line.rfind("*", 0) == 0)
+        auto line = mTextLines.at(i);
+        unsigned short color = COLOR_INDEX::GREY;
+        if (i == 0)
+        {
+            color = COLOR_INDEX::WHITE;
+        }
+        else if (line.rfind("*", 0) == 0)
         {
             color = mIsRec ? COLOR_INDEX::RED : COLOR_INDEX::GREEN;
         }
