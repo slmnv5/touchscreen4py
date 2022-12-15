@@ -97,26 +97,6 @@ public:
             putChar(x, y, *s, color);
     }
 
-    void putStringNice(uint x, uint y, const char *s) const
-    {
-        unsigned short colorNormal = idxToColor(COLOR_INDEX::WHITE);
-        unsigned short colorActive = idxToColor(COLOR_INDEX::YELLOW);
-
-        auto color = colorNormal;
-        for (; *s; x += mFont.width, s++)
-        {
-            if (color == colorNormal and *s == '[')
-            {
-                color = colorActive;
-            }
-            else if (color != colorNormal and *s == ']')
-            {
-                color = colorNormal;
-            }
-            putChar(x, y, *s, color);
-        }
-    }
-
 protected:
     void putChar(uint x, uint y, unsigned char chr, unsigned short color) const;
     void putPixel(uint x, uint y, uint r, uint g, uint b) const;
