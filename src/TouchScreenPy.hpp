@@ -18,12 +18,12 @@ std::vector<std::string> splitString(std::string s, uint screenWidth, char chrDe
         std::vector<std::string> tokens2 = splitString(element1.c_str(), ' ');
         for (std::string element2 : tokens2)
         {
-            if (oneLine.size() + element2.size() > screenWidth)
+            if (oneLine.size() + element2.size() + 1 > screenWidth)
             {
                 oneLine += chrDelim;
                 break;
             }
-            oneLine += element2;
+            oneLine += ' ' + element2;
         }
         resultVector.push_back(oneLine);
     }
