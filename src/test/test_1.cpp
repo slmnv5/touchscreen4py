@@ -102,3 +102,15 @@ TEST_CASE("Test FB 2", "[all]")
 		fb.putString(220, 220, "ABACUS 121 ~~~~~~~~~~~~~~~~~~>", COLOR_INDEX::YELLOW);
 	}
 }
+
+TEST_CASE("Test Touch Screeen Py", "[all]")
+{
+
+	SECTION("Test it")
+	{
+
+		TouchScreenPy tsp;
+		tsp.setText("AAA BBB CCC DDD EEE FFF GGG HHH III JJJ KKK LLL MMM NNN OOO PPP QQQ RRR");
+		sleep(3);
+	}
+}

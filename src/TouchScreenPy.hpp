@@ -16,7 +16,6 @@ class TouchScreenPy : public TouchScreen
 public:
     TouchScreenPy(int fbId = 1) : TouchScreen(fbId, false, true)
     {
-        LOG::ReportingLevel() = LogLvl::ERROR;
     }
     virtual ~TouchScreenPy()
     {
