@@ -56,14 +56,14 @@ void TouchScreenPy::setText(const char *text)
     for (uint i = 0; i < mTextLines.size(); i++)
     {
         auto line = mTextLines.at(i);
-        unsigned short color = COLOR_INDEX::GREY;
+        unsigned short color = COLOR_INDEX::LTGREY;
         if (i == 0)
         {
             color = COLOR_INDEX::WHITE;
         }
         else if (line.rfind("*", 0) == 0)
         {
-            color = mIsRec ? COLOR_INDEX::RED : COLOR_INDEX::GREEN;
+            color = mIsRec ? COLOR_INDEX::RED : COLOR_INDEX::LTGREEN;
         }
         else if (line.rfind("~", 0) == 0)
         {
