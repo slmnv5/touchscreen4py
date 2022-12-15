@@ -48,14 +48,14 @@ TEST_CASE("Test simple things", "[all][basic]")
 
 	SECTION("Split string position")
 	{
-		std::string s("Test  string [word] [wordword] \n again again again [word] again  \njjjjjjjjjjjjjjjjjjjjjjjjj");
+		std::string s("Test  string [word] [two_words] \n again again again [three_words] again \n123456789012345678");
 		std::vector<std::string> splitted = splitString(s, 17, 10);
 		LOG(LogLvl::INFO) << "Splitted string ==============>";
 		for (auto line : splitted)
 		{
 			LOG(LogLvl::DEBUG) << line;
 		}
-		assert(splitted.at(2) == "[word] [wordword]");
+		assert(splitted.at(2) == "[two_words] ");
 		assert(splitted.at(3) == "again again again");
 	}
 }

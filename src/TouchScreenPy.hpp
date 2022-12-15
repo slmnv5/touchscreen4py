@@ -18,9 +18,19 @@ std::vector<std::string> splitString(std::string s, uint screenWidth, char chrDe
         std::string tmp;
         for (std::string element2 : tokens2)
         {
-            if (element2.size() == 0)
+            uint sz = element2.size();
+            if (sz == 0)
                 continue;
-            if (tmp.size() + element2.size() > screenWidth)
+            if (sz > screenWidth)
+                element2 = element2.substr(0, screenWidth);
+            sz += tmp.size();
+            if (sz == screenWidth)
+            {
+                resultVector.push_back(tmp + element2);
+                tmp = "";
+                continue;
+            }
+            if (sz > screenWidth)
             {
                 resultVector.push_back(tmp);
                 tmp = element2 + ' ';
