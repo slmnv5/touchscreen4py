@@ -22,11 +22,6 @@ public:
     {
     }
 
-    void setLogLevel(uint lvl) const
-    {
-        LOG::ReportingLevel() = static_cast<LogLvl>(lvl);
-    }
-
     std::string getClickEvent();
 
     void setText(const char *text);
@@ -57,7 +52,7 @@ extern "C"
 
     int setText(void *ptr, const char *text);
 
-    int setLogLevel(void *ptr, int lvl);
+    int setLogLevel(int lvl);
 }
 
 #endif

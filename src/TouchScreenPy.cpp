@@ -69,7 +69,6 @@ void TouchScreenPy::setText(const char *text)
     }
 }
 
-
 extern "C"
 {
 
@@ -136,12 +135,11 @@ extern "C"
         }
     }
 
-    int setLogLevel(void *ptr, int lvl)
+    int setLogLevel(int lvl)
     {
         try
         {
-            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setLogLevel(lvl);
+            LOG::ReportingLevel() = static_cast<LogLvl>(lvl);
             return 0;
         }
         catch (...)
