@@ -42,7 +42,7 @@ static unsigned short def_b[] =
     {0, 172, 0, 168, 0, 172, 0, 168,
      84, 255, 84, 255, 84, 255, 84, 255};
 
-unsigned short idxToColor(uint colorIdx)
+inline unsigned short idxToColor(uint colorIdx)
 {
     unsigned short r = def_r[colorIdx];
     unsigned short g = def_g[colorIdx];

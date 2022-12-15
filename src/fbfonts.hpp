@@ -3,12 +3,12 @@
 
 #include "pch.hpp"
 
-struct FbPixelFont;
-
-extern unsigned char fontdata_16x32[];
-extern unsigned char fontdata_12x27[];
-
-struct FbPixelFont font_16x32;
-struct FbPixelFont font_12x27;
+struct FbPixelFont
+{
+    const char *name;
+    uint width, height;
+    unsigned char *data;
+};
+extern struct FbPixelFont font_16x32;
 
 #endif

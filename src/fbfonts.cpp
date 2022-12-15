@@ -1,23 +1,7 @@
 #include "fbfonts.hpp"
 
-struct FbPixelFont
-{
-    const char *name;
-    uint width, height;
-    unsigned char *data;
-};
 
-struct FbPixelFont font_16x32 = {
-    .name = "font_16x32",
-    .width = 16,
-    .height = 32,
-    .data = fontdata_16x32};
 
-struct FbPixelFont font_12x27 = {
-    .name = "font_12x27",
-    .width = 12,
-    .height = 27,
-    .data = fontdata_12x27};
 
 
 unsigned char fontdata_12x27[16*27*256/8] = {
@@ -10011,3 +9995,14 @@ unsigned char fontdata_16x32[16 * 32 * 256 / 8] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, /* 255 */
 };
 
+FbPixelFont font_16x32 = {
+    .name = "font_16x32",
+    .width = 16,
+    .height = 32,
+    .data = fontdata_16x32};
+
+FbPixelFont font_12x27 = {
+    .name = "font_12x27",
+    .width = 12,
+    .height = 27,
+    .data = fontdata_12x27};
