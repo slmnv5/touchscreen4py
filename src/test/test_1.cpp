@@ -34,10 +34,6 @@ TEST_CASE("Test simple things", "[all][basic]")
 		LOG(LogLvl::ERROR) << "ERROR";
 		LOG::ReportingLevel() = LogLvl::DEBUG;
 	}
-}
-
-TEST_CASE("Test FB 1", "[all][basic]")
-{
 
 	SECTION("Find word at position")
 	{
@@ -49,6 +45,23 @@ TEST_CASE("Test FB 1", "[all][basic]")
 		word = wordAtPosition(" Test [once we] do", 11111, '[', ']');
 		assert(word == "");
 	}
+
+	SECTION("Split string position")
+	{
+		std::string s("Test  string [word] [wordword] \n again again again [word] again  \njjjjjjjjjjjjjjjjjjjjjjjjj");
+		std::vector<std::string> splitted = splitString(s, 17, 10);
+		LOG(LogLvl::INFO) << "Splitted string ==============>";
+		for (auto line : splitted)
+		{
+			LOG(LogLvl::DEBUG) << line;
+		}
+		assert(splitted.at(2) == "[word] [wordword]");
+		assert(splitted.at(3) == "again again again");
+	}
+}
+
+TEST_CASE("Test FB 1", "[all]")
+{
 
 	SECTION("Test FB squares, colors")
 	{
@@ -77,7 +90,7 @@ TEST_CASE("Test FB 1", "[all][basic]")
 	}
 }
 
-TEST_CASE("Test FB 2", "[all][basic]")
+TEST_CASE("Test FB 2", "[all]")
 {
 
 	SECTION("Test text strings")
