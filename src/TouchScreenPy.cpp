@@ -69,7 +69,7 @@ void TouchScreenPy::setText(const char *text)
         {
             color = COLOR_INDEX::YELLOW;
         }
-        this->mFrameBuffer.putString(0, i++ * mFrameBuffer.mFont.height, line.c_str(), color);
+        this->mFrameBuffer.putString(0, i * mFrameBuffer.mFont.height, line.c_str(), color);
     }
 }
 
