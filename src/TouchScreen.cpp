@@ -87,21 +87,21 @@ void TouchScreen::updateScreen()
         pos = mLoopPosition * mFrameBuffer.mPixelsX;
         mFrameBuffer.putSquare(0, 0, pos, 2, YELLOW);
         mFrameBuffer.putSquare(pos, 0, mFrameBuffer.mPixelsX - pos, 2, BLACK);
-
-        mFrameBuffer.putSquare(0, mFrameBuffer.mFont.height - 2, pos, 2, YELLOW);
-        mFrameBuffer.putSquare(pos, mFrameBuffer.mFont.height - 2, mFrameBuffer.mPixelsX - pos, 2, BLACK);
+        uint sz = mFrameBuffer.mFont.height;
+        mFrameBuffer.putSquare(0, sz - 2, pos, 2, YELLOW);
+        mFrameBuffer.putSquare(pos, sz - 2, mFrameBuffer.mPixelsX - pos, 2, BLACK);
     }
 }
 
 std::pair<uint, uint> TouchScreen::getClickEventColRow()
 {
 
-    uint x, y, savex, savey;
+    uint x, y, savex, savey, clickX, clickY;
     x = y = savex = savey = 0;
     auto started = myclock::now();
     bool touch_on = false;
     bool button_click = false;
-
+    clickX = clickY = 999999;
     struct input_event ev;
 
     while (read(mFdScr, &ev, sizeof(struct input_event)) != -1)
@@ -144,15 +144,18 @@ std::pair<uint, uint> TouchScreen::getClickEventColRow()
 
         if (button_click)
         {
-
             button_click = false;
             x = mInvertX ? mMaxX - x : x;
             y = mInvertY ? mMaxY - y : y;
             x = (x - mMinX) * mScaleX;
             y = (y - mMinY) * mScaleY;
-
+            uint sz = mFrameBuffer.mFont.height;
+            mFrameBuffer.putSquareInv(clickX, clickY, sz, sz);
+            clickX = x;
+            clickY = y;
+            mFrameBuffer.putSquareInv(clickX, clickY, sz, sz);
             uint col = x / mFrameBuffer.mFont.width;
-            uint row = y / mFrameBuffer.mFont.height;
+            uint row = y / sz;
             if (row >= mTextLines.size())
                 continue;
             LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;
