@@ -66,11 +66,11 @@ int main(int argc, char *argv[])
 
 void help()
 {
-	cout << "Usage: mimap5 -r <file> [options] \n"
-			"  -k <kbdMapFile> use typing keyboard for MIDI notes, needs sudo\n"
-			"  -n [name] output MIDI port name to create\n"
-			"  -v verbose output\n"
-			"  -vv more verbose\n"
-			"  -vvv even more verbose\n"
-			"  -h displays this info\n";
+	std::cout << "Usage: mimap5 -r <file> [options] \n"
+				 "  -k <kbdMapFile> use typing keyboard for MIDI notes, needs sudo\n"
+				 "  -n [name] output MIDI port name to create\n"
+				 "  -v verbose output\n"
+				 "  -vv more verbose\n"
+				 "  -vvv even more verbose\n"
+				 "  -h displays this info\n";
 }
