@@ -31,7 +31,7 @@ app: $(OBJ_APP)
 	@echo "==========> Build app release version"
 	cd $(PROJECT_ROOT)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $^  $(LDFLAGS)
-	mv app touchscr5.so
+	mv -v app touchscr5.so
  
 $(SRC_DIR)/pch.hpp.gch: $(SRC_DIR)/pch.hpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -x c++-header -c $< -o $@
