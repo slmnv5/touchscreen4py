@@ -45,19 +45,6 @@ TEST_CASE("Test simple things", "[all][basic]")
 		word = wordAtPosition(" Test [once we] do", 11111, '[', ']');
 		assert(word == "");
 	}
-
-	SECTION("Split string position")
-	{
-		std::string s("Test  string [word] [two_words] \n again again again [three_words] again \n123456789012345678");
-		std::vector<std::string> splitted = splitString(s, 17, 10);
-		LOG(LogLvl::INFO) << "Splitted string ==============>";
-		for (auto line : splitted)
-		{
-			LOG(LogLvl::DEBUG) << line;
-		}
-		assert(splitted.at(2) == "[two_words] ");
-		assert(splitted.at(3) == "again again again");
-	}
 }
 
 TEST_CASE("Test FB 1", "[all]")
@@ -73,16 +60,16 @@ TEST_CASE("Test FB 1", "[all]")
 
 		fb.putSquare(473, 233, 22, 22, COLOR_INDEX::WHITE);
 		sleep(2);
-		fb.clearScreen();
+		fb.clearScreen(0);
 		fb.putSquare(133, 310, 22, 22, COLOR_INDEX::BLUE);
 		sleep(2);
-		fb.clearScreen();
+		fb.clearScreen(0);
 		fb.putSquare(223, 233, 22, 22, COLOR_INDEX::RED);
 		sleep(2);
-		fb.clearScreen();
+		fb.clearScreen(0);
 		fb.putSquare(453, 13, 22, 22, COLOR_INDEX::YELLOW);
 		sleep(2);
-		fb.clearScreen();
+		fb.clearScreen(1111111);
 		assert(fb.mPixelsX > 100);
 		assert(fb.mPixelsY > 100);
 		assert(fb.mPixelsX < 10000);
@@ -110,7 +97,7 @@ TEST_CASE("Test Touch Screeen Py", "[all]")
 	{
 
 		TouchScreenPy tsp;
-		tsp.setText("AAA BBB CCC DDD EEE FFF GGG HHH III JJJ KKK LLL MMM NNN OOO PPP QQQ RRR");
+		tsp.setText("AAA BBB CCC DDD EEE FFF GGG HHH III JJJ KKK LLL MMM NNN OOO PPP QQQ RRR", 0, 0, 100, 100, 100);
 		sleep(3);
 	}
 }

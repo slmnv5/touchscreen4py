@@ -1,6 +1,5 @@
 
 #include "TouchScreenPy.hpp"
-#include "lib/utils.hpp"
 
 std::string TouchScreenPy::getClickEvent()
 {

@@ -5,7 +5,6 @@
 
 #include "pch.hpp"
 #include "FrameBuffer.hpp"
-#include "lib/SafeQueue.hpp"
 
 static const float MIN_TOUCH_TIME = 0.15; // min time to hold button for click in seconds
 
