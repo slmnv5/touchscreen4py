@@ -43,14 +43,14 @@ FrameBuffer::FrameBuffer(int fbidx)
     LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
     for (uint i = 0; i < mPixelsY / mFont.height; i++)
     {
-        mTextLines.push_back("");
+        mRows.push_back("");
     }
 }
 
 void FrameBuffer::putString(uint row, const char *s, uint r, uint g, uint b)
 {
     unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-    mTextLines.at(row) = std::string(s);
+    mRows.at(row) = std::string(s);
     for (uint i = 0; *s; i++, s++)
         putChar(i * mFont.width, row, *s, color);
 }

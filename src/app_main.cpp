@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 		{
 			LOG(LogLvl::INFO) << "Running duration: " << duration.count();
 			duration = myclock::now() - started;
-			auto word = tsp.getClickEvent();
+			auto word = tsp.getClickEventWord();
 			LOG(LogLvl::INFO) << "Got clickEvent: " << word;
 		}
 	}

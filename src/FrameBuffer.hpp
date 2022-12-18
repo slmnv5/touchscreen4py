@@ -29,7 +29,7 @@ typedef enum
     LTPURPLE = 13, /* 255,  84, 255 */
     YELLOW = 14,   /* 255, 255,  84 */
     WHITE = 15     /* 255, 255, 255 */
-} COLOR_INDEX;
+} COLOR_IND;
 
 static unsigned short def_r[] =
     {0, 0, 0, 0, 172, 172, 172, 168,
@@ -57,9 +57,9 @@ private:
     uint mScrSize = 0;   // screen memory size in bytes
     uint mColorSize = 0; // screen color size in bytes
 protected:
-    std::vector<std::string> mTextLines; // text on screen
-    FbPixelFont &mFont = font_16x32;     // font
-    uint mPixelsX, mPixelsY;             // screen resolution
+    std::vector<std::string> mRows;  // text on screen
+    FbPixelFont &mFont = font_16x32; // font
+    uint mPixelsX, mPixelsY;         // screen resolution
 
 public:
     FrameBuffer(int fbidx = 1);
@@ -77,12 +77,16 @@ public:
                 putPixel(x + w, y + h, color);
     }
 
-    void clearScreen(uint startY) const
+    void clearScreen(uint startY)
     {
         uint pix_offset = startY * mPixelsX * mColorSize;
         if (pix_offset < mScrSize)
         {
             memset(mFbPtr + pix_offset, 0, mScrSize - pix_offset);
+        }
+        for (uint i = startY; i < mRows.size(); i++)
+        {
+            mRows.at(i).clear();
         }
     }
 

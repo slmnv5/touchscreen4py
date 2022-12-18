@@ -21,7 +21,7 @@ public:
     {
     }
 
-    std::string getClickEvent();
+    std::string getClickEventWord();
 
     void setText(const char *text, uint row, uint r, uint g, uint b);
 
@@ -45,7 +45,7 @@ extern "C"
 
     void start(void *ptr);
 
-    const char *getClickEvent(void *ptr);
+    const char *getClickEventWord(void *ptr);
 
     int setLoop(void *ptr, double loopSeconds, double loopPosition, bool isRec, bool isStop);
 

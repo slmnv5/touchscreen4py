@@ -147,7 +147,7 @@ std::string TouchScreen::getClickEventWord()
             uint col = x / mFont.width;
             uint row = y / mFont.height;
 
-            auto line = mTextLines.at(row);
+            auto line = mRows.at(row);
             auto word = wordAtPosition(line, x, '[', ']');
             if (word.length() == 0)
                 continue;
@@ -158,6 +158,7 @@ std::string TouchScreen::getClickEventWord()
             return word;
         }
     }
+    return "";
 }
 
 void TouchScreen::getInfoFromDevice(int propId, uint &minV, uint &maxV)

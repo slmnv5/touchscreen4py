@@ -27,12 +27,12 @@ extern "C"
         x->mStopped = false;
     }
 
-    const char *getClickEvent(void *ptr)
+    const char *getClickEventWord(void *ptr)
     {
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            return x->getClickEvent().c_str();
+            return x->getClickEventWord().c_str();
         }
         catch (...)
         {
