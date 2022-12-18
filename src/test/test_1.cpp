@@ -96,3 +96,4 @@ TEST_CASE("Test FB 2", "[all]")
 			sleep(3);
 		}
 	}
+}

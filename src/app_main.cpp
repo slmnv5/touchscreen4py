@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
 		sleep(1);
 		tsp.setLoop(21.0, 0.55, true, false);
 		sleep(2);
-		LOG(LogLvl::INFO) << "Started update loop";
 		tsp.setText("Here we have [some cool]", 2, 0, 100, 100, 100);
 		tsp.setText("May be [coming] soon or [sooner]", 4, 0, 100, 100, 100);
 		sleep(2);

@@ -69,9 +69,8 @@ public:
         close(mFdFb);
     }
 
-    void putSquare(uint x, uint y, uint width, uint height, uint colorIdx) const
+    void putSquare(uint x, uint y, uint width, uint height, uint color) const
     {
-        unsigned short color = idxToColor(colorIdx);
         for (uint h = 0; h < height; h++)
             for (uint w = 0; w < width; w++)
                 putPixel(x + w, y + h, color);
@@ -93,9 +92,8 @@ public:
                 putPixelInv(x + w, y + h);
     }
 
-    void putString(uint x, uint y, const char *s, uint colorIdx) const
+    void putString(uint x, uint y, const char *s, uint color) const
     {
-        unsigned short color = idxToColor(colorIdx);
         for (uint i = 0; *s; i++, x += mFont.width, s++)
             putChar(x, y, *s, color);
     }
