@@ -87,17 +87,12 @@ TEST_CASE("Test FB 2", "[all]")
 		fb.putString(120, 0, "ABACUS 121", COLOR_INDEX::GREEN);
 		fb.putString(120, 0 + fb.mFont.height, "BIBIGON 321", COLOR_INDEX::RED);
 		fb.putString(220, 220, "ABACUS 121 ~~~~~~~~~~~~~~~~~~>", COLOR_INDEX::YELLOW);
+
+		SECTION("Test set text by row and col")
+		{
+
+			TouchScreenPy tsp;
+			tsp.setText("[AAA] BBB CCC DDD [EEE]", 3, 5, 100, 100, 100);
+			sleep(3);
+		}
 	}
-}
-
-TEST_CASE("Test Touch Screeen Py", "[all]")
-{
-
-	SECTION("Test it")
-	{
-
-		TouchScreenPy tsp;
-		tsp.setText("AAA BBB CCC DDD EEE FFF GGG HHH III JJJ KKK LLL MMM NNN OOO PPP QQQ RRR", 0, 0, 100, 100, 100);
-		sleep(3);
-	}
-}

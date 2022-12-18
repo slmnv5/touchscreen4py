@@ -44,8 +44,14 @@ int main(int argc, char *argv[])
 			fbIdInt = std::stoi(fbId);
 		}
 		TouchScreenPy tsp(fbIdInt);
+		sleep(1);
 		tsp.setLoop(21.0, 0.55, true, false);
-		tsp.setText("Here we have [some cool] stuff\nmay be [coming] soon [sooner]\nNo one is upset", 0, 0, 100, 100, 100);
+		sleep(2);
+		LOG(LogLvl::INFO) << "Started update loop";
+		tsp.setText("Here we have [some cool]", 2, 0, 100, 100, 100);
+		tsp.setText("May be [coming] soon or [sooner]", 4, 0, 100, 100, 100);
+		sleep(2);
+		LOG(LogLvl::INFO) << "Set text done";
 
 		auto started = myclock::now();
 		seconds duration(0);
