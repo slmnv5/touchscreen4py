@@ -23,7 +23,7 @@ public:
 
     std::string getClickEvent();
 
-    void setText(const char *text);
+    void setText(const char *text, uint col, uint row, uint r, uint g, uint b);
 
     void setLoop(double loopSeconds, double loopPosition, bool isRec, bool isStop)
     {
@@ -49,7 +49,9 @@ extern "C"
 
     int setLoop(void *ptr, double loopSeconds, double loopPosition, bool isRec, bool isStop);
 
-    int setText(void *ptr, const char *text);
+    int clearScreen(void *ptr, int startY);
+
+    int setText(void *ptr, const char *text, int row, int col, int r, int g, int b);
 
     int setLogLevel(int lvl);
 }

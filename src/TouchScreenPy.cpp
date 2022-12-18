@@ -2,41 +2,6 @@
 #include "TouchScreenPy.hpp"
 #include "lib/utils.hpp"
 
-std::vector<std::string> splitString(std::string s, uint screenWidth, char chrDelim)
-{
-    std::vector<std::string> resultVector;
-    std::vector<std::string> tokens1 = splitString(s.c_str(), chrDelim);
-    for (auto element1 : tokens1)
-    {
-        std::vector<std::string> tokens2 = splitString(element1.c_str(), ' ');
-        std::string tmp;
-        for (std::string element2 : tokens2)
-        {
-            uint sz = element2.size();
-            if (sz == 0)
-                continue;
-            if (sz > screenWidth)
-                element2 = element2.substr(0, screenWidth);
-            sz += tmp.size();
-            if (sz == screenWidth)
-            {
-                resultVector.push_back(tmp + element2);
-                tmp = "";
-                continue;
-            }
-            if (sz > screenWidth)
-            {
-                resultVector.push_back(tmp);
-                tmp = element2 + ' ';
-                continue;
-            }
-            tmp += element2 + ' ';
-        }
-        resultVector.push_back(tmp);
-    }
-    return resultVector;
-}
-
 std::string TouchScreenPy::getClickEvent()
 {
     auto pairColRow = this->getClickEventColRow();
@@ -46,31 +11,10 @@ std::string TouchScreenPy::getClickEvent()
     return (word.length() > 0) ? word : "";
 }
 
-void TouchScreenPy::setText(const char *text)
+void TouchScreenPy::setText(const char *text, uint col, uint row, uint r, uint g, uint b)
 {
-    const char LINE_DELIMTER = 10;
-    uint screenWidth = mFrameBuffer.mPixelsX / mFrameBuffer.mFont.width;
-    mTextLines = splitString(text, screenWidth, LINE_DELIMTER);
-    mFrameBuffer.clearScr();
-    LOG(LogLvl::DEBUG) << text << ", lines: " << mTextLines.size();
-    for (uint i = 0; i < mTextLines.size(); i++)
-    {
-        auto line = mTextLines.at(i);
-        unsigned short color = COLOR_INDEX::LTGREY;
-        if (i == 0)
-        {
-            color = COLOR_INDEX::WHITE;
-        }
-        else if (line.rfind("*", 0) == 0)
-        {
-            color = mIsRec ? COLOR_INDEX::RED : COLOR_INDEX::LTGREEN;
-        }
-        else if (line.rfind("~", 0) == 0)
-        {
-            color = COLOR_INDEX::YELLOW;
-        }
-        this->mFrameBuffer.putString(0, i * mFrameBuffer.mFont.height, line.c_str(), color);
-    }
+    unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
+    this->mFrameBuffer.putString(col * mFrameBuffer.mFont.width, row * mFrameBuffer.mFont.height, text, color);
 }
 
 extern "C"
@@ -125,12 +69,26 @@ extern "C"
             return -1;
         }
     }
-    int setText(void *ptr, const char *text)
+
+    int clearScreen(void *ptr, int startY)
     {
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setText(text);
+            x->mFrameBuffer.clearScreen(startY);
+            return 0;
+        }
+        catch (...)
+        {
+            return -1;
+        }
+    }
+    int setText(void *ptr, const char *text, int row, int col, int r, int g, int b)
+    {
+        try
+        {
+            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+            x->setText(text, row, col, r, g, b);
             return 0;
         }
         catch (...)

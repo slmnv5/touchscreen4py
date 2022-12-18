@@ -152,9 +152,9 @@ std::pair<uint, uint> TouchScreen::getClickEventColRow()
             uint row = y / mFrameBuffer.mFont.height;
             if (row >= mTextLines.size())
                 continue;
-            mFrameBuffer.putSquareInv(0, 0, mFrameBuffer.mPixelsX, mFrameBuffer.mFont.height);
-            usleep(1000);
-            mFrameBuffer.putSquareInv(0, 0, mFrameBuffer.mPixelsX, mFrameBuffer.mFont.height);
+            mFrameBuffer.putSquareInv(0, row * mFrameBuffer.mFont.height, mFrameBuffer.mPixelsX, mFrameBuffer.mFont.height);
+            usleep(MIN_TOUCH_TIME * 10E6);
+            mFrameBuffer.putSquareInv(0, row * mFrameBuffer.mFont.height, mFrameBuffer.mPixelsX, mFrameBuffer.mFont.height);
             LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;
             return std::pair<uint, uint>(col, row);
         }

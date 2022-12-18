@@ -77,9 +77,13 @@ public:
                 putPixel(x + w, y + h, color);
     }
 
-    void clearScr() const
+    void clearScreen(uint startY) const
     {
-        memset(mFbPtr, 0, mScrSize);
+        uint pix_offset = startY * mPixelsX * mColorSize;
+        if (pix_offset < mScrSize)
+        {
+            memset(mFbPtr + pix_offset, 0, mScrSize - pix_offset);
+        }
     }
 
     void putSquareInv(uint x, uint y, uint width, uint height) const

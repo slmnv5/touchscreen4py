@@ -73,16 +73,16 @@ TEST_CASE("Test FB 1", "[all]")
 
 		fb.putSquare(473, 233, 22, 22, COLOR_INDEX::WHITE);
 		sleep(2);
-		fb.clearScr();
+		fb.clearScreen();
 		fb.putSquare(133, 310, 22, 22, COLOR_INDEX::BLUE);
 		sleep(2);
-		fb.clearScr();
+		fb.clearScreen();
 		fb.putSquare(223, 233, 22, 22, COLOR_INDEX::RED);
 		sleep(2);
-		fb.clearScr();
+		fb.clearScreen();
 		fb.putSquare(453, 13, 22, 22, COLOR_INDEX::YELLOW);
 		sleep(2);
-		fb.clearScr();
+		fb.clearScreen();
 		assert(fb.mPixelsX > 100);
 		assert(fb.mPixelsY > 100);
 		assert(fb.mPixelsX < 10000);
