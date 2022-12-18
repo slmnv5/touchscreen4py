@@ -70,24 +70,14 @@ public:
         close(mFdFb);
     }
 
+    void setRowText(uint row, const char *s, uint r, uint g, uint b);
+    void clearScreen(uint startY);
+
     void putSquare(uint x, uint y, uint width, uint height, uint color) const
     {
         for (uint h = 0; h < height; h++)
             for (uint w = 0; w < width; w++)
                 putPixel(x + w, y + h, color);
-    }
-
-    void clearScreen(uint startY)
-    {
-        uint pix_offset = startY * mPixelsX * mColorSize;
-        if (pix_offset < mScrSize)
-        {
-            memset(mFbPtr + pix_offset, 0, mScrSize - pix_offset);
-        }
-        for (uint i = startY; i < mRows.size(); i++)
-        {
-            mRows.at(i).clear();
-        }
     }
 
     void putSquareInv(uint x, uint y, uint width, uint height) const
@@ -96,8 +86,6 @@ public:
             for (uint w = 0; w < width; w++)
                 putPixelInv(x + w, y + h);
     }
-
-    void putString(uint row, const char *s, uint r, uint g, uint b);
 
 protected:
     void putChar(uint x, uint y, unsigned char chr, unsigned short color) const;

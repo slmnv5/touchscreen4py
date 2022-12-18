@@ -47,12 +47,25 @@ FrameBuffer::FrameBuffer(int fbidx)
     }
 }
 
-void FrameBuffer::putString(uint row, const char *s, uint r, uint g, uint b)
+void FrameBuffer::setRowText(uint row, const char *s, uint r, uint g, uint b)
 {
     unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
     mRows.at(row) = std::string(s);
     for (uint i = 0; *s; i++, s++)
         putChar(i * mFont.width, row, *s, color);
+}
+
+void FrameBuffer::clearScreen(uint startY)
+{
+    uint pix_offset = startY * mPixelsX * mColorSize;
+    if (pix_offset < mScrSize)
+    {
+        memset(mFbPtr + pix_offset, 0, mScrSize - pix_offset);
+    }
+    for (uint i = startY; i < mRows.size(); i++)
+    {
+        mRows.at(i).clear();
+    }
 }
 
 void FrameBuffer::putChar(uint x, uint y, unsigned char chr, unsigned short color) const
