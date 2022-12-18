@@ -41,6 +41,17 @@ FrameBuffer::FrameBuffer(int fbidx)
         throw std::runtime_error("Cannot map frame buffer memory");
     }
     LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
+    for (uint i = 0; i < mPixelsY / mFont.height; i++)
+    {
+        mTextLines.push_back("");
+    }
+}
+
+void FrameBuffer::putString(uint row, const char *s, uint color)
+{
+    mTextLines.at(row) = std::string(s);
+    for (uint i = 0; *s; i++, s++)
+        putChar(i * mFont.width, row, *s, color);
 }
 
 void FrameBuffer::putChar(uint x, uint y, unsigned char chr, unsigned short color) const

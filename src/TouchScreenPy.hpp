@@ -23,7 +23,7 @@ public:
 
     std::string getClickEvent();
 
-    void setText(const char *text, uint col, uint row, uint r, uint g, uint b);
+    void setText(const char *text, uint row, uint r, uint g, uint b);
 
     void setLoop(double loopSeconds, double loopPosition, bool isRec, bool isStop)
     {

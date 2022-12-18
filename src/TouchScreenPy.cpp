@@ -1,19 +1,10 @@
 
 #include "TouchScreenPy.hpp"
 
-std::string TouchScreenPy::getClickEvent()
-{
-    auto pairColRow = this->getClickEventColRow();
-    auto line = this->mTextLines.at(pairColRow.second);
-    auto word = wordAtPosition(line, pairColRow.first, '[', ']');
-    LOG(LogLvl::DEBUG) << line << ", word: " << word;
-    return (word.length() > 0) ? word : "";
-}
-
-void TouchScreenPy::setText(const char *text, uint col, uint row, uint r, uint g, uint b)
+void TouchScreenPy::setText(const char *text, uint row, uint r, uint g, uint b)
 {
     unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-    this->mFrameBuffer.putString(col * mFrameBuffer.mFont.width, row * mFrameBuffer.mFont.height, text, color);
+    this->mFrameBuffer.putString(row * mFrameBuffer.mFont.height, text, color);
 }
 
 extern "C"
@@ -87,7 +78,7 @@ extern "C"
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setText(text, row, col, r, g, b);
+            x->setText(text, row, r, g, b);
             return 0;
         }
         catch (...)

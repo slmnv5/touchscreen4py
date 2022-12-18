@@ -93,7 +93,7 @@ void TouchScreen::updateScreen()
     }
 }
 
-std::pair<uint, uint> TouchScreen::getClickEventColRow()
+std::string TouchScreen::getClickEventWord()
 {
 
     uint x, y, savex, savey;
@@ -150,13 +150,16 @@ std::pair<uint, uint> TouchScreen::getClickEventColRow()
             y = (y - mMinY) * mScaleY;
             uint col = x / mFrameBuffer.mFont.width;
             uint row = y / mFrameBuffer.mFont.height;
-            if (row >= mTextLines.size())
+
+            auto line = mFrameBuffer.mTextLines.at(y);
+            auto word = wordAtPosition(line, x, '[', ']');
+            if (word.length() == 0)
                 continue;
             mFrameBuffer.putSquareInv(0, row * mFrameBuffer.mFont.height, mFrameBuffer.mPixelsX, mFrameBuffer.mFont.height);
             usleep(MIN_TOUCH_TIME * 10E6);
             mFrameBuffer.putSquareInv(0, row * mFrameBuffer.mFont.height, mFrameBuffer.mPixelsX, mFrameBuffer.mFont.height);
-            LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row;
-            return std::pair<uint, uint>(col, row);
+            LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row << ", word: " << word;
+            return word;
         }
     }
     return std::pair<uint, uint>(0, 0);
