@@ -47,8 +47,9 @@ FrameBuffer::FrameBuffer(int fbidx)
     }
 }
 
-void FrameBuffer::putString(uint row, const char *s, uint color)
+void FrameBuffer::putString(uint row, const char *s, uint r, uint g, uint b)
 {
+    unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
     mTextLines.at(row) = std::string(s);
     for (uint i = 0; *s; i++, s++)
         putChar(i * mFont.width, row, *s, color);

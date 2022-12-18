@@ -1,12 +1,6 @@
 
 #include "TouchScreenPy.hpp"
 
-void TouchScreenPy::setText(const char *text, uint row, uint r, uint g, uint b)
-{
-    unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-    this->mFrameBuffer.putString(row * mFrameBuffer.mFont.height, text, color);
-}
-
 extern "C"
 {
 
@@ -65,7 +59,7 @@ extern "C"
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->mFrameBuffer.clearScreen(startY);
+            x->clearScreen(startY);
             return 0;
         }
         catch (...)

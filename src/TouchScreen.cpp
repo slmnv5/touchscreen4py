@@ -38,13 +38,9 @@ std::string wordAtPosition(const std::string &s, unsigned int pos, char leftSpac
     return word;
 }
 
-TouchScreen::TouchScreen(uint fbId, bool invx, bool invy) : mFrameBuffer(fbId), mInvertX(invx), mInvertY(invy)
+TouchScreen::TouchScreen(uint fbId, bool invx, bool invy) : FrameBuffer(fbId), mInvertX(invx), mInvertY(invy)
 {
 
-    if (mFrameBuffer.mPixelsX <= 0 || mFrameBuffer.mPixelsY <= 0)
-    {
-        throw std::runtime_error("Screen resolution must be positive");
-    }
     std::string dev_id = findTouchscrEvent();
     if ("" == dev_id)
     {
@@ -61,8 +57,8 @@ TouchScreen::TouchScreen(uint fbId, bool invx, bool invy) : mFrameBuffer(fbId), 
     getInfoFromDevice(ABS_X, mMinX, mMaxX);
     getInfoFromDevice(ABS_Y, mMinY, mMaxY);
     getInfoFromDevice(ABS_PRESSURE, mMinP, mMaxP);
-    mScaleX = 1.0 / (mMaxX - mMinX) * mFrameBuffer.mPixelsX;
-    mScaleY = 1.0 / (mMaxY - mMinY) * mFrameBuffer.mPixelsY;
+    mScaleX = 1.0 / (mMaxX - mMinX) * mPixelsX;
+    mScaleY = 1.0 / (mMaxY - mMinY) * mPixelsY;
 
     mUpdateThread = std::thread(&TouchScreen::updateScreen, this);
     LOG(LogLvl::INFO) << "Opened touch screen device: " << name
@@ -84,12 +80,12 @@ void TouchScreen::updateScreen()
         if (mLoopPosition > 1)
             mLoopPosition -= 1.0;
 
-        pos = mLoopPosition * mFrameBuffer.mPixelsX;
-        mFrameBuffer.putSquare(0, 0, pos, 2, YELLOW);
-        mFrameBuffer.putSquare(pos, 0, mFrameBuffer.mPixelsX - pos, 2, BLACK);
-        uint sz = mFrameBuffer.mFont.height;
-        mFrameBuffer.putSquare(0, sz - 2, pos, 2, YELLOW);
-        mFrameBuffer.putSquare(pos, sz - 2, mFrameBuffer.mPixelsX - pos, 2, BLACK);
+        pos = mLoopPosition * mPixelsX;
+        putSquare(0, 0, pos, 2, YELLOW);
+        putSquare(pos, 0, mPixelsX - pos, 2, BLACK);
+        uint sz = mFont.height;
+        putSquare(0, sz - 2, pos, 2, YELLOW);
+        putSquare(pos, sz - 2, mPixelsX - pos, 2, BLACK);
     }
 }
 
@@ -148,21 +144,20 @@ std::string TouchScreen::getClickEventWord()
             y = mInvertY ? mMaxY - y : y;
             x = (x - mMinX) * mScaleX;
             y = (y - mMinY) * mScaleY;
-            uint col = x / mFrameBuffer.mFont.width;
-            uint row = y / mFrameBuffer.mFont.height;
+            uint col = x / mFont.width;
+            uint row = y / mFont.height;
 
-            auto line = mFrameBuffer.mTextLines.at(y);
+            auto line = mTextLines.at(row);
             auto word = wordAtPosition(line, x, '[', ']');
             if (word.length() == 0)
                 continue;
-            mFrameBuffer.putSquareInv(0, row * mFrameBuffer.mFont.height, mFrameBuffer.mPixelsX, mFrameBuffer.mFont.height);
+            putSquareInv(0, row * mFont.height, mPixelsX, mFont.height);
             usleep(MIN_TOUCH_TIME * 10E6);
-            mFrameBuffer.putSquareInv(0, row * mFrameBuffer.mFont.height, mFrameBuffer.mPixelsX, mFrameBuffer.mFont.height);
+            putSquareInv(0, row * mFont.height, mPixelsX, mFont.height);
             LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row << ", word: " << word;
             return word;
         }
     }
-    return std::pair<uint, uint>(0, 0);
 }
 
 void TouchScreen::getInfoFromDevice(int propId, uint &minV, uint &maxV)

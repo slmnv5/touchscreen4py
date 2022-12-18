@@ -12,11 +12,10 @@ std::string findTouchscrEvent();
 
 std::string wordAtPosition(const std::string &s, unsigned int pos, char leftSpace, char rightSpace);
 
-class TouchScreen
+class TouchScreen : public FrameBuffer
 {
 
 public:
-    FrameBuffer mFrameBuffer;
     bool mStopped = false;
 
 protected:
@@ -46,7 +45,7 @@ public:
 
     void updateScreen();
 
-    std::pair<uint, uint> getClickEventWord();
+    std::string getClickEventWord();
 
 private:
     void getInfoFromDevice(int propId, uint &minV, uint &maxV);

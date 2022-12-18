@@ -52,16 +52,16 @@ inline unsigned short idxToColor(uint colorIdx)
 class FrameBuffer
 {
 private:
-    int mFdFb = -1;                      // file descriptor
-    char *mFbPtr = 0;                    // pointer to frame buffer memory
-    uint mScrSize = 0;                   // screen memory size in bytes
-    uint mColorSize = 0;                 // screen color size in bytes
+    int mFdFb = -1;      // file descriptor
+    char *mFbPtr = 0;    // pointer to frame buffer memory
+    uint mScrSize = 0;   // screen memory size in bytes
+    uint mColorSize = 0; // screen color size in bytes
+protected:
     std::vector<std::string> mTextLines; // text on screen
+    FbPixelFont &mFont = font_16x32;     // font
+    uint mPixelsX, mPixelsY;             // screen resolution
 
 public:
-    FbPixelFont &mFont = font_16x32; // font
-    uint mPixelsX, mPixelsY;         // screen resolution
-
     FrameBuffer(int fbidx = 1);
 
     virtual ~FrameBuffer()
@@ -93,7 +93,7 @@ public:
                 putPixelInv(x + w, y + h);
     }
 
-    void putString(uint row, const char *s, uint color);
+    void putString(uint row, const char *s, uint r, uint g, uint b);
 
 protected:
     void putChar(uint x, uint y, unsigned char chr, unsigned short color) const;
