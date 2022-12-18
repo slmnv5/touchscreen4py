@@ -66,9 +66,8 @@ int main(int argc, char *argv[])
 
 void help()
 {
-	std::cout << "Usage: mimap5 -r <file> [options] \n"
-				 "  -k <kbdMapFile> use typing keyboard for MIDI notes, needs sudo\n"
-				 "  -n [name] output MIDI port name to create\n"
+	std::cout << "Usage: touchscr5 [options] \n"
+				 "  -f [fb Id] frame buffer Id to use\n"
 				 "  -v verbose output\n"
 				 "  -vv more verbose\n"
 				 "  -vvv even more verbose\n"
