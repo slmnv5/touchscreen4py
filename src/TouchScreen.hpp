@@ -10,7 +10,7 @@ static const float MIN_TOUCH_TIME = 0.15; // min time to hold button for click i
 
 std::string findTouchscrEvent();
 
-std::string wordAtPosition(const std::string &s, size_t pos);
+std::string wordAtPosition(const std::string &s, uint pos);
 
 class TouchScreen : public FrameBuffer
 {
