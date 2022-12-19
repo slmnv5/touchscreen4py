@@ -44,8 +44,8 @@ FrameBuffer::FrameBuffer(int fbidx)
     {
         mRows.push_back("");
     }
-    LOG(LogLvl::DEBUG) << "Frame buffer memory mapped. Number of screen rows: " 
-    << mRows.size() << " columns: " << mPixelsX / mFont.width;
+    LOG(LogLvl::DEBUG) << "Frame buffer memory mapped. Number of screen rows: "
+                       << mRows.size() << " columns: " << mPixelsX / mFont.width;
 }
 
 void FrameBuffer::setRowText(uint row, const char *s, uint r, uint g, uint b)
