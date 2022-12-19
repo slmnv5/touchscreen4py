@@ -44,11 +44,6 @@ FrameBuffer::FrameBuffer(int fbidx)
     {
         mRowText.push_back("");
     }
-
-    if (ioctl(mFdFb, FBIOBLANK, VESA_POWERDOWN) < 0)
-    {
-        LOG(LogLvl::ERROR) << "Cannot disable cursor";
-    }
     LOG(LogLvl::DEBUG) << "Frame buffer memory mapped. Number of screen rows: "
                        << getRows() << " columns: " << getCols();
 }
@@ -82,18 +77,6 @@ void FrameBuffer::putChar(uint x, uint y, unsigned char chr, unsigned short colo
             }
         }
     }
-}
-
-void FrameBuffer::putPixel(uint x, uint y, uint r, uint g, uint b) const
-{
-    uint pix_offset = x * mColorSize + y * mPixelsX * mColorSize;
-    if (pix_offset < 0 || pix_offset > this->mScrSize - mColorSize)
-    {
-        return;
-    }
-    unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-    // write 'two bytes at once'
-    *((unsigned short *)(mFbPtr + pix_offset)) = color;
 }
 
 void FrameBuffer::putPixel(uint x, uint y, unsigned short color) const

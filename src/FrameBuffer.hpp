@@ -101,7 +101,6 @@ public:
 
 protected:
     void putChar(uint x, uint y, unsigned char chr, unsigned short color) const;
-    void putPixel(uint x, uint y, uint r, uint g, uint b) const;
     void putPixel(uint x, uint y, unsigned short color) const;
     void putPixelInv(uint x, uint y) const;
 };
