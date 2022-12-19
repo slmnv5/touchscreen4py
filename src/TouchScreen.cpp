@@ -99,9 +99,6 @@ std::string TouchScreen::getClickEventWord()
 
     while (read(mFdScr, &ev, sizeof(struct input_event)) != -1)
     {
-        if (mStopped)
-            break;
-
         if (ev.type == EV_KEY && ev.code == BTN_TOUCH)
         {
             touch_on = ev.value;
