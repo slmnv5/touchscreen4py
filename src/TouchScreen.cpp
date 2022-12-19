@@ -23,18 +23,14 @@ std::string findTouchscrEvent()
 
 std::string wordAtPosition(const std::string &s, uint pos)
 {
-    LOG(LogLvl::DEBUG) << s << "=========" << pos;
     uint first, last;
     if ((first = s.rfind('[', pos)) == std::string::npos)
     {
-        LOG(LogLvl::DEBUG) << s << "=[=" << pos;
         return "";
     }
 
     if ((last = s.find(']', pos)) == std::string::npos)
     {
-
-        LOG(LogLvl::DEBUG) << s << "=]=" << pos;
         return "";
     }
     return s.substr(first, last - first + 1);
@@ -150,12 +146,8 @@ std::string TouchScreen::getClickEventWord()
             uint row = y / mFont.height;
 
             std::string line = mRowText.at(row);
-            LOG(LogLvl::DEBUG) << "col, row: " << col << ", ";
             std::string word = wordAtPosition(line, col);
-            bool empty = (word == "");
-
-            // LOG(LogLvl::DEBUG) << "col, row: " << col << ", " << row << ",\n"            << line << ", ==>" << word << "<==" << empty;
-            if (word.length() == 0)
+            if (word == "")
                 continue;
             putSquareInv(0, row * mFont.height, mPixelsX, mFont.height);
             usleep(MIN_TOUCH_TIME * 10E6);
