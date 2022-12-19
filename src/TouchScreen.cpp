@@ -149,7 +149,7 @@ std::string TouchScreen::getClickEventWord()
             if (word == "")
                 continue;
             putSquareInv(0, row * mFont.height, mPixelsX, mFont.height);
-            usleep(MIN_TOUCH_TIME * 10E6);
+            usleep(MIN_TOUCH_TIME / 2 * 10E6);
             putSquareInv(0, row * mFont.height, mPixelsX, mFont.height);
             LOG(LogLvl::DEBUG) << "Click event at col, row: " << col << ", " << row << ", word: " << word;
             return word;
