@@ -148,7 +148,15 @@ std::string TouchScreen::getClickEventWord()
             uint row = y / mFont.height;
 
             auto line = mRowText.at(row);
-            auto word = wordAtPosition(line, x, '[', ']');
+
+             
+            size_t first = line.find('[', x);
+            size_t last = line.find(']', first +1);
+            if (first == std::string::npos or last == std::string::npos)
+                continue;
+            std::string word = line.substr(first, last - first);
+            LOG(LogLvl::DEBUG) << "===========>" << word;
+
             LOG(LogLvl::DEBUG) << "col, row: " << col << ", " << row << ",\n"
                                << line << ", " << word;
             if (word.length() == 0)
