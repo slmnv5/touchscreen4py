@@ -42,33 +42,32 @@ FrameBuffer::FrameBuffer(int fbidx)
     }
     for (uint i = 0; i < mPixelsY / mFont.height; i++)
     {
-        mRows.push_back("");
+        mRowText.push_back("");
     }
     LOG(LogLvl::DEBUG) << "Frame buffer memory mapped. Number of screen rows: "
-                       << mRows.size() << " columns: " << mPixelsX / mFont.width;
+                       << mRowText.size() << " columns: " << mPixelsX / mFont.width;
 }
 
 void FrameBuffer::setRowText(uint row, const char *s, uint r, uint g, uint b)
 {
-    if (row > -mRows.size())
+    if (row > mRowText.size())
         return;
-    uint rowSz = mPixelsX / mFont.width;
+    uint charsInRow = mPixelsX / mFont.width;
     unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-    mRows.at(row) = std::string(s).substr(0, rowSz);
-    for (uint i = 0; *s and i < rowSz; i++, s++)
-        putChar(i * mFont.width, row, *s, color);
+    mRowText.at(row) = std::string(s).substr(0, charsInRow);
+    for (uint i = 0; *s and i < charsInRow; i++, s++)
+        putChar(i * mFont.width, row * mFont.height, *s, color);
 }
 
-void FrameBuffer::clearScreen(uint startY)
+void FrameBuffer::clearScreen(uint startRow)
 {
-    uint pix_offset = startY * mPixelsX * mColorSize;
-    if (pix_offset < mScrSize)
+    if (startRow >= mRowText.size())
+        return;
+    uint pix_offset = startRow * mPixelsX * mColorSize;
+    memset(mFbPtr + pix_offset, 0, mScrSize - pix_offset);
+    for (uint i = startRow; i < mRowText.size(); i++)
     {
-        memset(mFbPtr + pix_offset, 0, mScrSize - pix_offset);
-    }
-    for (uint i = startY; i < mRows.size(); i++)
-    {
-        mRows.at(i).clear();
+        mRowText.at(i).clear();
     }
 }
 

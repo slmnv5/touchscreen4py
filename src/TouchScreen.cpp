@@ -147,7 +147,7 @@ std::string TouchScreen::getClickEventWord()
             uint col = x / mFont.width;
             uint row = y / mFont.height;
 
-            auto line = mRows.at(row);
+            auto line = mRowText.at(row);
             auto word = wordAtPosition(line, x, '[', ']');
             LOG(LogLvl::DEBUG) << "col, row: " << col << ", " << row << line << word;
             if (word.length() == 0)

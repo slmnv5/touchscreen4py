@@ -57,9 +57,9 @@ private:
     uint mScrSize = 0;   // screen memory size in bytes
     uint mColorSize = 0; // screen color size in bytes
 protected:
-    std::vector<std::string> mRows;  // text on screen
-    FbPixelFont &mFont = font_16x32; // font
-    uint mPixelsX, mPixelsY;         // screen resolution
+    std::vector<std::string> mRowText; // text on screen
+    FbPixelFont &mFont = font_16x32;   // font
+    uint mPixelsX, mPixelsY;           // screen resolution
 
 public:
     FrameBuffer(int fbidx = 1);
