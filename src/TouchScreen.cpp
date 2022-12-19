@@ -144,9 +144,10 @@ std::string TouchScreen::getClickEventWord()
 
             std::string line = mRowText.at(row);
             std::string word = wordAtPosition(line, x);
+            bool empty = (word == "");
 
             LOG(LogLvl::DEBUG) << "col, row: " << col << ", " << row << ",\n"
-                               << line << ", " << word;
+                               << line << ", ==>" << word << "<==" << empty;
             if (word.length() == 0)
                 continue;
             putSquareInv(0, row * mFont.height, mPixelsX, mFont.height);
