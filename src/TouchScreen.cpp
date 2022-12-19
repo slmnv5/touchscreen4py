@@ -75,14 +75,15 @@ void TouchScreen::updateScreen()
         }
         mLoopPosition += 1.0 / 16;
         if (mLoopPosition > 1)
+        {
             mLoopPosition -= 1.0;
-
+            putSquare(0, 0, mPixelsX, 2, BLACK);
+            putSquare(0, mFont.height - 2, mPixelsX, 2, BLACK);
+        }
+        auto color = idxToColor(YELLOW);
         pos = mLoopPosition * mPixelsX;
-        putSquare(0, 0, pos, 2, YELLOW);
-        putSquare(pos, 0, mPixelsX - pos, 2, BLACK);
-        uint sz = mFont.height;
-        putSquare(0, sz - 2, pos, 2, YELLOW);
-        putSquare(pos, sz - 2, mPixelsX - pos, 2, BLACK);
+        putSquare(0, 0, pos, 2, color);
+        putSquare(0, mFont.height - 2, pos, 2, color);
     }
 }
 
