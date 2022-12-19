@@ -55,7 +55,7 @@ FrameBuffer::FrameBuffer(int fbidx)
 
 void FrameBuffer::setRowText(uint row, const char *s, uint r, uint g, uint b)
 {
-    if (row > mRowText.size())
+    if (row >= mRowText.size())
         return;
     uint charsInRow = mPixelsX / mFont.width;
     unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
