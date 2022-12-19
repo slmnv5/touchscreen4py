@@ -57,10 +57,9 @@ TouchScreen::TouchScreen(uint fbId, bool invx, bool invy) : FrameBuffer(fbId), m
     getInfoFromDevice(ABS_PRESSURE, mMinP, mMaxP);
     mScaleX = 1.0 / (mMaxX - mMinX) * mPixelsX;
     mScaleY = 1.0 / (mMaxY - mMinY) * mPixelsY;
-
-    mUpdateThread = std::thread(&TouchScreen::updateScreen, this);
     LOG(LogLvl::INFO) << "Opened touch screen device: " << name
                       << ", X: " << mMinX << "--" << mMaxX << ", Y: " << mMinY << "--" << mMaxY;
+    mUpdateThread = std::thread(&TouchScreen::updateScreen, this);
 }
 
 void TouchScreen::updateScreen()
