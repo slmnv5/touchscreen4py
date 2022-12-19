@@ -60,16 +60,16 @@ TEST_CASE("Test FB 1", "[all]")
 
 		fb.putSquare(473, 233, 22, 22, COLOR_IND::WHITE);
 		sleep(2);
-		fb.clearScreen(0);
+		fb.clearScreen();
 		fb.putSquare(133, 310, 22, 22, COLOR_IND::BLUE);
 		sleep(2);
-		fb.clearScreen(0);
+		fb.clearScreen();
 		fb.putSquare(223, 233, 22, 22, COLOR_IND::RED);
 		sleep(2);
-		fb.clearScreen(0);
+		fb.clearScreen();
 		fb.putSquare(453, 13, 22, 22, COLOR_IND::YELLOW);
 		sleep(2);
-		fb.clearScreen(1111111);
+		fb.clearScreen();
 	}
 }
 
