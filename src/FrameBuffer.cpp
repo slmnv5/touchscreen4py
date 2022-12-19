@@ -59,18 +59,6 @@ void FrameBuffer::setRowText(uint row, const char *s, uint r, uint g, uint b)
         putChar(i * mFont.width, row * mFont.height, *s, color);
 }
 
-void FrameBuffer::clearScreen(uint startRow)
-{
-    if (startRow >= mRowText.size())
-        return;
-    uint pix_offset = startRow * mPixelsX * mColorSize;
-    memset(mFbPtr + pix_offset, 0, mScrSize - pix_offset);
-    for (uint i = startRow; i < mRowText.size(); i++)
-    {
-        mRowText.at(i).clear();
-    }
-}
-
 void FrameBuffer::putChar(uint x, uint y, unsigned char chr, unsigned short color) const
 {
     uint mFontStep = std::ceil(mFont.width / 8.0);

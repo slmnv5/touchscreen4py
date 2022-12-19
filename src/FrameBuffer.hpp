@@ -71,7 +71,10 @@ public:
     }
 
     void setRowText(uint row, const char *s, uint r, uint g, uint b);
-    void clearScreen(uint startY);
+    void clearScreen()
+    {
+        memset(mFbPtr, 0, mScrSize);
+    }
 
     void putSquare(uint x, uint y, uint width, uint height, uint color) const
     {

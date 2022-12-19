@@ -41,7 +41,7 @@ extern "C"
 
     int setLoop(void *ptr, double loopSeconds, double loopPosition, bool isRec, bool isStop);
 
-    int clearScreen(void *ptr, int startY);
+    int clearScreen(void *ptr);
 
     int setRowText(void *ptr, int row, const char *text, int r, int g, int b);
 

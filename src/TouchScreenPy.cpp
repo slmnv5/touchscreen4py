@@ -55,12 +55,12 @@ extern "C"
         }
     }
 
-    int clearScreen(void *ptr, int startY)
+    int clearScreen(void *ptr)
     {
         try
         {
             TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->clearScreen(startY);
+            x->clearScreen();
             return 0;
         }
         catch (...)
