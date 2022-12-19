@@ -151,7 +151,7 @@ std::string TouchScreen::getClickEventWord()
 
             std::string line = mRowText.at(row);
             LOG(LogLvl::DEBUG) << "col, row: " << col << ", ";
-            std::string word = wordAtPosition(line, x);
+            std::string word = wordAtPosition(line, col);
             bool empty = (word == "");
 
             // LOG(LogLvl::DEBUG) << "col, row: " << col << ", " << row << ",\n"            << line << ", ==>" << word << "<==" << empty;
