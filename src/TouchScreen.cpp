@@ -23,6 +23,7 @@ std::string findTouchscrEvent()
 
 std::string wordAtPosition(const std::string &s, uint pos)
 {
+    LOG(LogLvl::DEBUG) << s << "=========" << pos;
     uint first, last;
     if ((first = s.rfind('[', pos)) == std::string::npos)
     {
