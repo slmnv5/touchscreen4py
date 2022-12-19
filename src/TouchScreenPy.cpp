@@ -1,5 +1,6 @@
 
 #include "TouchScreenPy.hpp"
+#include "lib/log.hpp"
 
 extern "C"
 {

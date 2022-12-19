@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "TouchScreenPy.hpp"
+#include "lib/log.hpp"
 
 using myclock = std::chrono::steady_clock;
 using seconds = std::chrono::duration<double>;
@@ -47,8 +48,8 @@ int main(int argc, char *argv[])
 		sleep(1);
 		tsp.setLoop(21.0, 0.55, true, false);
 		sleep(2);
-		tsp.setText("Here we have [some cool]", 2, 100, 100, 100);
-		tsp.setText("May be [coming] soon or [sooner]", 4, 100, 100, 100);
+		tsp.setRowText(2, "Here we have [some cool]", 100, 100, 100);
+		tsp.setRowText(4, "May be [coming] soon or [sooner]", 100, 100, 100);
 		sleep(2);
 		LOG(LogLvl::INFO) << "Set text done";
 

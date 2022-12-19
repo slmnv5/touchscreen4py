@@ -2,11 +2,7 @@
 #define TOUCBUFF_H
 
 #include "pch.hpp"
-
-#include "FrameBuffer.hpp"
 #include "TouchScreen.hpp"
-
-#include "lib/log.hpp"
 
 std::vector<std::string> splitString(std::string s, uint screenWidth, char chrDelim);
 
@@ -20,8 +16,6 @@ public:
     virtual ~TouchScreenPy()
     {
     }
-
-    std::string getClickEventWord();
 
     void setLoop(double loopSeconds, double loopPosition, bool isRec, bool isStop)
     {
@@ -49,7 +43,7 @@ extern "C"
 
     int clearScreen(void *ptr, int startY);
 
-    int setRowText(void *ptr, const char *text, int row, int r, int g, int b);
+    int setRowText(void *ptr, int row, const char *text, int r, int g, int b);
 
     int setLogLevel(int lvl);
 }
