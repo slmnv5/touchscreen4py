@@ -44,6 +44,11 @@ FrameBuffer::FrameBuffer(int fbidx)
     {
         mRowText.push_back("");
     }
+
+    if (ioctl(mFdFb, FBIOBLANK, VESA_POWERDOWN) < 0)
+    {
+        LOG(LogLvl::ERROR) << "Cannot disable cursor";
+    }
     LOG(LogLvl::DEBUG) << "Frame buffer memory mapped. Number of screen rows: "
                        << mRowText.size() << " columns: " << mPixelsX / mFont.width;
 }
