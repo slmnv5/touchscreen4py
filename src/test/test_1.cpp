@@ -58,19 +58,19 @@ TEST_CASE("Test FB 1", "[all]")
 
 		FrameBuffer fb;
 		LOG(LogLvl::INFO) << "Frame buffer created";
-		fb.putSquare(12, 12, 15, 15, COLOR_IND::RED);
+		fb.putSquare(12, 12, 15, 15, idxToColor(RED));
 		LOG(LogLvl::INFO) << "Square draw done!!!";
 
-		fb.putSquare(473, 233, 22, 22, COLOR_IND::WHITE);
+		fb.putSquare(473, 233, 22, 22, idxToColor(WHITE));
 		sleep(2);
 		fb.clearScreen();
-		fb.putSquare(133, 310, 22, 22, COLOR_IND::BLUE);
+		fb.putSquare(133, 310, 22, 22, idxToColor(BLUE));
 		sleep(2);
 		fb.clearScreen();
-		fb.putSquare(223, 233, 22, 22, COLOR_IND::RED);
+		fb.putSquare(223, 233, 22, 22, idxToColor(RED));
 		sleep(2);
 		fb.clearScreen();
-		fb.putSquare(453, 13, 22, 22, COLOR_IND::YELLOW);
+		fb.putSquare(453, 13, 22, 22, idxToColor(YELLOW));
 		sleep(2);
 		fb.clearScreen();
 	}
