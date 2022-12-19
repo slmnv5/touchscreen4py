@@ -70,7 +70,7 @@ void TouchScreen::updateScreen()
     while (true)
     {
         usleep(mLoopSeconds * 1000000 / 16);
-        if (mIsStop)
+        if (mStopped)
         {
             continue;
         }

@@ -22,7 +22,7 @@ public:
         this->mLoopSeconds = loopSeconds;
         this->mLoopPosition = loopPosition;
         this->mIsRec = isRec;
-        this->mIsStop = isStop;
+        this->mStopped = isStop;
     }
 };
 

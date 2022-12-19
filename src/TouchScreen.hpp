@@ -22,7 +22,6 @@ protected:
     double mLoopSeconds = 1.0;  // loop length in seconds
     double mLoopPosition = 0.0; // loop postion 0 to 1
     bool mIsRec = false;        // is recording
-    bool mIsStop = true;        // is stopped
 
 private:
     int mFdScr;                // file descriptor of touch screen

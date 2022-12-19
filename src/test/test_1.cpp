@@ -93,6 +93,7 @@ TEST_CASE("Test FB 2", "[all]")
 			TouchScreenPy tsp;
 			tsp.setRowText(6, "[AAA] BBB CCC DDD [EEE]", 100, 100, 100);
 			sleep(3);
+			tsp.mStopped = true;
 		}
 	}
 }
