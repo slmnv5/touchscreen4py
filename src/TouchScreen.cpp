@@ -25,11 +25,17 @@ std::string wordAtPosition(const std::string &s, size_t pos)
 {
     size_t first, last;
     if ((first = s.rfind('[', pos)) == std::string::npos)
+    {
+        LOG(LogLvl::DEBUG) << s << "=[=" << pos;
         return "";
+    }
 
     if ((last = s.find(']', pos)) == std::string::npos)
-        return "";
+    {
 
+        LOG(LogLvl::DEBUG) << s << "=]=" << pos;
+        return "";
+    }
     return s.substr(first, last - first + 1);
 }
 
