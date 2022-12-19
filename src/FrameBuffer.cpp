@@ -49,9 +49,12 @@ FrameBuffer::FrameBuffer(int fbidx)
 
 void FrameBuffer::setRowText(uint row, const char *s, uint r, uint g, uint b)
 {
+    if (row > -mRows.size())
+        return;
+    uint rowSz = mPixelsX / mFont.width;
     unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-    mRows.at(row) = std::string(s);
-    for (uint i = 0; *s; i++, s++)
+    mRows.at(row) = std::string(s).substr(0, rowSz);
+    for (uint i = 0; *s and i < rowSz; i++, s++)
         putChar(i * mFont.width, row, *s, color);
 }
 
