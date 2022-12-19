@@ -5,9 +5,9 @@
 extern "C"
 {
 
-    void *createTouchScreen()
+    void *createTouchScreen(int fbId)
     {
-        return new (std::nothrow) TouchScreenPy();
+        return new (std::nothrow) TouchScreenPy(fbId);
     }
 
     void deleteTouchScreen(void *ptr)

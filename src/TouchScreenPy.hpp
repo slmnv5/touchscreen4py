@@ -10,7 +10,7 @@ class TouchScreenPy : public TouchScreen
 {
 
 public:
-    TouchScreenPy(int fbId = 1) : TouchScreen(fbId, false, true)
+    TouchScreenPy(int fbId) : TouchScreen(fbId, false, true)
     {
     }
     virtual ~TouchScreenPy()
@@ -29,7 +29,7 @@ public:
 extern "C"
 {
 
-    void *createTouchScreen();
+    void *createTouchScreen(int fbId);
 
     void deleteTouchScreen(void *ptr);
 

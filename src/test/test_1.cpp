@@ -86,14 +86,5 @@ TEST_CASE("Test FB 2", "[all]")
 		fb.setRowText(2, "ABACUS 121", 100, 100, 100);
 		fb.setRowText(5, "BIBIGON 321", 100, 0, 0);
 		fb.setRowText(220, "ABACUS 121 ~~~~~~~~~~~~~~~~~~>", 0, 100, 100);
-
-		SECTION("Test set text by row and col")
-		{
-
-			TouchScreenPy tsp;
-			tsp.setRowText(6, "[AAA] BBB CCC DDD [EEE]", 100, 100, 100);
-			sleep(3);
-			tsp.mStopped = true;
-		}
 	}
 }
