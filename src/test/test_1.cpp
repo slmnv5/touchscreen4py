@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include "lib/catch.hpp"
-#include "FrameBuffer.hpp"
-#include "TouchScreen.hpp"
+// #include "FrameBuffer.hpp"
+// #include "TouchScreen.hpp"
 #include "TouchScreenPy.hpp"
 
 #include "lib/log.hpp"
@@ -35,14 +35,17 @@ TEST_CASE("Test simple things", "[all][basic]")
 		LOG::ReportingLevel() = LogLvl::DEBUG;
 	}
 
-	SECTION("Find word at position")
+	std::string s = " Test [once we] do ";
+	SECTION("Find word at position 1")
 	{
 		std::string word;
-		word = wordAtPosition(" Test [once we] do", 11, '[', ']');
+		word = wordAtPosition(s, 11);
 		assert(word == "[once we]");
-		word = wordAtPosition(" Test [once we] do", 0, '[', ']');
+		word = wordAtPosition(s, 0);
 		assert(word == "");
-		word = wordAtPosition(" Test [once we] do", 11111, '[', ']');
+		word = wordAtPosition(s, 11111);
+		assert(word == "");
+		word = wordAtPosition(s, 3);
 		assert(word == "");
 	}
 }
