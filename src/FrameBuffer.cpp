@@ -40,11 +40,11 @@ FrameBuffer::FrameBuffer(int fbidx)
         close(mFdFb);
         throw std::runtime_error("Cannot map frame buffer memory");
     }
-    LOG(LogLvl::DEBUG) << "Frame buffer memory mapped";
     for (uint i = 0; i < mPixelsY / mFont.height; i++)
     {
         mRows.push_back("");
     }
+    LOG(LogLvl::DEBUG) << "Frame buffer memory mapped. Number of screen rows: " << mRows.size();
 }
 
 void FrameBuffer::setRowText(uint row, const char *s, uint r, uint g, uint b)
