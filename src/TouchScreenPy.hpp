@@ -46,6 +46,10 @@ extern "C"
     int setRowText(void *ptr, int row, const char *text, int r, int g, int b);
 
     int setLogLevel(int lvl);
+
+    int getCols(void *ptr);
+
+    int getRows(void *ptr);
 }
 
 #endif

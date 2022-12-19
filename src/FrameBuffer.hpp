@@ -71,7 +71,7 @@ public:
     }
 
     void setRowText(uint row, const char *s, uint r, uint g, uint b);
-    void clearScreen()
+    void clearScreen() const
     {
         memset(mFbPtr, 0, mScrSize);
     }
@@ -88,6 +88,15 @@ public:
         for (uint h = 0; h < height; h++)
             for (uint w = 0; w < width; w++)
                 putPixelInv(x + w, y + h);
+    }
+    uint getCols() const
+    {
+        return mPixelsX / mFont.width;
+    }
+
+    uint getRows() const
+    {
+        return mPixelsY / mFont.height;
     }
 
 protected:

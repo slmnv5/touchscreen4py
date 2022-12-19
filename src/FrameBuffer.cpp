@@ -50,17 +50,17 @@ FrameBuffer::FrameBuffer(int fbidx)
         LOG(LogLvl::ERROR) << "Cannot disable cursor";
     }
     LOG(LogLvl::DEBUG) << "Frame buffer memory mapped. Number of screen rows: "
-                       << mRowText.size() << " columns: " << mPixelsX / mFont.width;
+                       << getRows() << " columns: " << getCols();
 }
 
 void FrameBuffer::setRowText(uint row, const char *s, uint r, uint g, uint b)
 {
     if (row >= mRowText.size())
         return;
-    uint charsInRow = mPixelsX / mFont.width;
     unsigned short color = ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
-    mRowText.at(row) = std::string(s).substr(0, charsInRow);
-    for (uint i = 0; *s and i < charsInRow; i++, s++)
+
+    mRowText.at(row) = std::string(s).substr(0, getCols());
+    for (uint i = 0; *s and i < getCols(); i++, s++)
         putChar(i * mFont.width, row * mFont.height, *s, color);
 }
 

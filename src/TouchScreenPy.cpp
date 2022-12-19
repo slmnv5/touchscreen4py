@@ -101,4 +101,30 @@ extern "C"
             return -1;
         }
     }
+
+    int getCols(void *ptr)
+    {
+        try
+        {
+            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+            return x->getCols();
+        }
+        catch (...)
+        {
+            return -1;
+        }
+    }
+
+    int getRows(void *ptr)
+    {
+        try
+        {
+            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
+            return x->getRows();
+        }
+        catch (...)
+        {
+            return -1;
+        }
+    }
 }
