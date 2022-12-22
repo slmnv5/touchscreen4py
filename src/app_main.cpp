@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 
 void help()
 {
-	std::cout << "Usage: touchscr5 [options] \n"
+	std::cout << "Usage: touchscreen4py [options] \n"
 				 "  -f [fb Id] frame buffer Id to use\n"
 				 "  -v verbose output\n"
 				 "  -vv more verbose\n"
