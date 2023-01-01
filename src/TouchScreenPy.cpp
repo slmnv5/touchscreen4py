@@ -19,28 +19,28 @@ extern "C"
 
     void deleteTouchScreen(void *ptr)
     {
-        TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-        delete x;
+        TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+        delete tsp;
     }
 
     void stop(void *ptr)
     {
-        TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-        x->mStopped = true;
+        TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+        tsp->mStopped = true;
     }
 
     void start(void *ptr)
     {
-        TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-        x->mStopped = false;
+        TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+        tsp->mStopped = false;
     }
 
     const char *getClickEventWord(void *ptr)
     {
         try
         {
-            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            return x->getClickEventWord().c_str();
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+            return tsp->getClickEventWord().c_str();
         }
         catch (...)
         {
@@ -52,8 +52,8 @@ extern "C"
     {
         try
         {
-            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setLoop(loopSeconds, loopPosition, isRec, isStop);
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+            tsp->setLoop(loopSeconds, loopPosition, isRec, isStop);
             return 0;
         }
         catch (...)
@@ -66,8 +66,8 @@ extern "C"
     {
         try
         {
-            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->clearScreen();
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+            tsp->clearScreen();
             return 0;
         }
         catch (...)
@@ -75,12 +75,12 @@ extern "C"
             return -1;
         }
     }
-    int setRowText(void *ptr, int row, const char *text, int r, int g, int b)
+    int setRowText(void *ptr, uint row, const char *text, uint r, uint g, uint b)
     {
         try
         {
-            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            x->setRowText(row, text, r, g, b);
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+            tsp->setRowText(row, text, r, g, b);
             return 0;
         }
         catch (...)
@@ -106,8 +106,8 @@ extern "C"
     {
         try
         {
-            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            return x->getCols();
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+            return tsp->getCols();
         }
         catch (...)
         {
@@ -119,12 +119,40 @@ extern "C"
     {
         try
         {
-            TouchScreenPy *x = static_cast<TouchScreenPy *>(ptr);
-            return x->getRows();
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+            return tsp->getRows();
         }
         catch (...)
         {
             return -1;
         }
     }
+
+    int putSquare(void *ptr, uint x, uint y, uint width, uint height, uint r, uint g, uint b) {
+        try
+        {
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+            uint color =  ((r / 8) << 11) + ((g / 4) << 5) + (b / 8);
+            tsp->putSquare(x, y, width, height, color);
+            return 1;
+        }
+        catch (...)
+        {
+            return -1;
+        }
+    }
+
+    int putSquareInv(void *ptr, uint x, uint y, uint width, uint height) {
+        try
+        {
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);            
+            tsp->putSquareInv(x, y, width, height);
+            return 1;
+        }
+        catch (...)
+        {
+            return -1;
+        }
+    }
+
 }

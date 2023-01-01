@@ -43,13 +43,19 @@ extern "C"
 
     int clearScreen(void *ptr);
 
-    int setRowText(void *ptr, int row, const char *text, int r, int g, int b);
+    int setRowText(void *ptr, uint row, const char *text, uint r, uint g, uint b);
 
     int setLogLevel(int lvl);
 
     int getCols(void *ptr);
 
     int getRows(void *ptr);
+
+    int getRows(void *ptr);
+    
+    int putSquare(void *ptr, uint x, uint y, uint width, uint height, uint r, uint g, uint b);
+
+    int putSquareInv(void *ptr, uint x, uint y, uint width, uint height);
 }
 
 #endif
