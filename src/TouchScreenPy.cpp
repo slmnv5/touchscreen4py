@@ -48,6 +48,11 @@ extern "C"
         }
     }
 
+    const char *testStr(void *ptr)
+    {
+        return "testStr";
+    }
+
     int setLoop(void *ptr, double loopSeconds, double loopPosition, bool isRec, bool isStop)
     {
         try
