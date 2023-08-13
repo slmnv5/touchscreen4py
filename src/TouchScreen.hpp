@@ -43,7 +43,7 @@ public:
     }
 
     void updateScreen();
-
+    std::string testStr();
     std::string getClickEventWord();
 
 private:

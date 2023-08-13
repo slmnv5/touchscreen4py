@@ -87,6 +87,11 @@ void TouchScreen::updateScreen()
     }
 }
 
+std::string TouchScreen::testStr()
+{
+    return std::string("testStr");
+}
+
 std::string TouchScreen::getClickEventWord()
 {
 

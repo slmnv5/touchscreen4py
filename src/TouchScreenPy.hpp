@@ -16,7 +16,7 @@ public:
     virtual ~TouchScreenPy()
     {
     }
-
+    std::string clickWord = "";
     void setLoop(double loopSeconds, double loopPosition, bool isRec, bool isStop)
     {
         this->mLoopSeconds = loopSeconds;

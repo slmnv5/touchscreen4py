@@ -40,7 +40,8 @@ extern "C"
         try
         {
             TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
-            return tsp->getClickEventWord().c_str();
+            tsp->clickWord = tsp->getClickEventWord();
+            return tsp->clickWord.c_str();
         }
         catch (...)
         {
@@ -50,7 +51,16 @@ extern "C"
 
     const char *testStr(void *ptr)
     {
-        return "testStr";
+        try
+        {
+            TouchScreenPy *tsp = static_cast<TouchScreenPy *>(ptr);
+            tsp->clickWord = tsp->testStr();
+            return tsp->clickWord.c_str();
+        }
+        catch (...)
+        {
+            return "";
+        }
     }
 
     int setLoop(void *ptr, double loopSeconds, double loopPosition, bool isRec, bool isStop)
